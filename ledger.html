@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Ledger of Cantica</title>
+<meta name="description" content="Look up the people, places, groups, terms, rumors and rules of the Cantica.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Michroma&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="ledger.css">
+</head>
+<body class="ledger-page">
+
+<div class="terminal-header" id="terminal-header">
+  <div class="left">
+    <span class="blink"></span>
+    <span>THE LEDGER OF CANTICA<span class="hide-sm"> <span class="accent">//</span> PUBLIC TERMINAL</span></span>
+  </div>
+  <div class="right"><a class="hdr-link" href="index.html">◂ Concierge</a></div>
+</div>
+
+<main class="ledger">
+  <div class="ledger-wrap">
+
+    <div class="ledger-title">
+      <div class="consultation-tag">▾ THE LEDGER ▾</div>
+      <h1>Everything I have told you, kept in one place.</h1>
+      <p class="lede"><em>Oh,</em> you would like to look something up. Please do. Names, places, terms and the rules of play are all here. Open an entry for more, and I will point you to the full answer.</p>
+    </div>
+
+    <div class="ledger-controls" id="controls">
+      <div class="search">
+        <label for="q" class="sr-only">Search the ledger</label>
+        <input id="q" type="search" placeholder="Search: a name, a place, a word…" autocomplete="off" spellcheck="false">
+        <kbd title="Press / to search">/</kbd>
+      </div>
+      <div class="chips" id="chips" role="group" aria-label="Filter by kind"></div>
+      <div class="count" id="count" aria-live="polite"></div>
+    </div>
+
+    <div id="results"></div>
+
+    <div class="empty" id="empty" hidden>
+      <p><em>Oh.</em> Nothing under that name. I am so sorry. Try fewer letters, or another word for it, or ask me at the <a href="index.html">Concierge</a>.</p>
+    </div>
+
+    <p class="rules-note" id="rules-note" hidden>
+      <span>◆ NATIVE RULES, EXPERIMENTAL</span> These are the Cantica rules as currently drafted for the Foundry system. They may change.
+    </p>
+
+  </div>
+</main>
+
+<div class="terminal-footer">
+  <div>THE LEDGER OF CANTICA <span style="color: var(--warm);">//</span> KEPT BY GLOSS <span style="color: var(--warm);">//</span> SHIP-LOCAL TERMINAL</div>
+  <div class="blessing">Be at peace. The ship holds.</div>
+</div>
+
+<script src="ledger-data.js"></script>
+<script src="ledger.js"></script>
+</body>
+</html>
