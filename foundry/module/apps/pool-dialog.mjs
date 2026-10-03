@@ -176,8 +176,7 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
   /** Read the current form state. Reads the DOM directly so the preview and the roll can't disagree. */
   #readInput() {
     const form = this.element;
-    const num = name => Math.max(0, Math.trunc(Number(form.elements[name]?.value) || 0));
-    const checked = name => [...form.querySelectorAll(`input[name="${name}"]:checked`)];
+        const checked = name => [...form.querySelectorAll(`input[name="${name}"]:checked`)];
     const chosen = form.elements.difficulty.selectedOptions[0];
 
     // Only one scene Trait can be added to a roll: a radio group, with "none" first.
@@ -193,8 +192,6 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
       gift: Boolean(form.elements.gift?.checked),
       encumbranceKeys: checked("encumbrance").map(el => el.value),
       commendations: checked("commendation").map(el => ({ id: el.value, name: el.dataset.name, ruleBreak: el.dataset.break })),
-      circumstances: num("circumstances"),
-      obstacles: num("obstacles"),
       bound: form.elements.bound?.checked ? 1 : 0,
       sceneId,
       sceneName: sceneId ? form.elements.sceneCard.selectedOptions[0].textContent.trim() : "",
@@ -215,8 +212,7 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
       skill: this.actor.skillRating(input.skill),
       traits: traits.reduce((sum, t) => sum + traitDice({ rank: this.actor.traitRank(t.key), stretch: t.stretch }), 0),
       gift: input.gift,
-      circumstances: input.circumstances + sceneTraitDice(input.sceneTrait),
-      obstacles: Math.max(0, input.obstacles - fx.obstaclesIgnored),
+      circumstances: sceneTraitDice(input.sceneTrait),
       bound: input.bound
     });
     const i18n = game.i18n;

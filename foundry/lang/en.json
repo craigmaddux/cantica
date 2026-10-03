@@ -198,11 +198,7 @@
       "TargetOption": "{name} · Rating {rating} ({kind})",
       "Traits": "Trait (pick one)",
       "GiftNote": "Adds no die. Turns one white die violet (or adds one violet die to a pool that is only the Margin).",
-      "Environment": "Environmental factors",
-      "Circumstances": "Circumstances (+1 each)",
-      "Obstacles": "Obstacles (−1 each)",
       "Bound": "Bound gear",
-      "EnvironmentHint": "Circumstances: another PC assisting, a form filed in advance. Obstacles: wind, wet rock, darkness, missing the right tools, a relevant NPC Tag or a Notice on you. Gear never adds dice: the right tools let you roll at all.",
       "Margin": "The Margin",
       "EncumbranceNote": "If any Hindrance is in play, the Margin of Error widens to 1–2 and an Error earns a Stamp. Hindrances never add dice.",
       "GreaterBound": "Greater Bound",
@@ -228,7 +224,9 @@
       "StretchShort": "Counts as 1 die, whatever its rank (the GM's call).",
       "StretchNote": "A stretch to fit the situation (the GM's call): the Trait counts as 1 die whatever its rank.",
       "SecondTrait": "Your Commendation lets a second Trait also apply.",
-      "BoundNote": "Gear running on divine infrastructure turns one white die violet. At most one die from gear and one from the Gift."
+      "BoundNote": "Gear running on divine infrastructure turns one white die violet. At most one die from gear and one from the Gift.",
+      "Gear": "Gear",
+      "GearHint": "Gear never adds dice: the right tools let you roll at all. Anything else that helps or hinders is the table's call, or a scene Trait."
     },
     "Roll": {
       "Margin": "Margin",

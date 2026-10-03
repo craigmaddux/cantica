@@ -16,9 +16,9 @@ New releases appear as in-app updates. On Molten, the same URL works; no CloudCo
 
 ## The rules in short
 
-- **Pool** = the Margin (1 amber die, always) + Skill (0–2) + one Trait (its rank) + 1 per Circumstance − 1 per Obstacle. **Cap 7.**
+- **Pool** = the Margin (1 amber die, always) + Skill (0–2) + one Trait (its rank) + one scene Trait (+1). **Cap 7.** After the roll, Stamps add dice from the chat card (see below).
 - **White dice succeed on 7+.** **Violet (Bound) dice succeed on 6+.** Violet dice replace white dice; they never add to the count. At most **two** dice are violet: one from the Gift and one from **Bound gear** (a checkbox in the roll dialog). A violet 1 is **Dissonance**.
-- **Gear** is permission, not a bonus: it never adds dice, and missing the right tools is an obstacle.
+- **Gear** is permission, not a bonus: it never adds dice: the right tools let you roll at all.
 - **The Margin** succeeds on 7+ at Grades I–III, 6+ at IV–VI, 5+ at VII–IX, 4+ at X. Its 1 is always an Error and its 10 always Grace.
 - **Difficulty = successes needed to succeed at all.** Below it is *Denied*; meeting it is *Approved, With Conditions*; one more is *Approved*; two or more is *Commended*. D0 Easy never Denies.
 - **Traits:** Station plus three open Traits (buy up to six, 4 Tenure each). Every Trait has a **rank**, 1 or 2 (two pips on the sheet; rank 2 costs 6 Tenure and needs Grade III). On a roll you pick **one**, and it adds dice equal to its rank. **Stretch** (a checkbox beside it, anyone can tick it) makes it count as 1 die whatever its rank.
@@ -43,7 +43,7 @@ Four tabs:
 
 ## Rolling
 
-The pool builder asks you to pick one Trait (Station or an open Trait, with a Stretch checkbox), and offers the Gift, one checkbox per Hindrance (and the Drawback), your Commendations, the Scene you're in, extra Circumstances, Obstacles and Bound dice. Difficulty is D0–D3, or the Rating of an NPC you've targeted.
+The pool builder asks you to pick one Trait (Station or an open Trait, with a Stretch checkbox), and offers the Gift, one checkbox per Hindrance (and the Drawback), your Commendations, the Scene you're in (and one scene Trait), and Bound gear. There are no boxes for Circumstances or Obstacles: anything else that helps or hinders is the table's call, or a scene Trait. Difficulty is D0–D3, or the Rating of an NPC you've targeted.
 
 ## Register With Gloss
 
