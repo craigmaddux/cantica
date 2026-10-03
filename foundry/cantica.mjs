@@ -15,9 +15,9 @@ import CardSheet from "./module/apps/card-sheet.mjs";
 import PoolDialog from "./module/apps/pool-dialog.mjs";
 import { rollPool } from "./module/dice/roll.mjs";
 import { registerDiceColors } from "./module/dice/dsn.mjs";
-import { onRenderChatMessage } from "./module/chat.mjs";
+import { onRenderChatMessage, listenForRollChanges } from "./module/chat.mjs";
 import Ledger from "./module/apps/ledger.mjs";
-import { registerCardArt, repaintCards } from "./module/card-art.mjs";
+import { registerCardArt, repaintCards, resizeCards } from "./module/card-art.mjs";
 import { openRegistration, hold, release, holds } from "./module/apps/registration.mjs";
 import { registerPanels, reconcilePanels, openPanel, setShown } from "./module/scene-panel.mjs";
 import { initLore, importLore } from "./module/lore.mjs";
@@ -84,7 +84,7 @@ Hooks.once("init", () => {
   });
 
   // Handy for macros: game.cantica.rollPool(actor, { skill: "hullcraft" }) or new game.cantica.PoolDialog({ actor }).
-  game.cantica = { rules, notices, rollPool, PoolDialog, showScrutiny, getScrutiny, gainScrutiny, showHum, getHum, activeCard, detectCard, setActiveCard, openLedger, importLore, openPanel, setShown, repaintCards, register: openRegistration };
+  game.cantica = { rules, notices, rollPool, PoolDialog, showScrutiny, getScrutiny, gainScrutiny, showHum, getHum, activeCard, detectCard, setActiveCard, openLedger, importLore, openPanel, setShown, repaintCards, resizeCards, register: openRegistration };
 
   return foundry.applications.handlebars.loadTemplates([
     `systems/${SYSTEM_ID}/templates/actor/character.hbs`,
@@ -108,6 +108,7 @@ Hooks.once("init", () => {
 Hooks.once("ready", () => {
   listenForScrutiny();
   listenForHum();
+  listenForRollChanges();
   listenForCards();
   reconcilePanels();
   if (game.settings.get(SYSTEM_ID, "showScrutiny")) showScrutiny();

@@ -90,8 +90,6 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
         effect: i18n.localize(`CANTICA.Commendation.short.${c.ruleBreak}`)
       })),
 
-      stamps: this.actor.system.stamps,
-      canExpedite: this.actor.system.stamps > 0,
       marginTarget: this.actor.system.marginTarget,
 
       // The scene: the card the token stands on, else the active card. The player can change it.
@@ -203,7 +201,6 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
       sceneTrait,
       difficulty: Number(chosen.dataset.difficulty),
       targetName: chosen.dataset.name ?? "",
-      expedite: Boolean(form.elements.expedite?.checked),
       greaterBound: Boolean(form.elements.greaterBound?.checked)
     };
   }
@@ -220,8 +217,7 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
       gift: input.gift,
       circumstances: input.circumstances + sceneTraitDice(input.sceneTrait),
       obstacles: Math.max(0, input.obstacles - fx.obstaclesIgnored),
-      bound: input.bound,
-      expedite: input.expedite
+      bound: input.bound
     });
     const i18n = game.i18n;
     const el = this.element.querySelector("[data-preview]");

@@ -28,6 +28,19 @@ export async function renderRollCard(state) {
 }
 
 /**
+ * Roll one more white die, for a Stamp spent from the chat card after the roll.
+ * @returns {Promise<number>} the d10 result
+ */
+export async function rollExtraDie() {
+  const roll = new foundry.dice.Roll(`1d10[${COLORSETS.white}]`);
+  for (const term of roll.dice) term.options.appearance = { colorset: term.options.flavor };
+  await roll.evaluate();
+  // Dice So Nice is optional.
+  try { game.dice3d?.showForRoll(roll, game.user, true); } catch (error) { console.warn(error); }
+  return roll.total;
+}
+
+/**
  * Build the pool, roll it, post the chat card, and settle Stamps and Scrutiny.
  * @param {Actor} actor
  * @param {object} input
@@ -45,7 +58,6 @@ export async function renderRollCard(state) {
  * @param {{id: string, name: string}} [input.sceneTrait] The one scene Trait picked for +1 die.
  * @param {number} [input.difficulty]       Successes needed: D0-D3, or an NPC's Rating.
  * @param {string} [input.targetName]       Name of the NPC whose Rating is the Difficulty.
- * @param {boolean} [input.expedite]        Spend a Stamp for +1 die (one per roll).
  * @param {boolean} [input.greaterBound]    Dissonance on 1-2 (each adds 2 to the Hum). From the Refrain, everyone's violet dice do this too.
  */
 export async function rollPool(actor, input) {
@@ -57,7 +69,6 @@ export async function rollPool(actor, input) {
   // widens Dissonance to 1-2 for every violet die (no one is told why).
   const greaterBound = Boolean(input.greaterBound);
   const widened = greaterBound || widensDissonance(getHum());
-  const expedite = Boolean(input.expedite) && actor.system.stamps > 0;
 
   // Hindrances never add dice. If any is in play, the Margin of Error widens to 1-2.
   const encumbranceKeys = input.encumbranceKeys ?? [];
@@ -86,8 +97,7 @@ export async function rollPool(actor, input) {
     gift,
     circumstances: (input.circumstances || 0) + sceneTraitDice(sceneTrait),
     obstacles,
-    bound: input.bound,
-    expedite
+    bound: input.bound
   });
 
   const parts = [`1d10[${COLORSETS.margin}]`];
@@ -132,7 +142,6 @@ export async function rollPool(actor, input) {
   if (input.obstacles) factors.push(`−${input.obstacles} ${i18n.localize("CANTICA.Roll.Obstacles")}`);
   if (input.bound) factors.push(i18n.localize("CANTICA.Roll.BoundSource"));
   if (sceneTrait) factors.push(`+1 ${sceneTrait.name}`);
-  if (expedite) factors.push(i18n.localize("CANTICA.Roll.Expedite"));
 
   const ladder = i18n.has(`CANTICA.Difficulty.${difficulty}`) ? i18n.localize(`CANTICA.Difficulty.${difficulty}`) : "";
   let difficultyText = input.targetName
@@ -145,6 +154,13 @@ export async function rollPool(actor, input) {
     .filter(Boolean);
 
   const state = {
+    actorId: actor.id,
+    targetName: input.targetName || "",
+    extra: [],
+    expedited: false,
+    countersigned: [],
+    ratingRaise: 0,
+    log: [],
     actorName: actor.name,
     skillLabel,
     difficulty,
@@ -180,9 +196,8 @@ export async function rollPool(actor, input) {
   ChatMessage.applyRollMode(data, game.settings.get("core", "rollMode"));
   const message = await ChatMessage.create(data);
 
-  // Stamps: Expedite spends one; a Hindrance biting earns one. Settle them in a single update.
-  const stampDelta = (outcome.stampEarned ? 1 : 0) - (expedite ? 1 : 0);
-  if (stampDelta) await actor.adjustStamps(stampDelta);
+  // A Hindrance biting earns a Stamp. (Spending Stamps is done after the roll, from the card.)
+  if (outcome.stampEarned) await actor.adjustStamps(1);
 
   // Every Margin of Error gives the GM +1 Scrutiny.
   if (outcome.scrutiny) await gainScrutiny();

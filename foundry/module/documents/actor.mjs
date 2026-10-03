@@ -1,4 +1,4 @@
-import { SKILLS, OPEN_TRAITS } from "../config.mjs";
+import { SKILLS, OPEN_TRAITS, CARD_TOKEN } from "../config.mjs";
 import { skillChange, traitSlotPurchase, traitRankUp, awardTenure, stampsPerSession, TRAIT_COST } from "../progression.mjs";
 
 export default class CanticaActor extends foundry.documents.Actor {
@@ -18,8 +18,8 @@ export default class CanticaActor extends foundry.documents.Actor {
         "ownership.default": DOCUMENT_OWNERSHIP_LEVELS.OBSERVER,
         prototypeToken: {
           actorLink: true,
-          width: 4,
-          height: 3,
+          width: CARD_TOKEN.width,
+          height: CARD_TOKEN.height,
           lockRotation: true,
           displayName: TOKEN_DISPLAY_MODES.NONE,
           disposition: TOKEN_DISPOSITIONS.NEUTRAL,

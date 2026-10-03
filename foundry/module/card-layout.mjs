@@ -136,8 +136,12 @@ export const MAX_PX = 1600;
 
 /** The card image's size for a token's size in grid squares. */
 export function imageSize(squaresWide, squaresHigh) {
-  const clamp = n => Math.min(MAX_PX, Math.max(200, Math.round(n * PX_PER_SQUARE)));
-  return { width: clamp(squaresWide), height: clamp(squaresHigh) };
+  const w = squaresWide * PX_PER_SQUARE;
+  const h = squaresHigh * PX_PER_SQUARE;
+  // A big card is scaled down as a whole, so its shape is kept; only a tiny one is lifted to a minimum.
+  const k = Math.min(1, MAX_PX / Math.max(w, h));
+  const floor = n => Math.max(200, Math.round(n * k));
+  return { width: floor(w), height: floor(h) };
 }
 
 /** Where a crop window sits so the art covers the whole card, a little above centre (focal 0.4). */

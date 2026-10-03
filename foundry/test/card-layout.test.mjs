@@ -106,6 +106,8 @@ test("the hash changes when the card changes, and is stable when it doesn't", ()
 test("the image is 200px per grid square, within limits", () => {
   assert.deepEqual(imageSize(4, 3), { width: 800, height: 600 });
   assert.deepEqual(imageSize(20, 20), { width: 1600, height: 1600 });
+  // a big card keeps its shape: 12 x 9 is still 4:3
+  assert.deepEqual(imageSize(12, 9), { width: 1600, height: 1200 });
   assert.deepEqual(imageSize(0.5, 0.5), { width: 200, height: 200 });
 });
 

@@ -104,7 +104,7 @@
     },
     "Stamps": {
       "Label": "Stamps",
-      "Hint": "Earned when any Hindrance bites, sometimes from a Margin of Grace, and for withdrawing from a scene. Spend: Expedite (+1 die), Countersign (give to an ally's roll), Reclassify (downgrade a Notice as it lands), Cite a Clause, Amend the Scene.",
+      "Hint": "Earned when any Hindrance bites, sometimes from a Margin of Grace, and for withdrawing from a scene. Spend: Expedite (+1 die after a roll, from its chat card), Countersign (+1 die on an ally's roll), Reclassify (downgrade a Notice as it lands), Cite a Clause, Amend the Scene.",
       "Cite": "Cite a Clause",
       "CiteTitle": "Cite a Clause",
       "CitePrompt": "Which rule do you declare exists and applies here?",
@@ -203,8 +203,6 @@
       "Obstacles": "Obstacles (−1 each)",
       "Bound": "Bound gear",
       "EnvironmentHint": "Circumstances: another PC assisting, a form filed in advance. Obstacles: wind, wet rock, darkness, missing the right tools, a relevant NPC Tag or a Notice on you. Gear never adds dice: the right tools let you roll at all.",
-      "Expedite": "Expedite",
-      "ExpediteNote": "Spend a Stamp for +1 die. One per roll.",
       "Margin": "The Margin",
       "EncumbranceNote": "If any Hindrance is in play, the Margin of Error widens to 1–2 and an Error earns a Stamp. Hindrances never add dice.",
       "GreaterBound": "Greater Bound",
@@ -238,7 +236,6 @@
       "Circumstances": "circumstance",
       "Obstacles": "obstacle",
       "BoundSource": "Bound gear",
-      "Expedite": "Expedite (Stamp)",
       "VsTarget": "vs {name} · Rating {rating}",
       "Capped": "Pool capped at 7.",
       "Floored": "Pool reduced to the Margin alone.",
@@ -510,6 +507,32 @@
           "text": "A campaign event, written by you."
         }
       }
+    },
+    "CardAction": {
+      "hit": "a hit",
+      "miss": "a miss",
+      "expedite": {
+        "button": "Expedite (spend a Stamp)",
+        "hint": "Spend a Stamp to roll one more die on your own roll. Once per roll.",
+        "title": "Expedite",
+        "text": "{who} spent a Stamp: one more die, a {value} ({hit})."
+      },
+      "countersign": {
+        "button": "Countersign (spend a Stamp)",
+        "hint": "Spend one of your Stamps to roll one more die on this ally's roll. Once per ally.",
+        "title": "Countersigned",
+        "text": "{who} countersigned with a Stamp: one more die, a {value} ({hit})."
+      },
+      "raise": {
+        "button": "Raise the Rating (1 Scrutiny)",
+        "hint": "Spend 1 Scrutiny: the NPC's Rating is one higher for this roll.",
+        "title": "Rating raised",
+        "text": "The GM spent 1 Scrutiny: the Rating is one higher for this roll.",
+        "NoScrutiny": "Not enough Scrutiny."
+      },
+      "Pick": "Which character spends the Stamp?",
+      "PickTitle": "Countersign",
+      "None": "You have no Stamp to spend."
     }
   }
 }

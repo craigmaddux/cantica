@@ -13,7 +13,7 @@
 
   <div class="dice">
     {{#each dice}}
-    <span class="die {{kind}} {{#if success}}hit{{/if}} {{flag}}" title="{{kind}}">{{value}}</span>
+    <span class="die {{kind}} {{#if success}}hit{{/if}} {{flag}} {{#if extra}}added{{/if}}" title="{{kind}}">{{value}}</span>
     {{/each}}
   </div>
 
@@ -24,6 +24,13 @@
   </div>
 
   <div class="verdict">{{tierLabel}}</div>
+
+  {{#each actions}}
+  <div class="margin card-action {{kind}}">
+    <strong>{{title}}</strong>
+    <span>{{text}}</span>
+  </div>
+  {{/each}}
 
   {{#if complication}}
   <div class="margin complication {{#if complication.negated}}negated{{/if}}">
@@ -56,12 +63,13 @@
   </div>
   {{/if}}
 
-  {{!-- The GM can complicate a roll made in a scene (one Scrutiny); the player can negate it (one Stamp).
-        The chat hook shows each button only to the people it is for. --}}
-  {{#if canComplicate}}
-  <div class="card-actions"><button type="button" data-action="complicate" title="{{localize 'CANTICA.Complication.Hint'}}">{{localize "CANTICA.Complication.Button"}}</button></div>
-  {{/if}}
-  {{#if canNegate}}
-  <div class="card-actions"><button type="button" data-action="negate" title="{{localize 'CANTICA.Complication.NegateHint'}}">{{localize "CANTICA.Complication.Negate"}}</button></div>
-  {{/if}}
+  {{!-- After the roll. Players spend Stamps (Expedite, Countersign, Negate); the GM spends Scrutiny
+        (Complicate, Raise the Rating). The chat hook shows each button only to the people it is for. --}}
+  <div class="card-actions">
+    {{#if canExpedite}}<button type="button" data-action="expedite" title="{{localize 'CANTICA.CardAction.expedite.hint'}}">{{localize "CANTICA.CardAction.expedite.button"}}</button>{{/if}}
+    {{#if canCountersign}}<button type="button" data-action="countersign" title="{{localize 'CANTICA.CardAction.countersign.hint'}}">{{localize "CANTICA.CardAction.countersign.button"}}</button>{{/if}}
+    {{#if canNegate}}<button type="button" data-action="negate" title="{{localize 'CANTICA.Complication.NegateHint'}}">{{localize "CANTICA.Complication.Negate"}}</button>{{/if}}
+    {{#if canComplicate}}<button type="button" data-action="complicate" title="{{localize 'CANTICA.Complication.Hint'}}">{{localize "CANTICA.Complication.Button"}}</button>{{/if}}
+    {{#if canRaise}}<button type="button" data-action="raise" title="{{localize 'CANTICA.CardAction.raise.hint'}}">{{localize "CANTICA.CardAction.raise.button"}}</button>{{/if}}
+  </div>
 </div>

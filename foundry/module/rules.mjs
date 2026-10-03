@@ -54,11 +54,10 @@ export const RATINGS = {
  * @param {number} [input.circumstances=0] Environmental advantages, +1 each (a scene Trait counts here).
  * @param {number} [input.obstacles=0]     Environmental penalties, -1 each.
  * @param {number} [input.bound=0]         Bound gear in play (0 or 1): it turns one white die violet. More than one is treated as one.
- * @param {boolean} [input.expedite=false] A Stamp spent for +1 die (one per roll).
  */
-export function buildPool({ skill = 0, traits = 0, gift = false, circumstances = 0, obstacles = 0, bound = 0, expedite = false } = {}) {
+export function buildPool({ skill = 0, traits = 0, gift = false, circumstances = 0, obstacles = 0, bound = 0 } = {}) {
   const clean = n => Math.max(0, Math.trunc(Number(n) || 0));
-  const raw = 1 + clean(skill) + clean(traits) + clean(circumstances) - clean(obstacles) + (expedite ? 1 : 0);
+  const raw = 1 + clean(skill) + clean(traits) + clean(circumstances) - clean(obstacles);
   let total = Math.min(POOL_CAP, Math.max(1, raw));
 
   // The Margin is always amber; colored dice replace white dice, never add to the count.

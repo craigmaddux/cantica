@@ -25,6 +25,13 @@ export const OPEN_TRAITS = ["trait1", "trait2", "trait3", "trait4", "trait5", "t
 /** The two Encumbrances every character has. Neither ever adds a die. */
 export const ENCUMBRANCES = ["personal", "circumstantial"];
 
+/**
+ * How many grid squares a Scene Card's token covers. v0.8.1 made them three times as wide and as tall
+ * (12 x 9, up from 4 x 3), so the card reads at a glance on the tabletop.
+ */
+export const CARD_TOKEN = { width: 12, height: 9 };
+export const OLD_CARD_TOKEN = { width: 4, height: 3 };
+
 /** NPC tiers: how much of the Notice track they have. */
 export const NPC_TIERS = ["background", "minor", "major"];
 

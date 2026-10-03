@@ -1,4 +1,4 @@
-import { SYSTEM_ID } from "./config.mjs";
+import { SYSTEM_ID, CARD_TOKEN, OLD_CARD_TOKEN } from "./config.mjs";
 import { layoutCard, cardHash, imageSize, coverCrop, COLOR } from "./card-layout.mjs";
 
 /**
@@ -144,7 +144,37 @@ export function repaintCards({ force = true } = {}) {
   for (const token of canvas.scene.tokens) if (isCard(token)) paintToken(token, { force });
 }
 
+/**
+ * Make the Scene Cards from before v0.8.1 the new, larger size: a card actor's prototype token, and any
+ * of its tokens on a scene, that are still exactly the old default. A size you chose yourself is left alone.
+ */
+export async function resizeCards() {
+  if (!game.user.isGM) return;
+  const old = OLD_CARD_TOKEN;
+  const isOld = t => t.width === old.width && t.height === old.height;
+
+  for (const actor of game.actors.filter(a => a.type === "card")) {
+    if (isOld(actor.prototypeToken)) await actor.update({ "prototypeToken.width": CARD_TOKEN.width, "prototypeToken.height": CARD_TOKEN.height });
+  }
+  for (const scene of game.scenes) {
+    const updates = scene.tokens
+      .filter(token => token.actor?.type === "card" && isOld(token))
+      .map(token => ({ _id: token.id, width: CARD_TOKEN.width, height: CARD_TOKEN.height }));
+    if (updates.length) await scene.updateEmbeddedDocuments("Token", updates);
+  }
+}
+
 export function registerCardArt() {
+  // Existing cards are made the larger size once, by the first GM to open the world after the update.
+  game.settings.register(SYSTEM_ID, "cardSizeV081", { scope: "world", config: false, type: Boolean, default: false });
+  Hooks.once("ready", async () => {
+    if (!game.user.isActiveGM || game.settings.get(SYSTEM_ID, "cardSizeV081")) return;
+    try {
+      await resizeCards();
+      await game.settings.set(SYSTEM_ID, "cardSizeV081", true);
+    } catch (error) { warn(error); }
+  });
+
   // New card tokens: fitted to the token, drawn beneath characters, with no name label (it's on the card).
   Hooks.on("preCreateToken", token => {
     if (!isCard(token)) return;
