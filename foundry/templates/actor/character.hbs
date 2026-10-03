@@ -34,7 +34,7 @@
   </header>
 
   <nav class="sheet-tabs" aria-label="{{localize 'CANTICA.Tabs.Label'}}">
-    {{#each tabs}}<button type="button" class="tab {{#if active}}active{{/if}}" data-action="setTab" data-tab="{{id}}">{{label}}</button>{{/each}}
+    {{#each tabs}}<button type="button" class="sheet-tab {{#if active}}active{{/if}}" data-action="setTab" data-tab="{{id}}">{{label}}</button>{{/each}}
   </nav>
 
   <div class="cantica-body">

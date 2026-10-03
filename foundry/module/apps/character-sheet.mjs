@@ -144,7 +144,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   /** Switch tabs without re-rendering: show one panel, mark one tab. */
   static #onSetTab(event, target) {
     this.#tab = target.dataset.tab;
-    this.element.querySelectorAll(".sheet-tabs .tab").forEach(tab => tab.classList.toggle("active", tab.dataset.tab === this.#tab));
+    this.element.querySelectorAll(".sheet-tabs .sheet-tab").forEach(tab => tab.classList.toggle("active", tab.dataset.tab === this.#tab));
     this.element.querySelectorAll(".tab-panel").forEach(panel => { panel.hidden = panel.dataset.tab !== this.#tab; });
   }
 

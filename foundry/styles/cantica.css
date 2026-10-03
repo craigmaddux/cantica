@@ -537,15 +537,15 @@
 .sheet.character .tab-panel { height: 100%; overflow-y: auto; padding: 0.9rem 1.1rem 1.1rem; }
 
 .sheet-tabs { background: var(--void-deep); border-bottom: 1px solid var(--rule-bright); display: flex; gap: 0; }
-.sheet-tabs .tab {
+.sheet-tabs .sheet-tab {
   background: transparent;
   border: 0;
   border-bottom: 2px solid transparent;
   color: var(--ink-dim);
   padding: 0.5rem 1.1rem;
 }
-.sheet-tabs .tab:hover { color: var(--warm-bright); box-shadow: none; }
-.sheet-tabs .tab.active { background: var(--hull-bright); border-bottom-color: var(--warm); color: var(--warm-bright); }
+.sheet-tabs .sheet-tab:hover { color: var(--warm-bright); box-shadow: none; }
+.sheet-tabs .sheet-tab.active { background: var(--hull-bright); border-bottom-color: var(--warm); color: var(--warm-bright); }
 
 .record-grid { display: grid; gap: 0.9rem; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 .record-main { display: flex; flex-direction: column; gap: 0.9rem; min-width: 0; }
@@ -699,3 +699,7 @@
 
 /* the pre-tabs layout named grid areas on .skills; the Record tab has its own grid */
 .sheet.character .record-skills { grid-area: auto; }
+
+/* Foundry hides every .tab that isn't .active, so the sheet's nav uses .sheet-tab. Its buttons also
+   center their contents by default; skill names read left-aligned. */
+.skill .skill-roll { justify-content: flex-start; }
