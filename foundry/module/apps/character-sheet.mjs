@@ -1,5 +1,6 @@
-import { SYSTEM_ID, SKILL_GROUPS, SKILL_MAX, TRAITS, NOTICE_STATUSES } from "../config.mjs";
+import { SYSTEM_ID, SKILL_GROUPS, SKILL_MAX, TRAITS } from "../config.mjs";
 import PoolDialog from "./pool-dialog.mjs";
+import { trackContext, takeNotice, clearNotice, clearMinors } from "./notice-track.mjs";
 
 const { HandlebarsApplicationMixin, DialogV2 } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -16,9 +17,9 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       adjustStamps: CharacterSheet.#onAdjustStamps,
       adjustTenure: CharacterSheet.#onAdjustTenure,
       citeClause: CharacterSheet.#onCiteClause,
-      addNotice: CharacterSheet.#onAddNotice,
-      closeNotice: CharacterSheet.#onCloseNotice,
-      deleteNotice: CharacterSheet.#onDeleteNotice
+      takeNotice,
+      clearNotice,
+      clearMinors
     }
   };
 
@@ -53,34 +54,13 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       value: system.traits[key]
     }));
 
-    context.notices = system.notices.map((notice, index) => ({
-      index,
-      name: notice.name,
-      closed: notice.status === "closed",
-      statuses: NOTICE_STATUSES.map(value => ({
-        value,
-        label: i18n.localize(`CANTICA.Notice.${value}`),
-        selected: notice.status === value
-      }))
-    }));
+    context.track = trackContext(this.actor);
 
     context.spread = {
       ...system.spread,
       summary: [3, 2, 1, 0].map(r => `${system.spread.counts[r]}×${r}`).join(" · ")
     };
     return context;
-  }
-
-  /** Form inputs named system.notices.N.field expand to an object, not an array; rebuild it. */
-  _processFormData(event, form, formData) {
-    const data = super._processFormData(event, form, formData);
-    const notices = data.system?.notices;
-    if (notices && !Array.isArray(notices)) {
-      data.system.notices = Object.entries(notices)
-        .sort(([a], [b]) => Number(a) - Number(b))
-        .map(([, value]) => value);
-    }
-    return data;
   }
 
   /* -------------------------------------------- */
@@ -136,25 +116,5 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
         { actorName: this.actor.name, clause }
       )
     });
-  }
-
-  static async #onAddNotice() {
-    const notices = this.actor.system.notices.map(n => ({ ...n }));
-    notices.push({ name: "", status: "pending" });
-    await this.actor.update({ "system.notices": notices });
-  }
-
-  /** Recovery formally closes a Notice. */
-  static async #onCloseNotice(event, target) {
-    const index = Number(target.dataset.index);
-    const notices = this.actor.system.notices.map(n => ({ ...n }));
-    if (notices[index]) notices[index].status = "closed";
-    await this.actor.update({ "system.notices": notices });
-  }
-
-  static async #onDeleteNotice(event, target) {
-    const index = Number(target.dataset.index);
-    const notices = this.actor.system.notices.filter((_, i) => i !== index).map(n => ({ ...n }));
-    await this.actor.update({ "system.notices": notices });
   }
 }

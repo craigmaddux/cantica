@@ -1,0 +1,31 @@
+import { NPC_TIERS } from "../config.mjs";
+import { noticeTrackField, migrateOldNotices } from "./track.mjs";
+
+const { NumberField, StringField } = foundry.data.fields;
+
+/**
+ * Stat block: Name, Rating, two Tags, Tier. The GM never rolls; NPCs act through
+ * their Rating, which is used directly as the Difficulty of any roll against or
+ * to resist them.
+ */
+export default class NpcData extends foundry.abstract.TypeDataModel {
+  static LOCALIZATION_PREFIXES = ["CANTICA.Npc"];
+
+  static defineSchema() {
+    return {
+      // 1 ordinary, 2 tough, 3 nemesis, 4 reserved.
+      rating: new NumberField({ required: true, nullable: false, integer: true, min: 1, max: 4, initial: 1 }),
+      // What they are good at. When a Tag applies, the player loses a die.
+      tag1: new StringField({ required: true, blank: true, initial: "" }),
+      tag2: new StringField({ required: true, blank: true, initial: "" }),
+      // Background: any Notice takes them out. Minor: one Minor box. Major: the full track.
+      tier: new StringField({ required: true, choices: NPC_TIERS, initial: "minor" }),
+      notices: noticeTrackField(),
+      notes: new StringField({ required: true, blank: true, initial: "" })
+    };
+  }
+
+  static migrateData(source) {
+    return super.migrateData(migrateOldNotices(source));
+  }
+}

@@ -4,13 +4,13 @@ export default class CanticaActor extends foundry.documents.Actor {
   /** Roll data for formulas and macros: `@skills.hullcraft` etc. */
   getRollData() {
     const data = super.getRollData();
-    data.skills = { ...this.system.skills };
+    if (this.type === "character") data.skills = { ...this.system.skills };
     return data;
   }
 
   /** @returns {number} Rating of a skill, 0 if the key is unknown. */
   skillRating(skill) {
-    return SKILLS.includes(skill) ? this.system.skills[skill] : 0;
+    return this.type === "character" && SKILLS.includes(skill) ? this.system.skills[skill] : 0;
   }
 
   /** Adjust Stamps by `delta`, never below zero. @returns {Promise<number>} the new total */

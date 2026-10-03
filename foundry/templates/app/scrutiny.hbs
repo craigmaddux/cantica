@@ -1,0 +1,10 @@
+<div class="scrutiny-body">
+  <div class="scrutiny-value" title="{{localize 'CANTICA.Scrutiny.Hint'}}">{{value}}</div>
+  {{#if isGM}}
+  <div class="scrutiny-controls">
+    <button type="button" data-action="adjust" data-delta="-1" aria-label="−">−</button>
+    <button type="button" data-action="adjust" data-delta="1" aria-label="+">+</button>
+    <button type="button" data-action="reset">{{localize "CANTICA.Scrutiny.Reset"}}</button>
+  </div>
+  {{/if}}
+</div>

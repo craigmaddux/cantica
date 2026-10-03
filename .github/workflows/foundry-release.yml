@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Run rules tests
-        run: node --test test/rules.test.mjs
+        run: node --test test/*.test.mjs
 
       - name: Stamp version and URLs into system.json
         run: |

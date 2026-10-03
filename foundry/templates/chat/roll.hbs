@@ -1,7 +1,7 @@
 <div class="cantica cantica-card tier-{{outcome.tier}}">
   <header>
     <div class="who">{{actorName}}</div>
-    <div class="what">{{skillLabel}} <span class="dc">D{{difficulty}} · {{difficultyLabel}}</span></div>
+    <div class="what">{{skillLabel}} <span class="dc">{{difficultyText}}</span></div>
   </header>
 
   <ul class="factors">
@@ -21,7 +21,6 @@
   </div>
 
   <div class="verdict">{{tierLabel}}</div>
-  {{#if conditionsLabel}}<div class="conditions">{{conditionsLabel}}</div>{{/if}}
 
   {{#if outcome.grace}}
   <div class="margin grace">
@@ -35,6 +34,7 @@
   <div class="margin error">
     <strong>{{localize "CANTICA.Roll.Error"}}</strong>
     <span>{{localize "CANTICA.Roll.ErrorText"}}</span>
+    <span class="scrutiny">{{localize "CANTICA.Roll.ScrutinyGained"}}</span>
     {{#if stampNote}}<span class="stamp">{{localize "CANTICA.Roll.StampEarned"}}</span>{{/if}}
   </div>
   {{/if}}

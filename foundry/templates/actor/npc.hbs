@@ -1,0 +1,46 @@
+<div class="cantica-sheet">
+  <header class="cantica-header">
+    <img class="portrait" src="{{actor.img}}" alt="{{actor.name}}" data-edit="img" data-action="editImage" title="{{localize 'CANTICA.Sheet.ChangePortrait'}}">
+    <div class="identity">
+      <div class="eyebrow">{{localize "CANTICA.Npc.Eyebrow"}}</div>
+      <input class="name" type="text" name="name" value="{{actor.name}}" placeholder="{{localize 'CANTICA.Sheet.NamePlaceholder'}}" {{#unless editable}}disabled{{/unless}}>
+    </div>
+    <div class="counters">
+      <div class="counter" title="{{localize 'CANTICA.Npc.RatingHint'}}">
+        <span class="counter-label">{{localize "CANTICA.Npc.Rating"}}</span>
+        <select name="system.rating" {{#unless editable}}disabled{{/unless}}>
+          {{#each ratings}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <div class="cantica-body npc-body">
+    <section class="panel traits">
+      <h2>{{localize "CANTICA.Npc.Tags"}}</h2>
+      <p class="hint">{{localize "CANTICA.Npc.TagsHint"}}</p>
+      <div class="trait">
+        <label for="npc-tag1">{{localize "CANTICA.Npc.Tag"}} 1</label>
+        <input id="npc-tag1" type="text" name="system.tag1" value="{{system.tag1}}" {{#unless editable}}disabled{{/unless}}>
+      </div>
+      <div class="trait">
+        <label for="npc-tag2">{{localize "CANTICA.Npc.Tag"}} 2</label>
+        <input id="npc-tag2" type="text" name="system.tag2" value="{{system.tag2}}" {{#unless editable}}disabled{{/unless}}>
+      </div>
+      <div class="trait">
+        <label for="npc-tier">{{localize "CANTICA.Npc.Tier"}}</label>
+        <select id="npc-tier" name="system.tier" {{#unless editable}}disabled{{/unless}}>
+          {{#each tiers}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+        </select>
+        <p class="hint">{{tierHint}}</p>
+      </div>
+    </section>
+
+    {{> "systems/cantica/templates/parts/notices.hbs"}}
+
+    <section class="panel notes">
+      <h2>{{localize "CANTICA.Sheet.Notes"}}</h2>
+      <textarea name="system.notes" rows="5" {{#unless editable}}disabled{{/unless}}>{{system.notes}}</textarea>
+    </section>
+  </div>
+</div>

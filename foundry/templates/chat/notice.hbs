@@ -1,0 +1,10 @@
+<div class="cantica cantica-card notice-card {{#if out}}tier-denied{{/if}}">
+  <header>
+    <div class="who">{{actorName}}</div>
+    <div class="what">{{localize "CANTICA.Track.Receives"}}</div>
+  </header>
+  <blockquote>{{notice}} <span class="dc">{{type}}</span></blockquote>
+  <p class="note">{{box}} · {{status}}</p>
+  {{#if overflowed}}<p class="note">{{localize "CANTICA.Track.Overflowed"}}</p>{{/if}}
+  {{#if out}}<div class="verdict">{{localize "CANTICA.Track.TakenOut"}}</div>{{/if}}
+</div>

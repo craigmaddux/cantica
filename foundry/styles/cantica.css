@@ -275,13 +275,6 @@
 .pip.filled { background: var(--warm); border-color: var(--warm-bright); box-shadow: 0 0 6px var(--warm-glow); }
 .rating { color: var(--ink-dim); font-family: var(--font-mono); font-size: 0.7rem; text-align: right; width: 1rem; }
 
-.notice { align-items: center; display: grid; gap: 0.3rem; grid-template-columns: minmax(0, 1fr) auto auto; }
-.notice input { grid-column: 1; grid-row: 1; }
-.notice > button { grid-row: 1; padding: 0.2rem 0.55rem; }
-.notice select { grid-column: 1 / -1; grid-row: 2; }
-.notice.closed input { color: var(--ink-dim); text-decoration: line-through; }
-.notice.closed select { color: var(--ink-dim); }
-.notices .empty { color: var(--ink-dim); font-size: 0.85rem; font-style: italic; margin: 0; }
 
 .notes textarea { flex: 1; min-height: 6rem; resize: vertical; }
 
@@ -401,3 +394,65 @@
 .cantica-card .margin button { justify-self: start; margin-top: 0.2rem; padding: 0.2rem 0.6rem; }
 
 .cantica-card.clause blockquote { border-left: 2px solid var(--warm-deep); color: var(--ink-bright); font-size: 1.05rem; font-style: italic; margin: 0.2rem 0; padding-left: 0.7rem; }
+
+/* ═══════════════ Notice track (v0.2): Minor · Minor · Major · Final ═══════════════ */
+
+.cantica .hint { color: var(--ink-dim); font-size: 0.8rem; margin: 0; }
+
+.track { display: grid; gap: 0.4rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+.track .box {
+  background: var(--void-deep);
+  border: 1px solid var(--rule-bright);
+  border-left: 3px solid var(--ink-faint);
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.35rem 0.45rem 0.45rem;
+}
+.track .box.minor { border-left-color: var(--warm-deep); }
+.track .box.major { border-left-color: var(--warm); }
+.track .box.final { border-left-color: var(--warn); }
+.track .box.filled { background: var(--hull-bright); box-shadow: inset 0 0 12px var(--warm-glow); }
+.track .box.final.filled { box-shadow: inset 0 0 12px rgba(255, 90, 74, 0.2); }
+
+.track .box-label { color: var(--ink-dim); font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.22em; text-transform: uppercase; }
+.track .box-status { color: var(--ink-faint); letter-spacing: 0.1em; margin-left: 0.3rem; }
+.track .box.filled .box-label { color: var(--warm); }
+.track .box input { font-style: italic; }
+.track .box-row { align-items: center; display: grid; gap: 0.3rem; grid-template-columns: 1fr auto; }
+.track .box-row select { font-family: var(--font-mono); font-size: 0.7rem; }
+.track .box-row button { padding: 0.15rem 0.5rem; }
+
+.track-actions { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.track-actions button { padding: 0.25rem 0.6rem; }
+
+/* ═══════════════ NPC sheet ═══════════════ */
+
+.cantica-body.npc-body {
+  grid-template-areas: "traits" "notices" "notes";
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto 1fr;
+}
+
+.sheet.npc .cantica-header .portrait { height: 76px; width: 76px; }
+.sheet.npc .counter select { font-family: var(--font-mono); font-size: 0.75rem; max-width: 9rem; }
+
+/* ═══════════════ Scrutiny tracker ═══════════════ */
+
+.application.scrutiny .window-content { align-items: center; display: flex; justify-content: center; }
+.scrutiny-body { align-items: center; display: flex; flex-direction: column; gap: 0.5rem; padding: 0.6rem 0.8rem 0.8rem; width: 100%; }
+.scrutiny-value {
+  color: var(--warm-bright);
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  line-height: 1;
+  text-shadow: 0 0 14px var(--warm-glow);
+}
+.scrutiny-controls { display: flex; gap: 0.35rem; }
+.scrutiny-controls button { padding: 0.15rem 0.6rem; }
+
+/* ═══════════════ Chat card additions ═══════════════ */
+
+.cantica-card .margin .scrutiny { color: var(--warn); font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; }
+.cantica-card.notice-card blockquote { border-left: 2px solid var(--warm-deep); color: var(--ink-bright); font-size: 1.05rem; font-style: italic; margin: 0.2rem 0; padding-left: 0.7rem; }
+.cantica-card.notice-card.tier-denied blockquote { border-left-color: var(--warn); }

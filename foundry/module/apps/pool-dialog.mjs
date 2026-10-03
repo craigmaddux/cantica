@@ -59,12 +59,30 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
       encumbranceText: traits.encumbrance,
       touched,
       giftText: gift,
+      stamps: this.actor.system.stamps,
+      canExpedite: this.actor.system.stamps > 0,
+
+      // A targeted NPC's Rating is used directly as the Difficulty. Preselect the first target.
+      targets: this.#npcTargets().map(({ id, name, rating }, i) => ({
+        value: `target:${id}`,
+        name,
+        rating,
+        label: i18n.format("CANTICA.Pool.TargetOption", { name, rating, kind: i18n.localize(`CANTICA.Rating.${rating}`) }),
+        selected: i === 0
+      })),
       difficulties: Object.keys(DIFFICULTIES).map(level => ({
         value: level,
         label: `D${level} · ${i18n.localize(`CANTICA.Difficulty.${level}`)}`,
-        selected: Number(level) === 2
+        selected: Number(level) === 1 && !this.#npcTargets().length
       }))
     };
+  }
+
+  /** NPCs the user has targeted, with their Ratings. */
+  #npcTargets() {
+    return [...game.user.targets]
+      .filter(token => token.actor?.type === "npc")
+      .map(token => ({ id: token.id, name: token.actor.name, rating: token.actor.system.rating }));
   }
 
   _onRender(context, options) {
@@ -80,6 +98,7 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
   #readInput() {
     const form = this.element;
     const num = name => Math.max(0, Math.trunc(Number(form.elements[name]?.value) || 0));
+    const chosen = form.elements.difficulty.selectedOptions[0];
     return {
       skill: form.elements.skill.value,
       traitKeys: [...form.querySelectorAll('input[name="traits"]:checked')].map(el => el.value),
@@ -87,7 +106,9 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
       circumstances: num("circumstances"),
       obstacles: num("obstacles"),
       bound: num("bound"),
-      difficulty: Number(form.elements.difficulty.value),
+      difficulty: Number(chosen.dataset.difficulty),
+      targetName: chosen.dataset.name ?? "",
+      expedite: Boolean(form.elements.expedite?.checked),
       encumbrance: Boolean(form.elements.encumbrance?.checked),
       greaterBound: Boolean(form.elements.greaterBound?.checked)
     };
@@ -101,7 +122,8 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
       gift: input.gift,
       circumstances: input.circumstances,
       obstacles: input.obstacles,
-      bound: input.bound
+      bound: input.bound,
+      expedite: input.expedite
     });
     const i18n = game.i18n;
     const el = this.element.querySelector("[data-preview]");

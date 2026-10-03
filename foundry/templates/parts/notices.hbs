@@ -1,0 +1,22 @@
+<section class="panel notices">
+  <h2>{{localize "CANTICA.Track.Heading"}}</h2>
+  <div class="track">
+    {{#each track}}
+    <div class="box {{kind}} {{#if filled}}filled{{/if}}">
+      <div class="box-label">{{label}} <span class="box-status">{{status}}</span></div>
+      <input type="text" name="system.notices.{{slot}}.name" value="{{name}}" placeholder="—" {{#unless @root.editable}}disabled{{/unless}}>
+      <div class="box-row">
+        <select name="system.notices.{{slot}}.type" title="{{localize 'CANTICA.Track.NoticeType'}}" {{#unless @root.editable}}disabled{{/unless}}>
+          {{#each types}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+        </select>
+        <button type="button" data-action="clearNotice" data-slot="{{slot}}" title="{{localize 'CANTICA.Track.Clear'}}" {{#unless filled}}disabled{{else}}{{#unless @root.editable}}disabled{{/unless}}{{/unless}}><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+  <div class="track-actions">
+    <button type="button" data-action="takeNotice" data-kind="minor" {{#unless editable}}disabled{{/unless}}>{{localize "CANTICA.Track.TakeMinor"}}</button>
+    <button type="button" data-action="takeNotice" data-kind="major" {{#unless editable}}disabled{{/unless}}>{{localize "CANTICA.Track.TakeMajor"}}</button>
+    <button type="button" data-action="clearMinors" title="{{localize 'CANTICA.Track.ClearMinorsHint'}}" {{#unless editable}}disabled{{/unless}}>{{localize "CANTICA.Track.ClearMinors"}}</button>
+  </div>
+</section>

@@ -13,7 +13,14 @@
   <div class="field">
     <label for="pool-difficulty">{{localize "CANTICA.Pool.Difficulty"}}</label>
     <select id="pool-difficulty" name="difficulty">
-      {{#each difficulties}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+      {{#if targets.length}}
+      <optgroup label="{{localize 'CANTICA.Pool.Targets'}}">
+        {{#each targets}}<option value="{{value}}" data-difficulty="{{rating}}" data-name="{{name}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+      </optgroup>
+      {{/if}}
+      <optgroup label="{{localize 'CANTICA.Pool.Ladder'}}">
+        {{#each difficulties}}<option value="{{value}}" data-difficulty="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+      </optgroup>
     </select>
   </div>
 
@@ -44,6 +51,16 @@
       <label>{{localize "CANTICA.Pool.Bound"}}<input type="number" name="bound" value="0" min="0" max="6"></label>
     </div>
     <p class="hint">{{localize "CANTICA.Pool.EnvironmentHint"}}</p>
+  </fieldset>
+
+  <fieldset>
+    <legend>{{localize "CANTICA.Stamps.Label"}}</legend>
+    <label class="check {{#unless canExpedite}}off{{/unless}}">
+      <input type="checkbox" name="expedite" {{#unless canExpedite}}disabled{{/unless}}>
+      <span class="check-label">{{localize "CANTICA.Pool.Expedite"}}</span>
+      <span class="check-text">{{stamps}} {{localize "CANTICA.Stamps.Label"}}</span>
+      <span class="check-note">{{localize "CANTICA.Pool.ExpediteNote"}}</span>
+    </label>
   </fieldset>
 
   <fieldset>

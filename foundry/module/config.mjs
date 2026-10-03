@@ -28,7 +28,15 @@ export const TRAITS = ["station", "deck", "bond", "encumbrance"];
  */
 export const DICE_TRAITS = ["station", "deck", "bond"];
 
-/** Notice statuses, mildest to worst, then Closed (recovery formally closes a Notice). */
-export const NOTICE_STATUSES = ["pending", "observation", "escalated", "closed"];
+/** NPC tiers: how much of the Notice track they have. */
+export const NPC_TIERS = ["background", "minor", "major"];
+
+/** Display status of each Notice box (Minor = Pending Review, Major = Escalated, Final = Closed). */
+export const SLOT_INFO = {
+  minor1: { kind: "minor" },
+  minor2: { kind: "minor" },
+  major: { kind: "major" },
+  final: { kind: "final" }
+};
 
 export const TIERS = ["denied", "conditions", "approved", "commended"];

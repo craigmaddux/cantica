@@ -1,6 +1,7 @@
-import { SKILLS, SKILL_MAX, STARTING_SPREAD, NOTICE_STATUSES } from "../config.mjs";
+import { SKILLS, SKILL_MAX, STARTING_SPREAD } from "../config.mjs";
+import { noticeTrackField, migrateOldNotices } from "./track.mjs";
 
-const { SchemaField, NumberField, StringField, BooleanField, ArrayField } = foundry.data.fields;
+const { SchemaField, NumberField, StringField, BooleanField } = foundry.data.fields;
 
 export default class CharacterData extends foundry.abstract.TypeDataModel {
   static LOCALIZATION_PREFIXES = ["CANTICA.Character"];
@@ -30,14 +31,15 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
       stamps: new NumberField({ required: true, nullable: false, integer: true, min: 0, initial: 0 }),
       tenure: new NumberField({ required: true, nullable: false, integer: true, min: 0, initial: 0 }),
 
-      // Harm arrives as named Notices with a bureaucratic status.
-      notices: new ArrayField(new SchemaField({
-        name: new StringField({ required: true, blank: true, initial: "" }),
-        status: new StringField({ required: true, choices: NOTICE_STATUSES, initial: "pending" })
-      })),
+      // One shared track: 2 Minor boxes, 1 Major box, 1 Final box.
+      notices: noticeTrackField(),
 
       notes: new StringField({ required: true, blank: true, initial: "" })
     };
+  }
+
+  static migrateData(source) {
+    return super.migrateData(migrateOldNotices(source));
   }
 
   /**

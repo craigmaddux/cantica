@@ -72,24 +72,7 @@
       </div>
     </section>
 
-    <section class="panel notices">
-      <h2>
-        {{localize "CANTICA.Notice.Heading"}}
-        <button type="button" class="add" data-action="addNotice" {{#unless editable}}disabled{{/unless}}>{{localize "CANTICA.Notice.Add"}}</button>
-      </h2>
-      {{#each notices}}
-      <div class="notice {{#if closed}}closed{{/if}}">
-        <input type="text" name="system.notices.{{index}}.name" value="{{name}}" placeholder="{{localize 'CANTICA.Notice.NamePlaceholder'}}" {{#unless @root.editable}}disabled{{/unless}}>
-        <select name="system.notices.{{index}}.status" {{#unless @root.editable}}disabled{{/unless}}>
-          {{#each statuses}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
-        </select>
-        <button type="button" data-action="closeNotice" data-index="{{index}}" title="{{localize 'CANTICA.Notice.CloseHint'}}" {{#if closed}}disabled{{else}}{{#unless @root.editable}}disabled{{/unless}}{{/if}}>{{localize "CANTICA.Notice.Close"}}</button>
-        <button type="button" data-action="deleteNotice" data-index="{{index}}" title="{{localize 'CANTICA.Notice.Delete'}}" {{#unless @root.editable}}disabled{{/unless}}><i class="fa-solid fa-trash"></i></button>
-      </div>
-      {{else}}
-      <p class="empty">{{localize "CANTICA.Notice.None"}}</p>
-      {{/each}}
-    </section>
+    {{> "systems/cantica/templates/parts/notices.hbs"}}
 
     <section class="panel notes">
       <h2>{{localize "CANTICA.Sheet.Notes"}}</h2>
