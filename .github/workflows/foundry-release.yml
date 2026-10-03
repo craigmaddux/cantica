@@ -1,0 +1,48 @@
+name: Foundry system release
+
+# Push a tag like v0.1.0 to publish a release with system.json and system.zip.
+# The system lives in foundry/; the website at the repo root is unaffected.
+# Molten (or any Foundry) installs and updates from:
+#   https://github.com/craigmaddux/cantica/releases/latest/download/system.json
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: foundry
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run rules tests
+        run: node --test test/rules.test.mjs
+
+      - name: Stamp version and URLs into system.json
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          REPO="${GITHUB_REPOSITORY}"
+          jq --arg v "$VERSION" \
+             --arg url "https://github.com/${REPO}" \
+             --arg manifest "https://github.com/${REPO}/releases/latest/download/system.json" \
+             --arg download "https://github.com/${REPO}/releases/download/${GITHUB_REF_NAME}/system.zip" \
+             '.version = $v | .url = $url | .manifest = $manifest | .download = $download' \
+             system.json > system.tmp && mv system.tmp system.json
+
+      - name: Build system.zip
+        run: zip -r system.zip system.json cantica.mjs module templates styles lang assets samples
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            foundry/system.json
+            foundry/system.zip
+          generate_release_notes: true

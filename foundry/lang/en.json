@@ -1,0 +1,145 @@
+{
+  "TYPES": {
+    "Actor": {
+      "character": "Character"
+    }
+  },
+  "CANTICA": {
+    "SheetLabel": "Cantica Character",
+    "Sheet": {
+      "Eyebrow": "Personnel Record",
+      "NamePlaceholder": "Name",
+      "ChangePortrait": "Change portrait",
+      "Traits": "Traits",
+      "Skills": "Skills",
+      "Notes": "Notes",
+      "SpreadHint": "Skill spread. The starting spread is one 3, two 2s, three 1s and seven 0s; it drifts as Tenure raises skills."
+    },
+    "Character": {
+      "touched": {
+        "label": "Touched"
+      },
+      "gift": {
+        "hint": "A Gift is a Trait: it says how, and a skill still says what. It never rolls on its own."
+      }
+    },
+    "Group": {
+      "body": "Body",
+      "mind": "Mind",
+      "hands": "Hands",
+      "people": "People",
+      "worlds": "Worlds",
+      "divine": "Divine"
+    },
+    "Skill": {
+      "athletics": { "label": "Athletics", "hint": "Climbing, running, enduring. Also resisting pain." },
+      "scuffle": { "label": "Scuffle", "hint": "Fighting." },
+      "sneak": { "label": "Sneak", "hint": "Stealth and sleight of hand." },
+      "lore": { "label": "Lore", "hint": "History, theology, culture, the founders." },
+      "science": { "label": "Science", "hint": "Biology, chemistry, astronomy, the Greens, analysis." },
+      "notice": { "label": "Notice", "hint": "Perception and investigation." },
+      "hullcraft": { "label": "Hullcraft", "hint": "Repair, engineering, systems; also making things." },
+      "mend": { "label": "Mend", "hint": "Medicine and care." },
+      "pilot": { "label": "Pilot", "hint": "Shuttles, vehicles, navigation." },
+      "persuade": { "label": "Persuade", "hint": "Talking, haggling, reading people." },
+      "procedure": { "label": "Procedure", "hint": "Bureaucracy, law, forms, the Checklist. Also resisting bureaucratic pressure." },
+      "survival": { "label": "Survival", "hint": "Fieldcraft, foraging, shelter, hostile environments." },
+      "attune": { "label": "Attune", "hint": "Sensing, soothing and coaxing the Bound. Also resisting the Bound." }
+    },
+    "Trait": {
+      "station": "Station",
+      "stationHint": "Your work assignment.",
+      "deck": "Deck",
+      "deckHint": "Where you come from.",
+      "bond": "Bond",
+      "bondHint": "A person or faction tie.",
+      "encumbrance": "Encumbrance",
+      "encumbranceHint": "Your trouble. It tilts the Margin when in play and earns Stamps.",
+      "gift": "Gift"
+    },
+    "Stamps": {
+      "Label": "Stamps",
+      "Hint": "Earned when Encumbrance bites (a Margin of Error while it is in play), and sometimes from a Margin of Grace.",
+      "Cite": "Cite a Clause",
+      "CiteTitle": "Cite a Clause",
+      "CitePrompt": "Which rule do you declare exists and applies here?",
+      "Cites": "Cites a Clause",
+      "CiteNote": "Binding, and it helps. The GM adds one detail of how it actually reads.",
+      "None": "No Stamps to spend."
+    },
+    "Tenure": {
+      "Label": "Tenure",
+      "Hint": "Earned at Compline. Spent to raise skills and add Traits."
+    },
+    "Notice": {
+      "Heading": "Notices",
+      "Add": "Add",
+      "None": "No Notices on file.",
+      "NamePlaceholder": "Bruised Ribs",
+      "Close": "Close",
+      "CloseHint": "Recovery formally closes a Notice.",
+      "Delete": "Remove",
+      "pending": "Pending Review",
+      "observation": "Under Observation",
+      "escalated": "Escalated",
+      "closed": "Closed"
+    },
+    "Difficulty": {
+      "1": "Easy",
+      "2": "Standard",
+      "3": "Hard",
+      "4": "Heroic",
+      "5": "Story Event"
+    },
+    "Pool": {
+      "Title": "Build a Pool",
+      "Skill": "Skill",
+      "Difficulty": "Difficulty",
+      "Traits": "Traits in play",
+      "GiftNote": "Adds a die and turns up to two dice violet.",
+      "Environment": "Environmental factors",
+      "Circumstances": "Circumstances (+1 each)",
+      "Obstacles": "Obstacles (−1 each)",
+      "Bound": "Other Bound dice",
+      "EnvironmentHint": "Circumstances: gear, a scene feature, a PC assisting, a form filed in advance. Obstacles: wind, wet rock, darkness, hostile bureaucracy. Bound dice replace white dice; they never add to the pool.",
+      "Margin": "The Margin",
+      "Encumbrance": "Encumbrance in play",
+      "EncumbranceNote": "The Margin of Error widens to 1–2, and an Error earns a Stamp.",
+      "GreaterBound": "Greater Bound",
+      "GreaterBoundNote": "Resonance on 1–2.",
+      "Dice": "dice",
+      "Breakdown": "{amber} amber · {white} white · {violet} violet",
+      "Roll": "Roll"
+    },
+    "Roll": {
+      "Margin": "Margin",
+      "Gift": "Gift",
+      "Circumstances": "circumstance",
+      "Obstacles": "obstacle",
+      "BoundSource": "Bound",
+      "Capped": "Pool capped at 7.",
+      "Floored": "Pool reduced to the Margin alone.",
+      "SuccessesVs": "successes vs D",
+      "Grace": "Margin of Grace",
+      "GraceText": "Something goes unexpectedly right: a detail, a helping hand, or a Stamp.",
+      "ClaimStamp": "Take a Stamp",
+      "StampClaimed": "Stamp taken",
+      "Error": "Margin of Error",
+      "ErrorText": "A twist. The GM introduces a complication.",
+      "StampEarned": "Encumbrance bites: +1 Stamp.",
+      "ResonanceCount": "Resonance ×{n}",
+      "ResonanceText": "The Bound notice. Something sings back."
+    },
+    "Tier": {
+      "denied": "Denied",
+      "conditions": "Approved, With Conditions",
+      "approved": "Approved",
+      "commended": "Commended"
+    },
+    "Conditions": {
+      "1": "Short by one. Light conditions.",
+      "2": "Short by two. Heavy conditions.",
+      "3": "Far short. Severe conditions."
+    }
+  }
+}

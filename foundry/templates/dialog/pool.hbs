@@ -1,0 +1,73 @@
+<div class="pool-body">
+  <div class="field">
+    <label for="pool-skill">{{localize "CANTICA.Pool.Skill"}}</label>
+    <select id="pool-skill" name="skill">
+      {{#each skillGroups}}
+      <optgroup label="{{label}}">
+        {{#each skills}}<option value="{{key}}" {{#if selected}}selected{{/if}}>{{label}} ({{rating}})</option>{{/each}}
+      </optgroup>
+      {{/each}}
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="pool-difficulty">{{localize "CANTICA.Pool.Difficulty"}}</label>
+    <select id="pool-difficulty" name="difficulty">
+      {{#each difficulties}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+    </select>
+  </div>
+
+  <fieldset>
+    <legend>{{localize "CANTICA.Pool.Traits"}}</legend>
+    {{#each traits}}
+    <label class="check {{#if disabled}}off{{/if}}">
+      <input type="checkbox" name="traits" value="{{key}}" {{#if disabled}}disabled{{/if}}>
+      <span class="check-label">{{label}}</span>
+      <span class="check-text">{{#if text}}{{text}}{{else}}—{{/if}}</span>
+    </label>
+    {{/each}}
+    {{#if touched}}
+    <label class="check gift">
+      <input type="checkbox" name="gift">
+      <span class="check-label">{{localize "CANTICA.Trait.gift"}}</span>
+      <span class="check-text">{{#if giftText}}{{giftText}}{{else}}—{{/if}}</span>
+      <span class="check-note">{{localize "CANTICA.Pool.GiftNote"}}</span>
+    </label>
+    {{/if}}
+  </fieldset>
+
+  <fieldset>
+    <legend>{{localize "CANTICA.Pool.Environment"}}</legend>
+    <div class="steppers">
+      <label>{{localize "CANTICA.Pool.Circumstances"}}<input type="number" name="circumstances" value="0" min="0" max="6"></label>
+      <label>{{localize "CANTICA.Pool.Obstacles"}}<input type="number" name="obstacles" value="0" min="0" max="6"></label>
+      <label>{{localize "CANTICA.Pool.Bound"}}<input type="number" name="bound" value="0" min="0" max="6"></label>
+    </div>
+    <p class="hint">{{localize "CANTICA.Pool.EnvironmentHint"}}</p>
+  </fieldset>
+
+  <fieldset>
+    <legend>{{localize "CANTICA.Pool.Margin"}}</legend>
+    <label class="check">
+      <input type="checkbox" name="encumbrance">
+      <span class="check-label">{{localize "CANTICA.Pool.Encumbrance"}}</span>
+      <span class="check-text">{{#if encumbranceText}}{{encumbranceText}}{{else}}—{{/if}}</span>
+      <span class="check-note">{{localize "CANTICA.Pool.EncumbranceNote"}}</span>
+    </label>
+    <label class="check">
+      <input type="checkbox" name="greaterBound">
+      <span class="check-label">{{localize "CANTICA.Pool.GreaterBound"}}</span>
+      <span class="check-note">{{localize "CANTICA.Pool.GreaterBoundNote"}}</span>
+    </label>
+  </fieldset>
+
+  <div class="preview" data-preview>
+    <span class="preview-total"><span data-total>1</span> {{localize "CANTICA.Pool.Dice"}}</span>
+    <span class="preview-breakdown" data-breakdown></span>
+    <span class="preview-note" data-note></span>
+  </div>
+
+  <footer>
+    <button type="submit"><i class="fa-solid fa-dice-d10"></i> {{localize "CANTICA.Pool.Roll"}}</button>
+  </footer>
+</div>

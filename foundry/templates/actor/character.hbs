@@ -1,0 +1,99 @@
+<div class="cantica-sheet">
+  <header class="cantica-header">
+    <img class="portrait" src="{{actor.img}}" alt="{{actor.name}}" data-edit="img" data-action="editImage" title="{{localize 'CANTICA.Sheet.ChangePortrait'}}">
+    <div class="identity">
+      <div class="eyebrow">{{localize "CANTICA.Sheet.Eyebrow"}}</div>
+      <input class="name" type="text" name="name" value="{{actor.name}}" placeholder="{{localize 'CANTICA.Sheet.NamePlaceholder'}}" {{#unless editable}}disabled{{/unless}}>
+      <label class="touched">
+        <input type="checkbox" name="system.touched" {{checked system.touched}} {{#unless editable}}disabled{{/unless}}>
+        <span>{{localize "CANTICA.Character.touched.label"}}</span>
+      </label>
+    </div>
+    <div class="counters">
+      <div class="counter" title="{{localize 'CANTICA.Stamps.Hint'}}">
+        <span class="counter-label">{{localize "CANTICA.Stamps.Label"}}</span>
+        <div class="counter-controls">
+          <button type="button" data-action="adjustStamps" data-delta="-1" {{#unless editable}}disabled{{/unless}}>−</button>
+          <span class="counter-value">{{system.stamps}}</span>
+          <button type="button" data-action="adjustStamps" data-delta="1" {{#unless editable}}disabled{{/unless}}>+</button>
+        </div>
+        <button type="button" class="cite" data-action="citeClause" {{#unless editable}}disabled{{/unless}}>{{localize "CANTICA.Stamps.Cite"}}</button>
+      </div>
+      <div class="counter" title="{{localize 'CANTICA.Tenure.Hint'}}">
+        <span class="counter-label">{{localize "CANTICA.Tenure.Label"}}</span>
+        <div class="counter-controls">
+          <button type="button" data-action="adjustTenure" data-delta="-1" {{#unless editable}}disabled{{/unless}}>−</button>
+          <span class="counter-value">{{system.tenure}}</span>
+          <button type="button" data-action="adjustTenure" data-delta="1" {{#unless editable}}disabled{{/unless}}>+</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="cantica-body">
+    <section class="panel traits">
+      <h2>{{localize "CANTICA.Sheet.Traits"}}</h2>
+      {{#each traits}}
+      <div class="trait" title="{{hint}}">
+        <label for="trait-{{key}}">{{label}}</label>
+        <input id="trait-{{key}}" type="text" name="system.traits.{{key}}" value="{{value}}" {{#unless @root.editable}}disabled{{/unless}}>
+      </div>
+      {{/each}}
+      {{#if system.touched}}
+      <div class="trait gift" title="{{localize 'CANTICA.Character.gift.hint'}}">
+        <label for="trait-gift">{{localize "CANTICA.Trait.gift"}}</label>
+        <input id="trait-gift" type="text" name="system.gift" value="{{system.gift}}" {{#unless editable}}disabled{{/unless}}>
+      </div>
+      {{/if}}
+    </section>
+
+    <section class="panel skills">
+      <h2>
+        {{localize "CANTICA.Sheet.Skills"}}
+        <span class="spread {{#if spread.matchesStart}}ok{{/if}}" title="{{localize 'CANTICA.Sheet.SpreadHint'}}">{{spread.summary}}</span>
+      </h2>
+      <div class="skill-groups">
+        {{#each skillGroups}}
+        <div class="skill-group">
+          <h3>{{label}}</h3>
+          {{#each skills}}
+          <div class="skill" title="{{hint}}">
+            <button type="button" class="skill-roll" data-action="rollSkill" data-skill="{{key}}">{{label}}</button>
+            <span class="pips">
+              {{#each pips}}
+              <button type="button" class="pip {{#if filled}}filled{{/if}}" data-action="setSkill" data-skill="{{../key}}" data-value="{{n}}" {{#unless @root.editable}}disabled{{/unless}} aria-label="{{../label}} {{n}}"></button>
+              {{/each}}
+            </span>
+            <span class="rating">{{rating}}</span>
+          </div>
+          {{/each}}
+        </div>
+        {{/each}}
+      </div>
+    </section>
+
+    <section class="panel notices">
+      <h2>
+        {{localize "CANTICA.Notice.Heading"}}
+        <button type="button" class="add" data-action="addNotice" {{#unless editable}}disabled{{/unless}}>{{localize "CANTICA.Notice.Add"}}</button>
+      </h2>
+      {{#each notices}}
+      <div class="notice {{#if closed}}closed{{/if}}">
+        <input type="text" name="system.notices.{{index}}.name" value="{{name}}" placeholder="{{localize 'CANTICA.Notice.NamePlaceholder'}}" {{#unless @root.editable}}disabled{{/unless}}>
+        <select name="system.notices.{{index}}.status" {{#unless @root.editable}}disabled{{/unless}}>
+          {{#each statuses}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+        </select>
+        <button type="button" data-action="closeNotice" data-index="{{index}}" title="{{localize 'CANTICA.Notice.CloseHint'}}" {{#if closed}}disabled{{else}}{{#unless @root.editable}}disabled{{/unless}}{{/if}}>{{localize "CANTICA.Notice.Close"}}</button>
+        <button type="button" data-action="deleteNotice" data-index="{{index}}" title="{{localize 'CANTICA.Notice.Delete'}}" {{#unless @root.editable}}disabled{{/unless}}><i class="fa-solid fa-trash"></i></button>
+      </div>
+      {{else}}
+      <p class="empty">{{localize "CANTICA.Notice.None"}}</p>
+      {{/each}}
+    </section>
+
+    <section class="panel notes">
+      <h2>{{localize "CANTICA.Sheet.Notes"}}</h2>
+      <textarea name="system.notes" rows="6" {{#unless editable}}disabled{{/unless}}>{{system.notes}}</textarea>
+    </section>
+  </div>
+</div>

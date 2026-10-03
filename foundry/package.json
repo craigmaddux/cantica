@@ -1,0 +1,10 @@
+{
+  "name": "cantica-system",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Cantica game system for Foundry VTT. No build step; this file only runs the rules tests.",
+  "scripts": {
+    "test": "node --test test/rules.test.mjs"
+  }
+}

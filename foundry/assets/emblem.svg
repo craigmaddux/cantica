@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Cantica">
+  <defs>
+    <radialGradient id="core" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#e3b8ff"/>
+      <stop offset="0.45" stop-color="#b07ad4"/>
+      <stop offset="1" stop-color="#7a4ca0" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="void" cx="50%" cy="50%" r="70%">
+      <stop offset="0" stop-color="#0c1320"/>
+      <stop offset="1" stop-color="#02040a"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#void)"/>
+  <circle cx="256" cy="256" r="226" fill="none" stroke="#ffb340" stroke-width="3" opacity="0.8"/>
+  <circle cx="256" cy="256" r="210" fill="none" stroke="#c47820" stroke-width="1" opacity="0.5"/>
+  <!-- cruciform hull: long vertical Spine, shorter docking-bay crossbar -->
+  <rect x="236" y="62" width="40" height="388" fill="#1a2438" stroke="#2c3a55" stroke-width="2"/>
+  <rect x="136" y="214" width="240" height="46" fill="#131c2d" stroke="#2c3a55" stroke-width="2"/>
+  <!-- amber window rows -->
+  <g fill="#ffb340">
+    <rect x="244" y="96" width="6" height="6"/><rect x="262" y="96" width="6" height="6"/>
+    <rect x="244" y="124" width="6" height="6"/><rect x="262" y="124" width="6" height="6"/>
+    <rect x="244" y="152" width="6" height="6"/><rect x="262" y="152" width="6" height="6"/>
+    <rect x="244" y="180" width="6" height="6"/><rect x="262" y="180" width="6" height="6"/>
+    <rect x="244" y="296" width="6" height="6"/><rect x="262" y="296" width="6" height="6"/>
+    <rect x="244" y="324" width="6" height="6"/><rect x="262" y="324" width="6" height="6"/>
+    <rect x="244" y="352" width="6" height="6"/><rect x="262" y="352" width="6" height="6"/>
+    <rect x="244" y="380" width="6" height="6"/><rect x="262" y="380" width="6" height="6"/>
+    <rect x="152" y="232" width="6" height="6"/><rect x="176" y="232" width="6" height="6"/>
+    <rect x="200" y="232" width="6" height="6"/><rect x="306" y="232" width="6" height="6"/>
+    <rect x="330" y="232" width="6" height="6"/><rect x="354" y="232" width="6" height="6"/>
+  </g>
+  <!-- the Bound glow at the waist -->
+  <circle cx="256" cy="237" r="64" fill="url(#core)"/>
+  <circle cx="256" cy="237" r="12" fill="#e3b8ff"/>
+  <!-- distant cyan -->
+  <rect x="251" y="68" width="10" height="4" fill="#4dd4e8"/>
+</svg>

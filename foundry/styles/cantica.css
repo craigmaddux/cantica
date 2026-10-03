@@ -1,0 +1,403 @@
+/* Cantica system styles: the Gloss terminal, brought to the table.
+   Palette and type match the player guide (craigmaddux.github.io/cantica). */
+
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Michroma&family=Spectral:ital,wght@0,400;0,500;1,400&display=swap");
+
+.cantica {
+  --void: #050810;
+  --void-deep: #02040a;
+  --hull: #0c1320;
+  --hull-bright: #131c2d;
+  --hull-light: #1a2438;
+  --rule: #1f2a40;
+  --rule-bright: #2c3a55;
+
+  --ink: #c8d4e6;
+  --ink-bright: #e8eef8;
+  --ink-soft: #94a3bc;
+  --ink-dim: #5a6a86;
+  --ink-faint: #38445c;
+
+  --warm: #ffb340;
+  --warm-bright: #ffd07a;
+  --warm-deep: #c47820;
+  --warm-glow: rgba(255, 179, 64, 0.18);
+
+  --bound: #4dd4e8;
+  --bound-bright: #8aeaf5;
+  --bound-glow: rgba(77, 212, 232, 0.14);
+
+  --liturgy: #b07ad4;
+  --liturgy-deep: #7a4ca0;
+
+  --warn: #ff5a4a;
+  --warn-deep: #c43828;
+
+  --font-body: "Spectral", Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-display: "Michroma", sans-serif;
+}
+
+/* ═══════════════ Windows ═══════════════ */
+
+.application.cantica {
+  --color-text-primary: var(--ink);
+  background: var(--hull);
+  border: 1px solid var(--rule-bright);
+  border-radius: 0;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+}
+
+.application.cantica .window-header {
+  background: var(--void-deep);
+  border-bottom: 1px solid var(--rule-bright);
+  color: var(--ink-soft);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.application.cantica .window-content {
+  background:
+    repeating-linear-gradient(0deg, transparent 0 2px, rgba(255, 255, 255, 0.012) 2px 3px),
+    var(--hull);
+  padding: 0;
+}
+
+.cantica input[type="text"],
+.cantica input[type="number"],
+.cantica select,
+.cantica textarea {
+  background: var(--void-deep);
+  border: 1px solid var(--rule-bright);
+  border-radius: 0;
+  color: var(--ink-bright);
+  font-family: var(--font-body);
+}
+
+.cantica input:focus,
+.cantica select:focus,
+.cantica textarea:focus {
+  border-color: var(--warm);
+  box-shadow: 0 0 0 1px var(--warm-glow);
+  outline: none;
+}
+
+.cantica button {
+  background: var(--hull-bright);
+  border: 1px solid var(--rule-bright);
+  border-radius: 0;
+  color: var(--ink-soft);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.cantica button:hover:not(:disabled) {
+  border-color: var(--warm);
+  color: var(--warm-bright);
+  box-shadow: 0 0 8px var(--warm-glow);
+}
+
+.cantica button:disabled { opacity: 0.4; cursor: default; }
+
+/* Section heading: tracked mono caps, an amber diamond, and a fading rule. */
+.cantica h2,
+.cantica legend {
+  align-items: center;
+  border: 0;
+  color: var(--warm);
+  display: flex;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  gap: 0.5rem;
+  letter-spacing: 0.28em;
+  margin: 0;
+  padding: 0;
+  text-transform: uppercase;
+}
+
+.cantica h2::before,
+.cantica legend::before { content: "◆"; font-size: 0.55rem; }
+
+.cantica h2::after {
+  background: var(--warm-deep);
+  content: "";
+  flex: 1;
+  height: 1px;
+  opacity: 0.35;
+}
+
+.cantica h2 button.add { order: 3; padding: 0.15rem 0.6rem; }
+
+/* ═══════════════ Character sheet ═══════════════ */
+
+.cantica-sheet { display: flex; flex-direction: column; height: 100%; }
+
+.cantica-header {
+  align-items: center;
+  background: var(--hull-bright);
+  border-bottom: 1px solid var(--rule-bright);
+  display: flex;
+  gap: 1rem;
+  padding: 0.9rem 1.1rem;
+}
+
+.cantica-header .portrait {
+  border: 1px solid var(--rule-bright);
+  border-radius: 0;
+  box-shadow: 0 0 14px var(--warm-glow);
+  cursor: pointer;
+  flex: none;
+  height: 92px;
+  object-fit: cover;
+  width: 92px;
+}
+
+.cantica-header .identity { flex: 1; min-width: 0; }
+
+.cantica-header .eyebrow {
+  color: var(--ink-dim);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+}
+.cantica-header .eyebrow::before { content: "◆ "; color: var(--warm); }
+
+.cantica-header input.name {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--rule-bright);
+  font-size: 1.7rem;
+  height: auto;
+  padding: 0.1rem 0;
+  width: 100%;
+}
+
+.cantica-header .touched {
+  align-items: center;
+  color: var(--liturgy);
+  display: inline-flex;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  gap: 0.4rem;
+  letter-spacing: 0.22em;
+  margin-top: 0.35rem;
+  text-transform: uppercase;
+}
+
+.cantica-header .counters { display: flex; flex: none; gap: 0.6rem; }
+
+.counter {
+  align-items: center;
+  background: var(--void-deep);
+  border: 1px solid var(--rule-bright);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 96px;
+  padding: 0.45rem 0.6rem;
+}
+
+.counter-label {
+  color: var(--ink-dim);
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+}
+
+.counter-controls { align-items: center; display: flex; gap: 0.5rem; }
+.counter-controls button { height: 1.5rem; line-height: 1; padding: 0; width: 1.5rem; }
+.counter-value { color: var(--warm-bright); font-family: var(--font-display); font-size: 1.2rem; min-width: 1.4rem; text-align: center; }
+.counter .cite { padding: 0.15rem 0.5rem; }
+
+.cantica-body {
+  display: grid;
+  flex: 1;
+  gap: 0.9rem;
+  grid-template-areas: "traits skills" "notices skills" "notes skills";
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  grid-template-rows: auto auto 1fr;
+  overflow-y: auto;
+  padding: 0.9rem 1.1rem 1.1rem;
+}
+
+.cantica-body .traits { grid-area: traits; }
+.cantica-body .skills { grid-area: skills; }
+.cantica-body .notices { grid-area: notices; }
+.cantica-body .notes { grid-area: notes; }
+
+.panel { display: flex; flex-direction: column; gap: 0.5rem; }
+
+.trait { display: grid; gap: 0.1rem; }
+.trait label { color: var(--ink-dim); font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.24em; text-transform: uppercase; }
+.trait input { font-style: italic; }
+.trait.gift label { color: var(--liturgy); }
+.trait.gift input { border-color: var(--liturgy-deep); }
+
+.skills .spread {
+  color: var(--ink-faint);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  order: 3;
+}
+.skills .spread.ok { color: var(--bound); }
+
+.skill-groups { display: grid; gap: 0.7rem; }
+.skill-group h3 { color: var(--ink-dim); font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.3em; margin: 0 0 0.15rem; text-transform: uppercase; }
+
+.skill { align-items: center; border-bottom: 1px solid var(--rule); display: flex; gap: 0.5rem; padding: 0.15rem 0; }
+
+.skill .skill-roll {
+  background: transparent;
+  border: 0;
+  color: var(--ink);
+  flex: 1;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  letter-spacing: 0;
+  padding: 0.1rem 0;
+  text-align: left;
+  text-transform: none;
+}
+.skill .skill-roll:hover { color: var(--warm-bright); box-shadow: none; }
+
+.pips { display: flex; gap: 4px; }
+.pip { background: transparent; border: 1px solid var(--rule-bright); height: 12px; padding: 0; width: 12px; }
+.pip.filled { background: var(--warm); border-color: var(--warm-bright); box-shadow: 0 0 6px var(--warm-glow); }
+.rating { color: var(--ink-dim); font-family: var(--font-mono); font-size: 0.7rem; text-align: right; width: 1rem; }
+
+.notice { align-items: center; display: grid; gap: 0.3rem; grid-template-columns: minmax(0, 1fr) auto auto; }
+.notice input { grid-column: 1; grid-row: 1; }
+.notice > button { grid-row: 1; padding: 0.2rem 0.55rem; }
+.notice select { grid-column: 1 / -1; grid-row: 2; }
+.notice.closed input { color: var(--ink-dim); text-decoration: line-through; }
+.notice.closed select { color: var(--ink-dim); }
+.notices .empty { color: var(--ink-dim); font-size: 0.85rem; font-style: italic; margin: 0; }
+
+.notes textarea { flex: 1; min-height: 6rem; resize: vertical; }
+
+/* ═══════════════ Pool builder ═══════════════ */
+
+.pool-dialog .pool-body { display: flex; flex-direction: column; gap: 0.75rem; padding: 0.9rem 1.1rem 1.1rem; }
+
+.pool-dialog .field { display: grid; gap: 0.2rem; }
+.pool-dialog label { font-size: 0.85rem; }
+.pool-dialog .field > label {
+  color: var(--ink-dim);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.pool-dialog fieldset { border: 1px solid var(--rule); border-radius: 0; display: flex; flex-direction: column; gap: 0.35rem; margin: 0; padding: 0.55rem 0.7rem 0.7rem; }
+.pool-dialog legend { padding: 0 0.4rem; width: auto; }
+
+.check { align-items: baseline; column-gap: 0.5rem; display: grid; grid-template-columns: auto auto 1fr; }
+.check.off { opacity: 0.45; }
+.check .check-label { color: var(--ink-bright); font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; }
+.check .check-text { color: var(--ink-soft); font-style: italic; }
+.check .check-note { color: var(--ink-dim); font-size: 0.78rem; grid-column: 2 / -1; }
+.check.gift .check-label { color: var(--liturgy); }
+
+.steppers { align-items: end; display: grid; gap: 0.5rem; grid-template-columns: repeat(3, 1fr); }
+.steppers label { color: var(--ink-soft); display: grid; font-size: 0.78rem; gap: 0.2rem; }
+.pool-dialog .hint { color: var(--ink-dim); font-size: 0.78rem; margin: 0; }
+
+.preview {
+  align-items: baseline;
+  background: var(--void-deep);
+  border: 1px solid var(--warm-deep);
+  box-shadow: inset 0 0 18px var(--warm-glow);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.9rem;
+  padding: 0.6rem 0.8rem;
+}
+.preview-total { color: var(--warm-bright); font-family: var(--font-display); font-size: 1.05rem; }
+.preview-breakdown { color: var(--ink-soft); font-family: var(--font-mono); font-size: 0.7rem; }
+.preview-note { color: var(--warn); font-family: var(--font-mono); font-size: 0.65rem; }
+
+.pool-dialog footer { display: flex; justify-content: flex-end; }
+.pool-dialog footer button { background: var(--warm-deep); border-color: var(--warm); color: var(--void); font-weight: 700; padding: 0.45rem 1.4rem; }
+.pool-dialog footer button:hover:not(:disabled) { background: var(--warm); color: var(--void); }
+
+/* ═══════════════ Chat cards ═══════════════ */
+
+.cantica-card {
+  --tier: var(--ink-soft);
+  background: var(--hull);
+  border: 1px solid var(--rule-bright);
+  border-left: 3px solid var(--tier);
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-body);
+  gap: 0.45rem;
+  padding: 0.6rem 0.75rem 0.7rem;
+}
+
+.cantica-card.tier-denied { --tier: var(--warn); }
+.cantica-card.tier-conditions { --tier: var(--warm-deep); }
+.cantica-card.tier-approved { --tier: var(--bound); }
+.cantica-card.tier-commended { --tier: var(--warm-bright); box-shadow: 0 0 14px var(--warm-glow); }
+
+.cantica-card header { display: grid; gap: 0.05rem; }
+.cantica-card .who { color: var(--ink-dim); font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.28em; text-transform: uppercase; }
+.cantica-card .who::before { content: "◆ "; color: var(--warm); }
+.cantica-card .what { color: var(--ink-bright); font-size: 1.1rem; }
+.cantica-card .dc { color: var(--warm); font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.15em; margin-left: 0.4rem; text-transform: uppercase; }
+
+.cantica-card .factors { color: var(--ink-soft); display: flex; flex-wrap: wrap; font-size: 0.78rem; gap: 0.15rem 0.5rem; list-style: none; margin: 0; padding: 0; }
+.cantica-card .factors li:not(:last-child)::after { color: var(--ink-faint); content: " ·"; }
+.cantica-card .note { color: var(--ink-dim); font-size: 0.78rem; font-style: italic; margin: 0; }
+
+.cantica-card .dice { display: flex; flex-wrap: wrap; gap: 6px; padding: 0.15rem 0; }
+
+.cantica-card .die {
+  align-items: center;
+  border: 1px solid transparent;
+  display: inline-flex;
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 700;
+  height: 2rem;
+  justify-content: center;
+  opacity: 0.5;
+  position: relative;
+  width: 2rem;
+}
+.cantica-card .die.white { background: var(--ink-bright); border-color: var(--ink-soft); color: var(--hull); }
+.cantica-card .die.margin { background: var(--warm); border-color: var(--warm-bright); color: var(--void); }
+.cantica-card .die.violet { background: var(--liturgy-deep); border-color: var(--liturgy); color: var(--ink-bright); }
+.cantica-card .die.hit { box-shadow: 0 0 9px var(--tier); opacity: 1; }
+.cantica-card .die.grace { outline: 2px solid var(--bound); outline-offset: 2px; opacity: 1; }
+.cantica-card .die.error { outline: 2px solid var(--warn); outline-offset: 2px; opacity: 1; }
+.cantica-card .die.resonance { outline: 2px solid var(--bound); outline-offset: 2px; opacity: 1; }
+
+.cantica-card .tally { align-items: baseline; display: flex; gap: 0.5rem; }
+.cantica-card .successes { color: var(--ink-bright); font-family: var(--font-display); font-size: 1.5rem; }
+.cantica-card .vs { color: var(--ink-dim); font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; }
+
+.cantica-card .verdict { color: var(--tier); font-family: var(--font-display); font-size: 0.95rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.cantica-card .conditions { color: var(--ink-soft); font-size: 0.85rem; font-style: italic; }
+
+.cantica-card .margin { border-top: 1px solid var(--rule); display: grid; gap: 0.15rem; padding-top: 0.4rem; }
+.cantica-card .margin strong { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.22em; text-transform: uppercase; }
+.cantica-card .margin span { color: var(--ink-soft); font-size: 0.85rem; }
+.cantica-card .margin.grace strong { color: var(--bound); }
+.cantica-card .margin.error strong { color: var(--warn); }
+.cantica-card .margin.resonance strong { color: var(--liturgy); }
+.cantica-card .margin .stamp { color: var(--warm-bright); font-style: italic; }
+.cantica-card .margin button { justify-self: start; margin-top: 0.2rem; padding: 0.2rem 0.6rem; }
+
+.cantica-card.clause blockquote { border-left: 2px solid var(--warm-deep); color: var(--ink-bright); font-size: 1.05rem; font-style: italic; margin: 0.2rem 0; padding-left: 0.7rem; }
