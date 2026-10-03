@@ -119,7 +119,7 @@
     },
     "Tenure": {
       "Label": "Tenure",
-      "Hint": "Spent on skills and Traits. Grade follows Tenure earned, never what you've spent.",
+      "Hint": "Spent on skills and Traits. Grade follows Tenure earned, never what you've spent. Add Tenure on the History tab.",
       "Earned": "earned",
       "Unspent": "Unspent Tenure"
     },

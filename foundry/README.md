@@ -37,7 +37,7 @@ Four tabs:
 - **Record:** Grade, Stamps and Tenure up top; Station and open Traits; the two Encumbrances; Notices; Commendations; and skills. Click a skill's name to roll it; click its pips to set a rating. At first a character is in **creation**: a 12 Tenure budget, maximum rating 2. *Finish creation* when done; after that, skills are bought with Tenure.
 - **Gift:** Gift, Drawback and Registered. Only when the character is **Touched**.
 - **Notes:** free text.
-- **History:** the Tenure log. A GM can award Tenure, run **Compline** (three questions, 1 Tenure per yes) or award an **arc milestone** (+3). A Grade-up is highlighted in the log and announced in chat.
+- **History:** the Tenure log. Anyone who can edit the sheet can award Tenure, run **Compline** (three questions, 1 Tenure per yes) or award an **arc milestone** (+3). A Grade-up is highlighted in the log and announced in chat.
 
 ## Rolling
 

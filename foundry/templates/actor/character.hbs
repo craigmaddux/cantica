@@ -166,7 +166,7 @@
     <section class="tab-panel history-tab" data-tab="history" {{#unless tabHistory}}hidden{{/unless}}>
       <section class="panel history">
         <h2>{{localize "CANTICA.History.Heading"}}</h2>
-        {{#if isGM}}
+        {{#if canAward}}
         <div class="track-actions">
           <button type="button" data-action="compline">{{localize "CANTICA.History.Compline"}}</button>
           <button type="button" data-action="arcMilestone">{{localize "CANTICA.History.Arc"}}</button>

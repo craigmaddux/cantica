@@ -54,6 +54,8 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     context.system = system;
     context.editable = this.isEditable;
     context.isGM = isGM && this.isEditable;
+    // Everyone at the table may record Tenure on a sheet they can edit: Compline, arc milestones, awards.
+    context.canAward = this.isEditable;
 
     // Tabs: Record, Gift (only when Touched), Notes, History.
     const ids = ["record", ...(system.touched ? ["gift"] : []), "notes", "history"];
@@ -234,7 +236,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     await this.actor.update({ "system.commendations": list });
   }
 
-  /** GM: award Tenure for any reason. */
+  /** Award Tenure for any reason. */
   static async #onAwardTenure() {
     const i18n = game.i18n;
     const fields = await DialogV2.prompt({
@@ -258,7 +260,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     if (fields) await announceAward(this.actor, await this.actor.awardTenure(fields.amount, fields));
   }
 
-  /** GM: Compline. Three questions; each yes earns 1 Tenure. */
+  /** Compline. Three questions; each yes earns 1 Tenure. */
   static async #onCompline() {
     const i18n = game.i18n;
     const questions = [1, 2, 3].map(n => i18n.localize(`CANTICA.History.Q${n}`));
@@ -282,7 +284,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     await announceAward(this.actor, await this.actor.awardTenure(answers.yes.length, { kind: "compline", session: answers.session, reason }));
   }
 
-  /** GM: an arc concluded. +3 Tenure. */
+  /** An arc concluded. +3 Tenure. */
   static async #onArcMilestone() {
     const i18n = game.i18n;
     await announceAward(this.actor, await this.actor.awardTenure(3, { reason: i18n.localize("CANTICA.History.ArcMilestone") }));
