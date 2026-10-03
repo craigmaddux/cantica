@@ -209,6 +209,8 @@ body::after {
 
 .terminal-header .right { color: var(--ink-faint); }
 .terminal-header .accent { color: var(--warm); }
+.terminal-header .hdr-link { color: var(--warm); text-decoration: none; }
+.terminal-header .hdr-link:hover { color: var(--warm-bright); text-decoration: underline; }
 
 /* ═══════════════════════════ SPLASH / WELCOME ═══════════════════════════ */
 .splash {

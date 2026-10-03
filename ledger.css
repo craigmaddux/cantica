@@ -1,0 +1,319 @@
+/* The Ledger of Cantica. Loads after style.css and reuses its palette and terminal chrome. */
+
+/* style.css sets overflow-x: hidden on html and body, which turns body into a scroll container and
+   stops position: sticky from working. clip hides horizontal overflow without doing that. */
+html, body { overflow-x: clip; }
+
+.ledger-page { --hdr: 2.4rem; }
+
+.ledger-page .terminal-header .hdr-link {
+  color: var(--ink-soft);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.ledger-page .terminal-header .hdr-link:hover { color: var(--warm-bright); border-bottom-color: var(--warm-deep); }
+
+.sr-only {
+  border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden;
+  padding: 0; position: absolute; white-space: nowrap; width: 1px;
+}
+
+.ledger {
+  background: var(--hull);
+  background-image: linear-gradient(180deg, var(--hull) 0%, var(--void) 100%);
+  min-height: 100vh;
+  padding: 3.5rem 0 5rem;
+}
+
+.ledger-wrap {
+  margin: 0 auto;
+  max-width: 54rem;
+  padding: 0 1.25rem;
+}
+
+/* ═════════ Title ═════════ */
+
+.ledger-title { margin-bottom: 2rem; text-align: center; }
+
+.ledger-title h1 {
+  color: var(--ink-bright);
+  font-family: 'Spectral', serif;
+  font-size: 1.9rem;
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.25;
+  margin: 0.4rem 0 1rem;
+}
+
+.ledger-title .lede {
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  margin: 0 auto;
+  max-width: 38rem;
+}
+
+/* ═════════ Controls ═════════ */
+
+.ledger-controls {
+  background: var(--hull);
+  border-bottom: 1px solid var(--rule);
+  display: grid;
+  gap: 0.6rem;
+  margin: 0 -1.25rem;
+  padding: 0.7rem 1.25rem 0.6rem;
+  position: sticky;
+  top: var(--hdr);
+  z-index: 40;
+}
+
+.search { position: relative; }
+
+.search input {
+  appearance: none;
+  background: var(--void-deep);
+  border: 1px solid var(--rule-bright);
+  border-radius: 0;
+  color: var(--ink-bright);
+  font-family: 'Spectral', serif;
+  font-size: 1rem;
+  padding: 0.6rem 2.6rem 0.6rem 0.9rem;
+  width: 100%;
+}
+.search input::placeholder { color: var(--ink-dim); font-style: italic; }
+.search input:focus { border-color: var(--warm); box-shadow: 0 0 0 1px var(--warm-glow), 0 0 16px var(--warm-glow); outline: none; }
+.search input::-webkit-search-cancel-button { filter: invert(0.7); }
+
+.search kbd {
+  border: 1px solid var(--rule-bright);
+  color: var(--ink-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  padding: 0.05rem 0.4rem;
+  pointer-events: none;
+  position: absolute;
+  right: 0.7rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.search input:not(:placeholder-shown) ~ kbd { display: none; }
+
+.chips { display: flex; flex-wrap: nowrap; gap: 0.4rem; overflow-x: auto; padding-bottom: 0.15rem; scrollbar-width: none; }
+.chips::-webkit-scrollbar { display: none; }
+
+.chip {
+  background: transparent;
+  border: 1px solid var(--rule-bright);
+  color: var(--ink-soft);
+  cursor: pointer;
+  flex: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  padding: 0.3rem 0.65rem;
+  text-transform: uppercase;
+}
+.chip:hover { border-color: var(--warm-deep); color: var(--warm-bright); }
+.chip.on { background: var(--warm-glow); border-color: var(--warm); color: var(--warm-bright); }
+.chip .n { color: var(--ink-dim); margin-left: 0.25rem; }
+.chip.on .n { color: var(--warm); }
+
+.count {
+  color: var(--ink-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* ═════════ Entries ═════════ */
+
+#results { margin-top: 1.2rem; }
+
+.group { margin-bottom: 1.8rem; }
+
+.group h2 {
+  align-items: center;
+  color: var(--warm);
+  display: flex;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  font-weight: 500;
+  gap: 0.5rem;
+  letter-spacing: 0.3em;
+  margin: 0 0 0.3rem;
+  text-transform: uppercase;
+}
+.group h2::after { background: var(--warm-deep); content: ""; flex: 1; height: 1px; opacity: 0.3; order: 2; }
+.group h2 .n { color: var(--ink-faint); letter-spacing: 0.1em; order: 3; }
+
+.ledger ul { list-style: none; margin: 0; padding: 0; }
+
+.entry { border-bottom: 1px solid var(--rule); scroll-margin-top: calc(var(--hdr) + 8.5rem); }
+
+.entry-head {
+  align-items: baseline;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  display: grid;
+  font: inherit;
+  gap: 0 0.9rem;
+  grid-template-columns: 4.6rem minmax(0, 1fr) 1rem;
+  padding: 0.7rem 0.3rem;
+  text-align: left;
+  width: 100%;
+}
+.entry-head:hover { background: var(--hull-bright); }
+.entry-head:focus-visible { outline: 1px solid var(--warm); outline-offset: -1px; }
+
+.kind {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.kind-people { color: var(--warm); }
+.kind-places { color: var(--bound); }
+.kind-groups { color: var(--liturgy); }
+.kind-terms { color: var(--ink-soft); }
+.kind-rumors { color: var(--warn); }
+.kind-rules { color: var(--bound-bright); }
+
+.entry-main { display: grid; gap: 0.05rem; min-width: 0; }
+
+.entry-name { color: var(--ink-bright); font-family: 'Spectral', serif; font-size: 1.1rem; line-height: 1.25; }
+
+.entry-tag {
+  color: var(--ink-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.56rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.entry-summary { color: var(--ink-soft); font-size: 0.82rem; line-height: 1.4; }
+
+.chev { color: var(--ink-faint); font-size: 0.8rem; transition: transform 0.15s; }
+.entry.open .chev { color: var(--warm); transform: rotate(90deg); }
+.entry.open { background: var(--hull-bright); box-shadow: inset 2px 0 0 var(--warm); }
+.entry.open .entry-head:hover { background: transparent; }
+
+.entry-body {
+  color: var(--ink);
+  font-size: 0.88rem;
+  line-height: 1.6;
+  padding: 0.1rem 0.9rem 1rem calc(4.6rem + 0.9rem + 0.3rem);
+}
+.entry-body[hidden] { display: none; }
+
+.entry-img {
+  border: 1px solid var(--rule-bright);
+  display: block;
+  float: right;
+  margin: 0.2rem 0 0.6rem 1rem;
+  max-width: 11rem;
+  width: 38%;
+}
+
+.entry-text p { margin: 0 0 0.7rem; }
+.entry-text ul { list-style: none; margin: 0 0 0.7rem; padding: 0; }
+.entry-text li { margin-bottom: 0.35rem; padding-left: 1rem; position: relative; }
+.entry-text li::before { color: var(--warm-deep); content: "◆"; font-size: 0.5rem; left: 0; position: absolute; top: 0.45rem; }
+.entry-text strong { color: var(--ink-bright); font-weight: 500; }
+.entry-text em { color: var(--ink-bright); }
+
+a.xref {
+  border-bottom: 1px dotted var(--bound-deep);
+  color: var(--bound);
+  text-decoration: none;
+}
+a.xref:hover { border-bottom-style: solid; color: var(--bound-bright); }
+
+.entry-foot {
+  align-items: center;
+  clear: both;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.2rem;
+  padding-top: 0.2rem;
+}
+
+.entry-foot .full {
+  color: var(--warm);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.entry-foot .full:hover { color: var(--warm-bright); text-decoration: underline; }
+.entry-foot .permalink { color: var(--ink-faint); font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; margin-left: auto; text-decoration: none; }
+.entry-foot .permalink:hover { color: var(--warm); }
+
+/* ═════════ Rules tables ═════════ */
+
+.rules-table {
+  border-collapse: collapse;
+  clear: both;
+  font-size: 0.78rem;
+  margin: 0.2rem 0 0.9rem;
+  width: 100%;
+}
+.rules-table th, .rules-table td { border: 1px solid var(--rule); padding: 0.3rem 0.5rem; text-align: left; vertical-align: top; }
+.rules-table thead th { background: var(--void-deep); color: var(--warm); font-family: 'JetBrains Mono', monospace; font-size: 0.56rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; }
+.rules-table tbody th { color: var(--ink-bright); font-weight: 500; white-space: nowrap; }
+.rules-table.odds td { font-family: 'JetBrains Mono', monospace; font-size: 0.66rem; white-space: nowrap; }
+
+.track-demo { display: flex; gap: 0.35rem; margin: 0.3rem 0 0.8rem; }
+.track-demo span {
+  border: 1px solid var(--rule-bright);
+  color: var(--ink-soft);
+  flex: 1;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  padding: 0.45rem 0.3rem;
+  text-align: center;
+  text-transform: uppercase;
+}
+.track-demo span:nth-child(-n+2) { border-bottom: 2px solid var(--warm-deep); }
+.track-demo span:nth-child(3) { border-bottom: 2px solid var(--warm); }
+.track-demo span:nth-child(4) { border-bottom: 2px solid var(--warn); }
+
+/* ═════════ Empty state & notes ═════════ */
+
+.empty { color: var(--ink-soft); font-size: 0.95rem; padding: 2rem 0; text-align: center; }
+.empty a { color: var(--warm); }
+
+.rules-note {
+  border: 1px solid var(--rule-bright);
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+  margin: 1.2rem 0 0;
+  padding: 0.6rem 0.9rem;
+}
+.rules-note span { color: var(--bound-bright); font-family: 'JetBrains Mono', monospace; font-size: 0.56rem; letter-spacing: 0.2em; margin-right: 0.5rem; }
+
+/* ═════════ Small screens ═════════ */
+
+@media (max-width: 640px) {
+  .ledger-page .terminal-header { font-size: 0.5rem; letter-spacing: 0.1em; padding: 0.45rem 0.8rem; }
+  .hide-sm { display: none; }
+  .ledger-controls { gap: 0.4rem; padding-bottom: 0.4rem; padding-top: 0.5rem; }
+  .search input { font-size: 0.9rem; padding: 0.45rem 2.4rem 0.45rem 0.7rem; }
+  .ledger { padding-top: 2rem; }
+  .ledger-title h1 { font-size: 1.5rem; }
+  .entry-head { grid-template-columns: minmax(0, 1fr) 1rem; }
+  .entry-head .kind { grid-column: 1; }
+  .entry-head .entry-main { grid-column: 1; }
+  .entry-head .chev { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+  .entry-body { padding: 0.1rem 0.5rem 1rem 0.5rem; }
+  .entry-img { float: none; margin: 0 0 0.7rem; max-width: 100%; width: 100%; }
+  .rules-table { display: block; overflow-x: auto; }
+  .entry { scroll-margin-top: calc(var(--hdr) + 9.5rem); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chev { transition: none; }
+}
