@@ -10,7 +10,7 @@
       "lore": 0,
       "science": 0,
       "notice": 2,
-      "hullcraft": 3,
+      "hullcraft": 2,
       "mend": 0,
       "pilot": 0,
       "persuade": 1,
@@ -23,6 +23,12 @@
       "trait1": "Stem-Side Born, Stem-Side Stubborn",
       "trait2": "Owes Deya Marsh More Than Tallies",
       "trait3": "Reads Schematics Like Scripture"
+    },
+    "traitRanks": {
+      "station": 1,
+      "trait1": 1,
+      "trait2": 1,
+      "trait3": 2
     },
     "traitSlots": 3,
     "encumbrances": {
@@ -37,6 +43,6 @@
     "tenureEarned": 12,
     "tenureUnspent": 6,
     "creation": false,
-    "notes": "Sample character from the design doc, at Grade III. Repairing a failing recycler: Margin + Hullcraft 3 + Station + Gift = 6 dice, two of them violet. Her Drawback is in play (the recycler is hurting), so the Margin of Error widens to 1–2."
+    "notes": "Sample character from the design doc, at Grade III. Repairing a failing recycler: Margin + Hullcraft 2 + Reads Schematics Like Scripture (rank 2) = 5 dice, and her Gift turns one of them violet. Her Drawback is in play (the recycler is hurting), so the Margin of Error widens to 1–2."
   }
 }

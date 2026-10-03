@@ -14,12 +14,12 @@ export const SKILL_GROUPS = {
 
 export const SKILLS = Object.values(SKILL_GROUPS).flat();
 
-export const SKILL_MAX = 3;
+export const SKILL_MAX = 2;
 
-/** Standard starting spread: three skills at 2, three at 1, the other seven at 0 (12 Tenure). */
+/** Standard starting spread: three skills at 2, three at 1, the other seven at 0 (15 Tenure). */
 export const STARTING_SPREAD = { 2: 3, 1: 3, 0: 7 };
 
-/** Station is required; the open Traits are free text. A character starts with three and can buy up to six. */
+/** Station is required; the open Traits are free text. A character starts with three and can buy up to six. Station and every open Trait carry a rank (1-2). */
 export const OPEN_TRAITS = ["trait1", "trait2", "trait3", "trait4", "trait5", "trait6"];
 
 /** The two Encumbrances every character has. Neither ever adds a die. */

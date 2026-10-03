@@ -47,13 +47,17 @@
           <h2>{{localize "CANTICA.Sheet.Traits"}}
             {{#if canBuyTrait}}<button type="button" class="add" data-action="buyTraitSlot" title="{{localize 'CANTICA.Traits.BuyHint'}}" {{#unless editable}}disabled{{/unless}}>{{localize "CANTICA.Traits.Buy"}} ({{traitCost}})</button>{{/if}}
           </h2>
-          <div class="trait" title="{{localize 'CANTICA.Trait.stationHint'}}">
-            <label for="trait-station">{{localize "CANTICA.Trait.station"}}</label>
-            <input id="trait-station" type="text" name="system.traits.station" value="{{system.traits.station}}" placeholder="{{localize 'CANTICA.Trait.stationPrompt'}}" {{#unless editable}}disabled{{/unless}}>
-          </div>
-          {{#each openTraits}}
-          <div class="trait open">
-            <input type="text" name="system.traits.{{key}}" value="{{value}}" placeholder="{{prompt}}" aria-label="{{prompt}}" {{#unless @root.editable}}disabled{{/unless}}>
+          {{#each traitRows}}
+          <div class="trait {{#unless isStation}}open{{/unless}}" {{#if isStation}}title="{{localize 'CANTICA.Trait.stationHint'}}"{{/if}}>
+            {{#if isStation}}<label for="trait-station">{{localize "CANTICA.Trait.station"}}</label>{{/if}}
+            <div class="trait-line">
+              <input id="trait-{{key}}" type="text" name="system.traits.{{key}}" value="{{value}}" placeholder="{{prompt}}" aria-label="{{prompt}}" {{#unless @root.editable}}disabled{{/unless}}>
+              <span class="pips rank" title="{{@root.rankHint}}">
+                {{#each pips}}
+                <button type="button" class="pip {{#if filled}}filled{{/if}} {{#if locked}}locked{{/if}}" {{#if base}}tabindex="-1" aria-hidden="true"{{else}}data-action="setTraitRank" data-key="{{../key}}" data-value="{{n}}" aria-label="{{localize 'CANTICA.Traits.Rank.Aria'}} {{n}}"{{/if}} {{#if disabled}}disabled{{/if}}></button>
+                {{/each}}
+              </span>
+            </div>
           </div>
           {{/each}}
         </section>

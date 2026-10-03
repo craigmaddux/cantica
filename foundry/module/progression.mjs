@@ -1,5 +1,5 @@
 /**
- * Advancement (spec v0.5): Tenure, Grade, and what each Grade unlocks.
+ * Advancement (spec v0.7): Tenure, Grade, and what each Grade unlocks.
  * Pure functions with no Foundry dependency, unit-tested in Node.
  *
  * Grade is set by lifetime Tenure *earned* (never by what is spent): every 6 Tenure
@@ -26,14 +26,14 @@ export const stampsPerSession = grade => 2 + [3, 6, 9].filter(g => grade >= g).l
 /** Commendation slots: 1 at Grade II, 2 at Grade V, 3 at Grade VIII. */
 export const commendationSlots = grade => [2, 5, 8].filter(g => grade >= g).length;
 
-/* ── Skills ── */
+/* ── Skills (rated 0-2; there is no rating 3) ── */
 
-export const CREATION_BUDGET = 12;
-export const CREATION_MAX = 2;
-export const RATING_3_GRADE = 3;
+export const SKILL_CAP = 2;
+export const CREATION_BUDGET = 15;
+export const CREATION_MAX = SKILL_CAP;
 
-/** Total Tenure spent to reach a rating from 0: 0→1 costs 1, 1→2 costs 2, 2→3 costs 6. */
-export const skillCost = rating => (rating >= 1 ? 1 : 0) + (rating >= 2 ? 2 : 0) + (rating >= 3 ? 6 : 0);
+/** Total Tenure spent to reach a rating from 0: 0→1 costs 1, 1→2 costs 3. */
+export const skillCost = rating => (rating >= 1 ? 1 : 0) + (rating >= 2 ? 3 : 0);
 
 /** What a whole set of skill ratings cost: used for the creation budget. */
 export const skillsCost = ratings => Object.values(ratings).reduce((sum, rating) => sum + skillCost(rating), 0);
@@ -43,42 +43,56 @@ export const skillsCost = ratings => Object.values(ratings).reduce((sum, rating)
  * @param {object} o
  * @param {number} o.from
  * @param {number} o.to
- * @param {boolean} o.creation   Character creation: a 12 Tenure budget, maximum rating 2, free to rearrange.
- * @param {number} o.grade
+ * @param {boolean} o.creation   Character creation: a 15 Tenure budget, free to rearrange.
  * @param {number} o.unspent     Unspent Tenure (play).
  * @param {number} o.spent       Tenure already spent from the creation budget on all skills.
  * @param {boolean} [o.gm]       The GM may set anything, free.
  * @returns {{ok: boolean, cost: number, reason?: string}}
  */
-export function skillChange({ from, to, creation, grade, unspent = 0, spent = 0, gm = false }) {
-  if (!Number.isInteger(to) || to < 0 || to > 3) return { ok: false, cost: 0, reason: "range" };
+export function skillChange({ from, to, creation, unspent = 0, spent = 0, gm = false }) {
+  if (!Number.isInteger(to) || to < 0 || to > SKILL_CAP) return { ok: false, cost: 0, reason: "range" };
   if (to === from) return { ok: true, cost: 0 };
   const cost = skillCost(to) - skillCost(from);
   if (gm) return { ok: true, cost: 0 };
 
   if (creation) {
-    if (to > CREATION_MAX) return { ok: false, cost: 0, reason: "creationMax" };
     if (cost > 0 && spent + cost > CREATION_BUDGET) return { ok: false, cost, reason: "creationBudget" };
     return { ok: true, cost };
   }
 
   if (cost < 0) return { ok: false, cost, reason: "noRefund" };
-  if (to === 3 && grade < RATING_3_GRADE) return { ok: false, cost, reason: "needGrade" };
   if (cost > unspent) return { ok: false, cost, reason: "needTenure" };
   return { ok: true, cost };
 }
 
-/* ── Traits ── */
+/* ── Traits (ranked 1-2) ── */
 
 export const TRAIT_BASE = 3;
 export const TRAIT_MAX = 6;
 export const TRAIT_COST = 4;
+
+export const TRAIT_RANK_MAX = 2;
+export const TRAIT_RANK_COST = 6;
+export const TRAIT_RANK_GRADE = 3;
 
 /** Buying another open Trait slot: 4 Tenure, to a maximum of six. */
 export function traitSlotPurchase({ slots, unspent }) {
   if (slots >= TRAIT_MAX) return { ok: false, cost: TRAIT_COST, reason: "max" };
   if (unspent < TRAIT_COST) return { ok: false, cost: TRAIT_COST, reason: "needTenure" };
   return { ok: true, cost: TRAIT_COST };
+}
+
+/**
+ * Raising a Trait from rank 1 to rank 2: 6 Tenure, and it needs Grade III. A Trait has to be
+ * written before it can be ranked, and the GM may set a rank for free.
+ */
+export function traitRankUp({ rank, written, grade, unspent, gm = false }) {
+  if (!written) return { ok: false, cost: 0, reason: "empty" };
+  if (rank >= TRAIT_RANK_MAX) return { ok: false, cost: 0, reason: "max" };
+  if (gm) return { ok: true, cost: 0 };
+  if (grade < TRAIT_RANK_GRADE) return { ok: false, cost: TRAIT_RANK_COST, reason: "needGrade" };
+  if (unspent < TRAIT_RANK_COST) return { ok: false, cost: TRAIT_RANK_COST, reason: "needTenure" };
+  return { ok: true, cost: TRAIT_RANK_COST };
 }
 
 /* ── Tenure ── */

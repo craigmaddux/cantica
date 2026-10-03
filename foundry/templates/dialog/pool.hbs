@@ -26,15 +26,32 @@
 
   <fieldset>
     <legend>{{localize "CANTICA.Pool.Traits"}}</legend>
-    {{#each traits}}
-    <label class="check">
-      <input type="checkbox" name="traits" value="{{key}}">
-      <span class="check-label">{{label}}</span>
-      <span class="check-text">{{text}}</span>
-    </label>
+    {{#if hasTraits}}
+    {{#each traitSlots}}
+    <div class="trait-slot" data-slot="{{n}}" {{#if hidden}}hidden{{/if}}>
+      {{#if hidden}}<p class="hint">{{localize "CANTICA.Pool.SecondTrait"}}</p>{{/if}}
+      <label class="check">
+        <input type="radio" name="trait-{{n}}" value="" checked>
+        <span class="check-label sign">—</span>
+        <span class="check-text">{{localize "CANTICA.Pool.NoTrait"}}</span>
+      </label>
+      {{#each traits}}
+      <label class="check">
+        <input type="radio" name="trait-{{../n}}" value="{{key}}">
+        <span class="check-label sign">+{{rank}}</span>
+        <span class="check-text">{{label}}: {{text}}</span>
+      </label>
+      {{/each}}
+      <label class="check stretch" title="{{localize 'CANTICA.Pool.StretchNote'}}">
+        <input type="checkbox" name="stretch-{{n}}">
+        <span class="check-label">{{localize "CANTICA.Pool.Stretch"}}</span>
+        <span class="check-note">{{localize "CANTICA.Pool.StretchShort"}}</span>
+      </label>
+    </div>
+    {{/each}}
     {{else}}
     <p class="hint">{{localize "CANTICA.Pool.NoTraits"}}</p>
-    {{/each}}
+    {{/if}}
     {{#if touched}}
     <label class="check gift">
       <input type="checkbox" name="gift">

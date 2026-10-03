@@ -1,11 +1,14 @@
 import { SKILLS, SKILL_MAX, OPEN_TRAITS } from "../config.mjs";
 import { RULE_BREAKS } from "../rules.mjs";
 import {
-  gradeFor, ROMAN, marginTarget, stampsPerSession, commendationSlots, skillsCost, CREATION_BUDGET, TRAIT_BASE, TRAIT_MAX
+  gradeFor, ROMAN, marginTarget, stampsPerSession, commendationSlots, skillsCost, CREATION_BUDGET, TRAIT_BASE, TRAIT_MAX, TRAIT_RANK_MAX
 } from "../progression.mjs";
 import { noticeTrackField, migrateOldNotices } from "./track.mjs";
 
 const { SchemaField, NumberField, StringField, BooleanField, ArrayField } = foundry.data.fields;
+
+/** Station and the open Traits: the keys that carry a rank. */
+const RANKED_TRAITS = ["station", ...OPEN_TRAITS];
 
 export default class CharacterData extends foundry.abstract.TypeDataModel {
   static LOCALIZATION_PREFIXES = ["CANTICA.Character"];
@@ -27,12 +30,16 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
 
       // Station is required (your high concept). Three open Traits to start; more can be bought, up to six.
       traits: new SchemaField({ station: text(), ...openTraits }),
+      // Each Trait has a rank, 1 or 2: it adds that many dice. Rank 2 costs 6 Tenure and needs Grade III.
+      traitRanks: new SchemaField(Object.fromEntries(RANKED_TRAITS.map(key =>
+        [key, new NumberField({ required: true, nullable: false, integer: true, min: 1, max: TRAIT_RANK_MAX, initial: 1 })]))),
       traitSlots: new NumberField({ required: true, nullable: false, integer: true, min: TRAIT_BASE, max: TRAIT_MAX, initial: TRAIT_BASE }),
 
       // Two Encumbrances: they never add dice. If any is in play the Margin of Error widens to 1-2.
       encumbrances: new SchemaField({ personal: text(), circumstantial: text() }),
 
-      // Touched characters add a Gift (adds its die, turns up to two dice violet) and a Drawback
+      // Touched characters add a Gift (no die of its own: it turns a white die violet, or adds one violet die to a pool
+      // that is only the Margin) and a Drawback
       // (a third Encumbrance). Registered: Form TH-14(C).
       touched: new BooleanField({ initial: false }),
       gift: text(),
@@ -45,7 +52,7 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
       tenureEarned: count(),
       tenureUnspent: count(),
 
-      // Character creation: a 12 Tenure skill budget, maximum rating 2. Finished once, then Tenure is spent in play.
+      // Character creation: a 15 Tenure skill budget, maximum rating 2. Finished once, then Tenure is spent in play.
       // Off by default, so imported and older characters are never reopened; a brand-new character
       // is switched on in CanticaActor#_preCreate.
       creation: new BooleanField({ initial: false }),
@@ -54,7 +61,7 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
         id: new StringField({ required: true, blank: false }),
         name: text(),
         situation: text(),
-        ruleBreak: new StringField({ required: true, choices: RULE_BREAKS, initial: "dice2" })
+        ruleBreak: new StringField({ required: true, choices: RULE_BREAKS, initial: "trait2" })
       })),
 
       // The log: Tenure earned, purchases, Compline answers, a highlight when a Grade is reached.
@@ -96,6 +103,21 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
       delete source.tenure;
     }
 
+    // v0.7: there is no skill rating 3. Any skill at 3 drops to 2 and refunds the 6 Tenure it cost,
+    // to unspent only: Tenure earned, and so Grade, never changes.
+    if (source.skills && typeof source.skills === "object") {
+      let refund = 0;
+      for (const [key, rating] of Object.entries(source.skills)) {
+        if (rating > SKILL_MAX) { refund += 6 * (rating - SKILL_MAX); source.skills[key] = SKILL_MAX; }
+      }
+      if (refund) source.tenureUnspent = (Number(source.tenureUnspent) || 0) + refund;
+    }
+
+    // v0.7: the Commendation rule-break "add 2 dice" became "a second Trait also applies".
+    if (Array.isArray(source.commendations)) {
+      for (const entry of source.commendations) if (entry?.ruleBreak === "dice2") entry.ruleBreak = "trait2";
+    }
+
     return super.migrateData(migrateOldNotices(source));
   }
 
@@ -107,7 +129,7 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
     this.stampsPerSession = stampsPerSession(grade);
     this.commendationSlots = commendationSlots(grade);
 
-    // Creation: how much of the 12 Tenure budget the current skills use.
+    // Creation: how much of the 15 Tenure budget the current skills use.
     this.skillSpent = skillsCost(this.skills);
     this.creationRemaining = CREATION_BUDGET - this.skillSpent;
   }

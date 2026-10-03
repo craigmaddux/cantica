@@ -97,8 +97,8 @@ export const STEPS = [
     id: "skills",
     kind: "skills",
     title: "What you are good at",
-    gloss: "Now, what are you good at? You have twelve Tenure to spend on skills, and no skill may begin above two. Most residents choose three skills at two and three at one, but it is entirely up to you.",
-    explain: "Skills are the 'what' of a roll: they add dice equal to their rating. A skill at 1 costs 1 Tenure, and a skill at 2 costs 3 in all. Click a skill's dots to set it."
+    gloss: "Now, what are you good at? You have fifteen Tenure to spend on skills, and no skill goes above two. Most residents choose three skills at two and three at one, which uses all fifteen, but it is entirely up to you.",
+    explain: "Skills are the 'what' of a roll: they add dice equal to their rating. A skill at 1 costs 1 Tenure, and a skill at 2 costs 4 in all (1, then 3 more). Click a skill's dots to set it."
   },
   {
     id: "hindrance-personal",
@@ -139,7 +139,7 @@ export const STEPS = [
     kind: "touched",
     title: "A delicate question",
     gloss: "A small, delicate question, and you are quite free to decline: do you think you might be Touched?",
-    explain: "A Touched resident carries a fragment of divine power: a small, strange, quiet gift. It adds a die when it applies and can turn dice violet, but it comes with a Drawback that works as a third Hindrance.",
+    explain: "A Touched resident carries a fragment of divine power: a small, strange, quiet gift. It adds no die of its own: it turns one of your dice violet, which succeeds on a 6, but it comes with a Drawback that works as a third Hindrance.",
     gift: {
       gloss: "How does it show itself?",
       field: "system.gift",

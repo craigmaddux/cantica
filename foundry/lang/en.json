@@ -86,14 +86,12 @@
         "label": "Attune",
         "hint": "Sensing, soothing and coaxing the Bound. Also resisting the Bound."
       },
-      "Costs": "0→1: 1 · 1→2: 2 · 2→3: 6",
-      "CostHint": "Skills are bought with unspent Tenure. Rating 3 needs Grade III.",
+      "Costs": "0→1: 1 · 1→2: 3",
+      "CostHint": "Skills are bought with unspent Tenure. They stop at rating 2.",
       "Deny": {
-        "range": "That isn't a rating.",
-        "creationMax": "At creation, no skill goes above 2.",
-        "creationBudget": "That's more than the 12 Tenure creation budget.",
+        "range": "Skills run from 0 to 2.",
+        "creationBudget": "That's more than the 15 Tenure creation budget.",
         "noRefund": "Skills can't be lowered once creation is finished. Ask the GM.",
-        "needGrade": "Rating 3 unlocks at Grade III.",
         "needTenure": "Not enough unspent Tenure."
       }
     },
@@ -198,8 +196,8 @@
       "Ladder": "Difficulty ladder",
       "Targets": "Targeted NPC (Rating is the Difficulty)",
       "TargetOption": "{name} · Rating {rating} ({kind})",
-      "Traits": "Traits in play",
-      "GiftNote": "Adds a die and turns up to two dice violet.",
+      "Traits": "Trait (pick one)",
+      "GiftNote": "Adds no die. Turns one white die violet (or adds one violet die to a pool that is only the Margin).",
       "Environment": "Environmental factors",
       "Circumstances": "Circumstances (+1 each)",
       "Obstacles": "Obstacles (−1 each)",
@@ -226,7 +224,12 @@
       "CommendationHint": "Tick a Commendation when its situation applies.",
       "ErrorRange": "Margin of Error on {range}",
       "NoSceneTrait": "No scene Trait",
-      "SceneTraitHint": "You may pick one scene Trait for +1 die."
+      "SceneTraitHint": "You may pick one scene Trait for +1 die.",
+      "NoTrait": "No Trait",
+      "Stretch": "Stretch",
+      "StretchShort": "Counts as 1 die, whatever its rank (the GM's call).",
+      "StretchNote": "A stretch to fit the situation (the GM's call): the Trait counts as 1 die whatever its rank.",
+      "SecondTrait": "Your Commendation lets a second Trait also apply."
     },
     "Roll": {
       "Margin": "Margin",
@@ -253,7 +256,13 @@
       "InPlay": "In play: {text}",
       "MarginTarget": "The Margin succeeds on {n}+ at this Grade.",
       "UpgradeNote": "A Commendation turns With Conditions into Approved.",
-      "ImpossibleNote": "{name}: the GM allows the normally impossible."
+      "ImpossibleNote": "{name}: the GM allows the normally impossible.",
+      "Stretched": "stretched, +1",
+      "GiftEffect": {
+        "die": "The Gift adds one violet die.",
+        "convert": "The Gift turns one die violet.",
+        "none": "The Gift has no white die to turn violet."
+      }
     },
     "Tier": {
       "denied": "Denied",
@@ -314,12 +323,26 @@
       "Deny": {
         "max": "You already have six open Traits.",
         "needTenure": "A new open Trait costs 4 Tenure."
+      },
+      "Rank": {
+        "Hint": "Rank 1 adds 1 die; rank 2 adds 2. Raising a Trait to rank 2 costs {cost} Tenure and needs Grade {grade}.",
+        "Title": "Raise a Trait to rank 2",
+        "Body": "Raising this Trait to rank 2 costs {cost} Tenure. Raise it?",
+        "Bought": "{trait}: rank 2",
+        "Aria": "Trait rank",
+        "Deny": {
+          "empty": "Write the Trait first.",
+          "max": "That Trait is already rank 2.",
+          "needGrade": "Rank 2 unlocks at Grade III.",
+          "needTenure": "Raising a Trait to rank 2 costs 6 Tenure.",
+          "noLower": "Only the GM can lower a Trait's rank."
+        }
       }
     },
     "Grade": {
       "Label": "Grade",
       "Margin": "Margin",
-      "Hint": "Set by lifetime Tenure earned: every 6 Tenure earns the next Grade. Grade sets your Stamps per session, the Margin's success threshold, and your Commendation slots, and unlocks skill rating 3 at Grade III.",
+      "Hint": "Set by lifetime Tenure earned: every 6 Tenure earns the next Grade. Grade sets your Stamps per session, the Margin's success threshold, and your Commendation slots, and unlocks Trait rank 2 at Grade III.",
       "Reached": "Reaches a new Grade",
       "ReachedNote": "Seniority is the ship's real wealth."
     },
@@ -328,7 +351,7 @@
       "Tenure": "Tenure",
       "Max": "max rating",
       "Finish": "Finish creation",
-      "Hint": "12 Tenure to buy skills, maximum rating 2. The standard spread is three skills at 2 and three at 1.",
+      "Hint": "15 Tenure to buy skills, maximum rating 2. The standard spread is three skills at 2 and three at 1.",
       "FinishTitle": "Finish character creation?",
       "FinishBody": "After this, skills are bought with Tenure you earn, and can't be lowered. Station, Traits and Hindrances stay editable."
     },
@@ -344,7 +367,7 @@
     },
     "Gift": {
       "Heading": "Gift and Drawback",
-      "Hint": "Touched gifts are small, specific and quiet: useful, inconvenient, and occasionally both. A Gift adds its die and turns up to two dice violet. Its Drawback works as a third Hindrance.",
+      "Hint": "Touched gifts are small, specific and quiet: useful, inconvenient, and occasionally both. A Gift adds no die of its own: it turns one white die violet (or, if you would roll only the Margin, adds one violet die). Its Drawback works as a third Hindrance.",
       "GiftPrompt": "how (Machines Hum Her Name)",
       "Drawback": "Drawback",
       "DrawbackHint": "The inconvenient side of the same Gift.",
@@ -361,14 +384,14 @@
       "Hint": "Because I [short phrase], when [specific situation], I [one rule-break]. Slots come at Grades II, V and VIII.",
       "NamePlaceholder": "Never Misses a Rivet",
       "SituationPlaceholder": "when I Hullcraft against the clock",
-      "dice2": "Add 2 dice (instead of 1)",
+      "trait2": "A second Trait also applies",
       "difficulty": "Treat the Difficulty as one lower",
       "obstacle": "Ignore one obstacle",
       "conditions": "With Conditions becomes Approved",
       "impossible": "Do the normally impossible (narrative)",
       "resonance": "A violet 1 doesn't Resonate",
       "short": {
-        "dice2": "+2 dice",
+        "trait2": "a second Trait",
         "difficulty": "Difficulty −1",
         "obstacle": "ignore an obstacle",
         "conditions": "Conditions → Approved",

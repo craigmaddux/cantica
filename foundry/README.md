@@ -16,17 +16,17 @@ New releases appear as in-app updates. On Molten, the same URL works; no CloudCo
 
 ## The rules in short
 
-- **Pool** = the Margin (1 amber die, always) + Skill (0–3) + 1 per relevant Trait + 1 per Circumstance − 1 per Obstacle. **Cap 7.**
+- **Pool** = the Margin (1 amber die, always) + Skill (0–2) + one Trait (its rank) + 1 per Circumstance − 1 per Obstacle. **Cap 7.**
 - **White dice succeed on 7+.** **Violet (Bound) dice succeed on 6+.** Violet dice replace white dice; they never add to the count.
 - **The Margin** succeeds on 7+ at Grades I–III, 6+ at IV–VI, 5+ at VII–IX, 4+ at X. Its 1 is always an Error and its 10 always Grace.
 - **Difficulty = successes needed to succeed at all.** Below it is *Denied*; meeting it is *Approved, With Conditions*; one more is *Approved*; two or more is *Commended*. D0 Easy never Denies.
-- **Traits:** Station plus three open Traits (buy up to six, 4 Tenure each). Each relevant Trait adds a die.
+- **Traits:** Station plus three open Traits (buy up to six, 4 Tenure each). Every Trait has a **rank**, 1 or 2 (two pips on the sheet; rank 2 costs 6 Tenure and needs Grade III). On a roll you pick **one**, and it adds dice equal to its rank. **Stretch** (a checkbox beside it, anyone can tick it) makes it count as 1 die whatever its rank.
 - **Hindrances:** two (Personal, Circumstantial), plus a Touched character's Drawback. Any one in play widens the Margin of Error to 1–2 and an Error earns a Stamp. They never add dice.
-- **Gift** (Touched): adds its die and turns up to two dice violet.
+- **Gift** (Touched): adds no die. It turns one white die violet, or, if the pool is only the Margin, adds one violet die. If there is no white die to turn, it does nothing extra.
 - **Every Margin of Error** gives the GM **+1 Scrutiny**.
 - **Stamps:** Expedite (a checkbox in the roll dialog) spends one for +1 die; Cite a Clause has a button on the sheet. You start each session with 2, +1 at Grades III, VI and IX.
 - **Notices:** one track of two Minor boxes, two Major boxes and a Final box. Each Notice is named, typed **B** (Body) or **S** (Standing), and has a *clears by* line.
-- **Grade** follows lifetime Tenure earned (every 6). **Skills** cost 1, 2 and 6 Tenure; rating 3 needs Grade III. **Commendations** arrive at Grades II, V and VIII.
+- **Grade** follows lifetime Tenure earned (every 6). **Skills** run 0–2 and cost 1, then 3 more. **Commendations** arrive at Grades II, V and VIII; one of the rule-breaks is *a second Trait also applies*.
 
 Appeal and Precedent are deliberately not in the system.
 
@@ -34,14 +34,14 @@ Appeal and Precedent are deliberately not in the system.
 
 Four tabs:
 
-- **Record:** Grade, Stamps and Tenure up top; Station and open Traits; the two Hindrances; Notices; Commendations; and skills. Click a skill's name to roll it; click its pips to set a rating. At first a character is in **creation**: a 12 Tenure budget, maximum rating 2. *Finish creation* when done; after that, skills are bought with Tenure.
+- **Record:** Grade, Stamps and Tenure up top; Station and open Traits; the two Hindrances; Notices; Commendations; and skills. Click a skill's name to roll it; click its pips to set a rating. At first a character is in **creation**: a 15 Tenure budget, maximum rating 2. *Finish creation* when done; after that, skills are bought with Tenure.
 - **Gift:** Gift, Drawback and Registered. Only when the character is **Touched**.
 - **Notes:** free text.
 - **History:** the Tenure log. Anyone who can edit the sheet can award Tenure, run **Compline** (three questions, 1 Tenure per yes) or award an **arc milestone** (+3). A Grade-up is highlighted in the log and announced in chat.
 
 ## Rolling
 
-The pool builder offers your Station and Traits, the Gift, one checkbox per Hindrance (and the Drawback), your Commendations, the Scene you're in, extra Circumstances, Obstacles and Bound dice. Difficulty is D0–D3, or the Rating of an NPC you've targeted.
+The pool builder asks you to pick one Trait (Station or an open Trait, with a Stretch checkbox), and offers the Gift, one checkbox per Hindrance (and the Drawback), your Commendations, the Scene you're in, extra Circumstances, Obstacles and Bound dice. Difficulty is D0–D3, or the Rating of an NPC you've targeted.
 
 ## Register With Gloss
 

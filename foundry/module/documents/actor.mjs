@@ -1,5 +1,5 @@
 import { SKILLS, OPEN_TRAITS } from "../config.mjs";
-import { skillChange, traitSlotPurchase, awardTenure, stampsPerSession, TRAIT_COST } from "../progression.mjs";
+import { skillChange, traitSlotPurchase, traitRankUp, awardTenure, stampsPerSession, TRAIT_COST } from "../progression.mjs";
 
 export default class CanticaActor extends foundry.documents.Actor {
   /** Scene Cards are drawn onto the tabletop: a big, neutral, linked token that everyone can see. */
@@ -7,7 +7,7 @@ export default class CanticaActor extends foundry.documents.Actor {
     const allowed = await super._preCreate(data, options, user);
     if (allowed === false) return false;
 
-    // A brand-new character starts in creation: a 12 Tenure skill budget, maximum rating 2.
+    // A brand-new character starts in creation: a 15 Tenure skill budget, maximum rating 2.
     if (this.type === "character" && data.system?.skills === undefined && data.system?.creation === undefined) {
       this.updateSource({ "system.creation": true });
     }
@@ -42,11 +42,16 @@ export default class CanticaActor extends foundry.documents.Actor {
     return this.type === "character" && SKILLS.includes(skill) ? this.system.skills[skill] : 0;
   }
 
-  /** Station and the open Traits the character has room for and has filled in, for the roll dialog. */
+  /** @returns {number} Rank (1-2) of Station or an open Trait. */
+  traitRank(key) {
+    return this.type === "character" ? (this.system.traitRanks?.[key] ?? 1) : 1;
+  }
+
+  /** Station and the open Traits the character has room for and has filled in, with ranks, for the roll dialog. */
   get rollTraits() {
     const { traits, traitSlots } = this.system;
     const keys = ["station", ...OPEN_TRAITS.slice(0, traitSlots)];
-    return keys.filter(key => traits[key]).map(key => ({ key, text: traits[key] }));
+    return keys.filter(key => traits[key]).map(key => ({ key, text: traits[key], rank: this.traitRank(key) }));
   }
 
   /** Encumbrances that can be in play: the two, plus a Touched character's Drawback. */
@@ -112,8 +117,8 @@ export default class CanticaActor extends foundry.documents.Actor {
   /* -------------------------------------------- */
 
   /**
-   * Set a skill rating, paying for it. Creation draws on the 12 Tenure budget (maximum 2);
-   * play spends unspent Tenure (rating 3 needs Grade III). The GM may set anything, free.
+   * Set a skill rating (0-2), paying for it. Creation draws on the 15 Tenure budget;
+   * play spends unspent Tenure (1 for rating 1, 3 more for rating 2). The GM may set anything, free.
    * @returns {Promise<{ok: boolean, reason?: string}>}
    */
   async setSkill(skill, to) {
@@ -122,7 +127,6 @@ export default class CanticaActor extends foundry.documents.Actor {
     const result = skillChange({
       from, to,
       creation: this.system.creation,
-      grade: this.system.grade,
       unspent: this.system.tenureUnspent,
       spent: this.system.skillSpent,
       gm
@@ -156,6 +160,44 @@ export default class CanticaActor extends foundry.documents.Actor {
       [this.#entry({ kind: "spent", amount: TRAIT_COST, reason: game.i18n.localize("CANTICA.Traits.Bought") })],
       { "system.traitSlots": traitSlots + 1, "system.tenureUnspent": tenureUnspent - TRAIT_COST }
     );
+    return result;
+  }
+
+  /**
+   * Raise a Trait to rank 2 (6 Tenure, Grade III), or, for the GM, set any rank for free.
+   * @param {string} key  "station" or an open Trait key.
+   * @param {number} to   The new rank.
+   */
+  async setTraitRank(key, to) {
+    const rank = this.traitRank(key);
+    const gm = game.user.isGM;
+    if (to === rank) return { ok: true, cost: 0 };
+
+    // Lowering is the GM's call only; raising is paid for.
+    if (to < rank) {
+      if (!gm) return { ok: false, cost: 0, reason: "noLower" };
+      await this.update({ [`system.traitRanks.${key}`]: to });
+      return { ok: true, cost: 0 };
+    }
+
+    const result = traitRankUp({
+      rank, written: Boolean(this.system.traits[key]), grade: this.system.grade, unspent: this.system.tenureUnspent, gm
+    });
+    if (!result.ok) {
+      ui.notifications.warn(game.i18n.localize(`CANTICA.Traits.Rank.Deny.${result.reason}`));
+      return result;
+    }
+
+    const update = { [`system.traitRanks.${key}`]: to };
+    if (result.cost) {
+      update["system.tenureUnspent"] = this.system.tenureUnspent - result.cost;
+      await this.#log(
+        [this.#entry({ kind: "spent", amount: result.cost, reason: game.i18n.format("CANTICA.Traits.Rank.Bought", { trait: this.system.traits[key] }) })],
+        update
+      );
+    } else {
+      await this.update(update);
+    }
     return result;
   }
 

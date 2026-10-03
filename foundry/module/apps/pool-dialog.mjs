@@ -1,5 +1,5 @@
 import { SYSTEM_ID, SKILL_GROUPS } from "../config.mjs";
-import { buildPool, DIFFICULTIES, commendationEffects } from "../rules.mjs";
+import { buildPool, DIFFICULTIES, commendationEffects, traitDice } from "../rules.mjs";
 import { sceneTraitDice } from "../scene.mjs";
 import { sceneChoices } from "../cards.mjs";
 import { rollPool } from "../dice/roll.mjs";
@@ -57,12 +57,19 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
         }))
       })),
 
-      // Station and the open Traits that are filled in: +1 die each when relevant.
-      traits: this.actor.rollTraits.map(({ key, text }) => ({
-        key,
-        label: i18n.localize(key === "station" ? "CANTICA.Trait.station" : "CANTICA.Trait.open"),
-        text
+      // Pick one: Station or an open Trait that is filled in, worth its rank. A second pick appears when a
+      // "second Trait" Commendation is ticked. Each pick has its own Stretch.
+      traitSlots: [1, 2].map(n => ({
+        n,
+        hidden: n === 2,
+        traits: this.actor.rollTraits.map(({ key, text, rank }) => ({
+          key,
+          label: i18n.localize(key === "station" ? "CANTICA.Trait.station" : "CANTICA.Trait.open"),
+          text,
+          rank
+        }))
       })),
+      hasTraits: this.actor.rollTraits.length > 0,
       touched,
       giftText: gift,
 
@@ -142,6 +149,32 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
     this.element.querySelectorAll(".scene-traits").forEach(group => { group.hidden = group.dataset.card !== chosen; });
   }
 
+  /** Show the second Trait pick only when a "second Trait" Commendation is ticked. */
+  #syncTraitSlots() {
+    const form = this.element;
+    const second = [...form.querySelectorAll('input[name="commendation"]:checked')].some(el => el.dataset.break === "trait2");
+    const slot2 = form.querySelector('.trait-slot[data-slot="2"]');
+    if (slot2) slot2.hidden = !second;
+
+    // The same Trait can't be picked twice.
+    const first = form.querySelector('input[name="trait-1"]:checked')?.value ?? "";
+    const next = form.querySelector('input[name="trait-2"]:checked')?.value ?? "";
+    form.querySelectorAll('input[name="trait-2"]').forEach(el => { el.disabled = Boolean(el.value) && el.value === first; });
+    form.querySelectorAll('input[name="trait-1"]').forEach(el => { el.disabled = second && Boolean(el.value) && el.value === next; });
+  }
+
+  /** The chosen Traits with their Stretch toggles (the second only when its slot is showing). */
+  #pickedTraits() {
+    const form = this.element;
+    const picks = [];
+    for (const n of [1, 2]) {
+      if (n === 2 && form.querySelector('.trait-slot[data-slot="2"]')?.hidden) continue;
+      const key = form.querySelector(`input[name="trait-${n}"]:checked`)?.value;
+      if (key) picks.push({ key, stretch: Boolean(form.elements[`stretch-${n}`]?.checked) });
+    }
+    return picks;
+  }
+
   /** Read the current form state. Reads the DOM directly so the preview and the roll can't disagree. */
   #readInput() {
     const form = this.element;
@@ -158,7 +191,7 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
 
     return {
       skill: form.elements.skill.value,
-      traitKeys: checked("traits").map(el => el.value),
+      traits: this.#pickedTraits(),
       gift: Boolean(form.elements.gift?.checked),
       encumbranceKeys: checked("encumbrance").map(el => el.value),
       commendations: checked("commendation").map(el => ({ id: el.value, name: el.dataset.name, ruleBreak: el.dataset.break })),
@@ -177,17 +210,18 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
 
   #updatePreview() {
     this.#syncSceneGroups();
+    this.#syncTraitSlots();
     const input = this.#readInput();
     const fx = commendationEffects(input.commendations);
+    const traits = input.traits.slice(0, fx.secondTrait ? 2 : 1);
     const pool = buildPool({
       skill: this.actor.skillRating(input.skill),
-      traits: input.traitKeys.length,
+      traits: traits.reduce((sum, t) => sum + traitDice({ rank: this.actor.traitRank(t.key), stretch: t.stretch }), 0),
       gift: input.gift,
       circumstances: input.circumstances + sceneTraitDice(input.sceneTrait),
       obstacles: Math.max(0, input.obstacles - fx.obstaclesIgnored),
       bound: input.bound,
-      expedite: input.expedite,
-      bonus: fx.bonusDice
+      expedite: input.expedite
     });
     const i18n = game.i18n;
     const el = this.element.querySelector("[data-preview]");
@@ -197,7 +231,8 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
     });
     el.querySelector("[data-note]").textContent =
       pool.capped ? i18n.localize("CANTICA.Roll.Capped")
-        : pool.floored ? i18n.localize("CANTICA.Roll.Floored") : "";
+        : pool.floored ? i18n.localize("CANTICA.Roll.Floored")
+          : input.gift ? i18n.localize(`CANTICA.Roll.GiftEffect.${pool.giftEffect || "none"}`) : "";
 
     // The Margin of Error widens to 1-2 when any Encumbrance (or the Drawback) is in play.
     const widened = input.encumbranceKeys.length > 0;

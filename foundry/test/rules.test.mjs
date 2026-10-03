@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { buildPool, evaluateRoll, tierFor, commendationEffects, effectiveDifficulty } from "../module/rules.mjs";
+import { buildPool, evaluateRoll, tierFor, commendationEffects, effectiveDifficulty, traitDice } from "../module/rules.mjs";
 import { marginTarget } from "../module/progression.mjs";
 
 test("Margin alone: Skill 0 still rolls one die", () => {
@@ -15,23 +15,65 @@ test("pool is floored at the Margin when obstacles outweigh everything", () => {
 });
 
 test("pool is capped at 7", () => {
-  const p = buildPool({ skill: 3, traits: 3, circumstances: 4 });
+  const p = buildPool({ skill: 2, traits: 2, circumstances: 4 });
   assert.equal(p.total, 7);
   assert.equal(p.capped, true);
   assert.equal(p.white, 6);
 });
 
-test("Ilse Varro: Margin + Hullcraft 3 + Station + Gift = 6 dice, two violet", () => {
-  const p = buildPool({ skill: 3, traits: 1, gift: true });
-  assert.equal(p.total, 6);
-  assert.equal(p.violet, 2);
+test("Ilse Varro: Margin + Hullcraft 2 + a rank 2 Trait + Gift = 5 dice, the Gift turns one violet", () => {
+  const p = buildPool({ skill: 2, traits: traitDice({ rank: 2 }), gift: true });
+  assert.equal(p.total, 5);
+  assert.equal(p.violet, 1);
   assert.equal(p.white, 3);
   assert.equal(p.margin, 1);
+  assert.equal(p.giftEffect, "convert");
+});
+
+test("a Trait adds dice equal to its rank; Stretch makes it 1", () => {
+  assert.equal(traitDice({ rank: 1 }), 1);
+  assert.equal(traitDice({ rank: 2 }), 2);
+  assert.equal(traitDice({ rank: 2, stretch: true }), 1);
+  assert.equal(traitDice({}), 1);
+  assert.equal(traitDice({ rank: 9 }), 2);
+  assert.equal(buildPool({ skill: 1, traits: traitDice({ rank: 2 }) }).total, 4);
+  assert.equal(buildPool({ skill: 1, traits: traitDice({ rank: 2, stretch: true }) }).total, 3);
+});
+
+test("the Gift adds no die when the pool has other dice", () => {
+  const without = buildPool({ skill: 1, traits: 1 });
+  const withGift = buildPool({ skill: 1, traits: 1, gift: true });
+  assert.equal(withGift.total, without.total);
+  assert.equal(withGift.violet, 1);
+  assert.equal(withGift.white, without.white - 1);
+});
+
+test("the Gift adds one violet die to a pool that is only the Margin", () => {
+  const p = buildPool({ gift: true });
+  assert.deepEqual([p.total, p.margin, p.white, p.violet, p.giftEffect], [2, 1, 0, 1, "die"]);
+  // Obstacles can leave only the Margin too.
+  const squeezed = buildPool({ skill: 1, obstacles: 1, gift: true });
+  assert.deepEqual([squeezed.total, squeezed.violet, squeezed.giftEffect], [2, 1, "die"]);
+});
+
+test("the Gift does nothing extra when every other die is already violet", () => {
+  const p = buildPool({ skill: 2, bound: 2, gift: true });
+  assert.equal(p.total, 3);
+  assert.equal(p.violet, 2);
+  assert.equal(p.white, 0);
+  assert.equal(p.giftEffect, "");
+});
+
+test("the Gift is separate from other Bound dice", () => {
+  const p = buildPool({ skill: 3, bound: 1, gift: true });
+  assert.equal(p.total, 4);
+  assert.equal(p.violet, 2);
+  assert.equal(p.white, 1);
 });
 
 test("Expedite adds one die, still subject to the cap", () => {
   assert.equal(buildPool({ skill: 2, expedite: true }).total, 4);
-  assert.equal(buildPool({ skill: 3, traits: 3, circumstances: 2, expedite: true }).total, 7);
+  assert.equal(buildPool({ skill: 2, traits: 2, circumstances: 3, expedite: true }).total, 7);
 });
 
 test("violet replaces white; it never adds to the count", () => {
@@ -147,11 +189,6 @@ test("odds reference table (spec v0.2): Denied / With Conditions / Approved / Co
 
 // ---- v0.5: Grade and Commendations ----
 
-test("Commendation dice are extra dice, still subject to the cap", () => {
-  assert.equal(buildPool({ skill: 2, bonus: 2 }).total, 5);
-  assert.equal(buildPool({ skill: 3, traits: 2, bonus: 2 }).total, 7);
-});
-
 test("the Margin's success threshold follows Grade; 1 is always Error and 10 always Grace", () => {
   // Grade I-III: a 6 on the Margin is not a success. Grade IV: it is.
   assert.equal(evaluateRoll({ margin: 6 }, { marginTarget: marginTarget(3) }).marginSuccess, false);
@@ -190,16 +227,16 @@ test("Commendation: a violet 1 doesn't Resonate", () => {
 
 test("Commendation effects from the rule-break menu", () => {
   const fx = commendationEffects([
-    { ruleBreak: "dice2" }, { ruleBreak: "difficulty" }, { ruleBreak: "obstacle" },
+    { ruleBreak: "trait2" }, { ruleBreak: "difficulty" }, { ruleBreak: "obstacle" },
     { ruleBreak: "conditions" }, { ruleBreak: "resonance" }, { ruleBreak: "impossible", name: "Walked Out" }
   ]);
-  assert.equal(fx.bonusDice, 2);
+  assert.equal(fx.secondTrait, true);
   assert.equal(fx.difficultyShift, -1);
   assert.equal(fx.obstaclesIgnored, 1);
   assert.equal(fx.upgradeConditions, true);
   assert.equal(fx.suppressResonance, 1);
   assert.equal(fx.impossible.length, 1);
-  assert.deepEqual(commendationEffects([]).bonusDice, 0);
+  assert.equal(commendationEffects([]).secondTrait, false);
 });
 
 test("a Commendation never takes Difficulty below 0", () => {

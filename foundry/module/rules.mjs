@@ -1,17 +1,26 @@
 /**
- * Cantica dice rules (spec v0.5). Pure functions with no Foundry dependency, so
+ * Cantica dice rules (spec v0.7). Pure functions with no Foundry dependency, so
  * the same logic is unit-tested in Node (see test/rules.test.mjs).
  *
- * Pool = Margin (1 amber) + Skill + Traits + Circumstances - Obstacles, cap 7.
+ * Pool = Margin (1 amber) + Skill + one Trait (its rank, or 1 if stretched) + Circumstances - Obstacles, cap 7.
  * White dice succeed on 7+; violet (Bound) dice on 6+; the Margin on a threshold that
  * improves with Grade (7+ at Grades I-III, down to 4+ at Grade X).
  * Difficulty = successes needed to succeed at all.
  */
 
+import { TRAIT_RANK_MAX } from "./progression.mjs";
+
 export const POOL_CAP = 7;
 export const WHITE_TARGET = 7;
 export const VIOLET_TARGET = 6;
-export const GIFT_VIOLET_DICE = 2;
+/**
+ * Dice a chosen Trait adds: its rank (1-2), or 1 whatever its rank when stretched to fit the situation.
+ * @param {{rank?: number, stretch?: boolean}} trait
+ */
+export function traitDice({ rank = 1, stretch = false } = {}) {
+  if (stretch) return 1;
+  return Math.min(TRAIT_RANK_MAX, Math.max(1, Math.trunc(Number(rank) || 1)));
+}
 
 /** Difficulty ladder offered in the roll dialog. D4 is a story event and is never rolled as a ladder step. */
 export const DIFFICULTIES = {
@@ -32,26 +41,38 @@ export const RATINGS = {
 /**
  * Work out how many dice of each color to roll.
  * @param {object} input
- * @param {number} [input.skill=0]         Skill rating, 0-3.
- * @param {number} [input.traits=0]        Ticked Traits (Station and the open Traits), each +1.
- * @param {boolean} [input.gift=false]     The Gift is in play: +1 die and up to two dice turn violet.
- * @param {number} [input.circumstances=0] Environmental advantages, +1 each.
+ * @param {number} [input.skill=0]         Skill rating, 0-2.
+ * @param {number} [input.traits=0]        Dice from the chosen character Trait(s): see {@link traitDice}.
+ * @param {boolean} [input.gift=false]     The Gift is in play. It adds no die, except one violet die to a pool
+ *                                         that is only the Margin; otherwise it turns one white die violet.
+ * @param {number} [input.circumstances=0] Environmental advantages, +1 each (a scene Trait counts here).
  * @param {number} [input.obstacles=0]     Environmental penalties, -1 each.
  * @param {number} [input.bound=0]         Extra violet dice from other sources (Bound gear, a plea).
  * @param {boolean} [input.expedite=false] A Stamp spent for +1 die (one per roll).
- * @param {number} [input.bonus=0]         Extra dice from Commendations.
  */
-export function buildPool({ skill = 0, traits = 0, gift = false, circumstances = 0, obstacles = 0, bound = 0, expedite = false, bonus = 0 } = {}) {
+export function buildPool({ skill = 0, traits = 0, gift = false, circumstances = 0, obstacles = 0, bound = 0, expedite = false } = {}) {
   const clean = n => Math.max(0, Math.trunc(Number(n) || 0));
-  const raw = 1 + clean(skill) + clean(traits) + (gift ? 1 : 0) + clean(circumstances) - clean(obstacles) + (expedite ? 1 : 0) + clean(bonus);
-  const total = Math.min(POOL_CAP, Math.max(1, raw));
+  const raw = 1 + clean(skill) + clean(traits) + clean(circumstances) - clean(obstacles) + (expedite ? 1 : 0);
+  let total = Math.min(POOL_CAP, Math.max(1, raw));
 
   // The Margin is always amber; colored dice replace white dice, never add to the count.
-  const colorable = total - 1;
-  const violet = Math.min(colorable, clean(bound) + (gift ? GIFT_VIOLET_DICE : 0));
+  let colorable = total - 1;
+  let violet = Math.min(colorable, clean(bound));
+
+  // The Gift: nothing extra, unless the pool is only the Margin (one violet die), or there is a white die to turn violet.
+  let giftEffect = "";
+  if (gift) {
+    if (colorable === 0) {
+      giftEffect = "die";
+      total += 1; colorable += 1; violet += 1;
+    } else if (colorable - violet > 0) {
+      giftEffect = "convert";
+      violet += 1;
+    }
+  }
   const white = colorable - violet;
 
-  return { raw, total, margin: 1, white, violet, capped: raw > POOL_CAP, floored: raw < 1 };
+  return { raw, total, margin: 1, white, violet, giftEffect, capped: raw > POOL_CAP, floored: raw < 1 };
 }
 
 /**
@@ -111,7 +132,7 @@ export function evaluateRoll({ margin, white = [], violet = [] }, {
 /* ── Commendations ── */
 
 /** The six rule-breaks a Commendation can use. */
-export const RULE_BREAKS = ["dice2", "difficulty", "obstacle", "conditions", "impossible", "resonance"];
+export const RULE_BREAKS = ["trait2", "difficulty", "obstacle", "conditions", "impossible", "resonance"];
 
 /**
  * What the ticked Commendations do to a roll.
@@ -120,7 +141,7 @@ export const RULE_BREAKS = ["dice2", "difficulty", "obstacle", "conditions", "im
 export function commendationEffects(selected) {
   const count = kind => selected.filter(c => c.ruleBreak === kind).length;
   return {
-    bonusDice: 2 * count("dice2"),               // +2 dice instead of +1 (Trait-style)
+    secondTrait: count("trait2") > 0,             // a second character Trait also applies
     difficultyShift: -count("difficulty"),        // treat the Difficulty as one lower
     obstaclesIgnored: count("obstacle"),          // ignore one obstacle
     upgradeConditions: count("conditions") > 0,   // With Conditions becomes Approved

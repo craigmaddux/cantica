@@ -548,9 +548,9 @@ window.LEDGER = [
 { id: "rules-pool", kind: "rules", name: "Building the pool", tag: "Rules", aka: ["pool", "dice pool", "cap", "how many dice"],
   summary: "Margin + Skill + Traits + Circumstances − Obstacles. Cap 7.",
   body: [
-    "<strong>Pool = the Margin + Skill (0–3) + 1 per relevant Trait + 1 per Circumstance − 1 per Obstacle. Cap: 7.</strong>",
-    "<ul><li><strong>The Margin:</strong> one amber die, always rolled. See [[rules-margin|the Margin]].</li><li><strong>Skill:</strong> 0–3 dice.</li><li><strong>Traits:</strong> +1 die each when relevant (Station and your open Traits); each counts once per roll. See [[rules-traits|Traits]].</li><li><strong>Commendations:</strong> +2 dice instead of +1 when one of that kind applies. See [[rules-commendations|Commendations]].</li><li><strong>Circumstances:</strong> +1 each: gear, another PC assisting, a form filed in advance.</li><li><strong>A scene Trait:</strong> you may pick <strong>one</strong> Trait of the scene you're in for +1 die. See [[rules-scene-cards|Scene cards]].</li><li><strong>Obstacles:</strong> −1 each: wind, wet rock, darkness, a relevant NPC Tag, a relevant Notice on you.</li><li><strong>Expedite:</strong> spend a Stamp for +1 die, once per roll. See [[rules-stamps|Stamps]].</li></ul>",
-    "Typical pools are 3–5 dice. A full 7 takes everything at once, for example Margin + Skill 3 + Trait + an assist + the environment. [[rules-hindrances|Hindrances]] never add dice."
+    "<strong>Pool = the Margin + Skill (0–2) + one Trait (its rank) + 1 per Circumstance − 1 per Obstacle. Cap: 7.</strong>",
+    "<ul><li><strong>The Margin:</strong> one amber die, always rolled. See [[rules-margin|the Margin]].</li><li><strong>Skill:</strong> 0–2 dice.</li><li><strong>One Trait:</strong> pick <strong>one</strong> of your Traits (Station or an open Trait) and it adds dice equal to its <strong>rank</strong>, 1 or 2. If it's a stretch, the table can call it a <strong>Stretch</strong>, and then it counts as 1 die whatever its rank. See [[rules-traits|Traits]].</li><li><strong>Commendations:</strong> one that says <em>a second Trait also applies</em> lets you pick a second Trait when its situation applies. See [[rules-commendations|Commendations]].</li><li><strong>The Gift:</strong> adds no die. It turns one white die violet, or, if you would roll only the Margin, adds one violet die. See [[rules-gift|Gift]].</li><li><strong>Circumstances:</strong> +1 each: gear, another PC assisting, a form filed in advance.</li><li><strong>A scene Trait:</strong> you may pick <strong>one</strong> Trait of the scene you're in for +1 die. See [[rules-scene-cards|Scene cards]].</li><li><strong>Obstacles:</strong> −1 each: wind, wet rock, darkness, a relevant NPC Tag, a relevant Notice on you.</li><li><strong>Expedite:</strong> spend a Stamp for +1 die, once per roll. See [[rules-stamps|Stamps]].</li></ul>",
+    "Typical pools are 3–5 dice. A full 7 takes everything at once, for example Margin + Skill 2 + a rank 2 Trait + an assist + the environment. [[rules-hindrances|Hindrances]] never add dice."
   ] },
 
 { id: "rules-difficulty", kind: "rules", name: "Difficulty and results", tag: "Rules",
@@ -582,11 +582,11 @@ window.LEDGER = [
 
 { id: "rules-traits", kind: "rules", name: "Traits", tag: "Rules",
   aka: ["station", "open traits", "high concept", "aspects", "trait"],
-  summary: "Station plus three open Traits: freeform phrases. Each relevant one adds a die.",
+  summary: "Station plus three open Traits: freeform phrases, ranked 1–2. You pick one per roll, worth its rank.",
   body: [
-    "Freeform phrases, Fate-style. Each relevant Trait adds +1 die, and each counts once per roll.",
+    "Freeform phrases, Fate-style. Every Trait has a <strong>rank</strong>, 1 or 2 (two pips on the sheet). On a roll you pick <strong>one</strong> relevant Trait, and it adds dice equal to its rank. A <strong>Stretch</strong> (a Trait that only just fits, the GM's call, anyone can raise it) counts as 1 die whatever its rank.",
     "<ul><li><strong>Station</strong> (required): what you do, your high concept. It ties to your [[work-assignment|work assignment]] and the economy (<em>Third-Shift Recycler Technician</em>).</li><li><strong>Three open Traits:</strong> anything. Suggested prompts, not required labels: <em>a hobby or interest · how the people around you would describe your best quality · a knack or a reputation.</em> (<em>Reads Schematics Like Scripture</em> · <em>Stubborn in the Kindest Way</em> · <em>Can Find Anything in the Sump</em>)</li></ul>",
-    "You can buy up to three more open Traits, for 4 Tenure each (six in all). The GM may also award one after a major story moment (<em>Walked Out of the Quiet Dock</em>). Your troubles are not Traits: see [[rules-hindrances|Hindrances]]. Touched characters also have a [[rules-gift|Gift]]."
+    "<strong>Rank:</strong> a Trait starts at rank 1. Raising it to rank 2 costs <strong>6 Tenure</strong> and needs <strong>Grade III</strong>. You can buy up to three more open Traits, for 4 Tenure each (six in all). The GM may also award one after a major story moment (<em>Walked Out of the Quiet Dock</em>). Your troubles are not Traits: see [[rules-hindrances|Hindrances]]. Touched characters also have a [[rules-gift|Gift]]."
   ] },
 
 { id: "rules-hindrances", kind: "rules", name: "Hindrances", tag: "Rules",
@@ -601,10 +601,10 @@ window.LEDGER = [
 
 { id: "rules-gift", kind: "rules", name: "Gift and Drawback (Touched)", tag: "Rules",
   aka: ["gift", "drawback", "registered", "touched", "form th-14"],
-  summary: "A Touched character's Gift adds a die and turns dice violet. Its Drawback is a third Hindrance.",
+  summary: "A Touched character's Gift adds no die: it turns a white die violet. Its Drawback is a third Hindrance.",
   body: [
     "[[the-touched|Touched]] gifts are small, specific and quiet: useful, inconvenient, and occasionally both at once. Touched characters aren't shunned; people just aren't sure what to make of them.",
-    "<ul><li><strong>Gift:</strong> a Trait that says <em>how</em>; a skill still says <em>what</em>. In play it adds its die and turns <strong>up to two dice violet</strong>. It never rolls on its own.</li><li><strong>Drawback:</strong> the inconvenient side of the same Gift. <strong>It works as a third Hindrance:</strong> it widens the Margin of Error and earns Stamps.</li><li><strong>Registered:</strong> yes or no ([[the-registry|Form TH-14(C)]]). Being unregistered makes a good circumstantial Hindrance.</li></ul>",
+    "<ul><li><strong>Gift:</strong> a Trait that says <em>how</em>; a skill still says <em>what</em>. In play it adds <strong>no die</strong>: it turns <strong>one white die violet</strong>. If your pool would be <em>only the Margin</em> (skill 0, no Trait, no scene Trait, no Circumstances), it adds <strong>one violet die</strong> instead. If every other die is already violet, it does nothing extra. Other Bound dice (Bound gear, a plea) work as before. It never rolls on its own.</li><li><strong>Drawback:</strong> the inconvenient side of the same Gift. <strong>It works as a third Hindrance:</strong> it widens the Margin of Error and earns Stamps.</li><li><strong>Registered:</strong> yes or no ([[the-registry|Form TH-14(C)]]). Being unregistered makes a good circumstantial Hindrance.</li></ul>",
     "<table class=\"rules-table\"><thead><tr><th>Gift</th><th>Drawback</th></tr></thead><tbody><tr><td><em>Machines Hum Her Name</em></td><td><em>Hears Them When They're Hurting</em></td></tr><tr><td><em>Knows When a Threshold Is Crossed</em></td><td><em>Can't Not Notice</em></td></tr><tr><td><em>Feels a Promise Break</em></td><td><em>Feels Every One</em></td></tr></tbody></table>",
     "Gift + Attune is the most direct and most dangerous way to deal with [[the-bound|the Bound]]. See [[rules-violet|violet dice]]."
   ] },
@@ -640,7 +640,7 @@ window.LEDGER = [
   summary: "Minors clear at session end. Majors need treatment, or another person.",
   body: [
     "<table class=\"rules-table\"><thead><tr><th></th><th>Body</th><th>Standing</th></tr></thead><tbody><tr><th>Minor</th><td>clears at end of session</td><td>clears at end of session</td></tr><tr><th>Major</th><td>treatment: [[hospice|the Hospice]], a Mend roll, time</td><td><strong>a scene with another person</strong>: talking it through, a drink, a Liturgist's counsel, a hug</td></tr></tbody></table>",
-    "Social Majors require another person to heal. A Bond Trait can apply, a friend can roll Persuade or Mend, or the scene can simply be played out. Recovery formally closes a Notice; [[hospice|the Hospice]] requires a form."
+    "Social Majors require another person to heal. A Trait about that relationship can apply, a friend can roll Persuade or Mend, or the scene can simply be played out. Recovery formally closes a Notice; [[hospice|the Hospice]] requires a form."
   ] },
 
 { id: "rules-acting", kind: "rules", name: "Acting against an NPC", tag: "Rules",
@@ -709,10 +709,10 @@ window.LEDGER = [
   ] },
 
 { id: "rules-creation", kind: "rules", name: "Character creation", tag: "Rules",
-  aka: ["starting skills", "starting spread", "create a character", "new character", "12 tenure"],
-  summary: "12 Tenure to buy skills, maximum rating 2: three skills at 2, three at 1, seven at 0.",
+  aka: ["starting skills", "starting spread", "create a character", "new character", "15 tenure"],
+  summary: "15 Tenure to buy skills, maximum rating 2: three skills at 2, three at 1, seven at 0.",
   body: [
-    "<ul><li><strong>12 Tenure</strong> to buy skills, and a <strong>maximum rating of 2</strong> at creation.</li><li><strong>Standard spread:</strong> three skills at 2, three at 1, the remaining seven at 0.</li><li><strong>Free:</strong> Station, three open Traits and two Hindrances (plus Gift, Drawback and Registered if [[the-touched|Touched]]). See [[rules-traits|Traits]], [[rules-hindrances|Hindrances]] and [[rules-gift|Gift]].</li><li><strong>Grade I:</strong> 2 Stamps per session, and the Margin succeeds on 7+. See [[rules-grade|Grade]].</li></ul>",
+    "<ul><li><strong>15 Tenure</strong> to buy skills. Skills stop at <strong>rating 2</strong>: 1 Tenure for the first rating, 3 more for the second.</li><li><strong>Standard spread:</strong> three skills at 2, three at 1, the remaining seven at 0.</li><li><strong>Free:</strong> Station, three open Traits (all rank 1) and two Hindrances (plus Gift, Drawback and Registered if [[the-touched|Touched]]). See [[rules-traits|Traits]], [[rules-hindrances|Hindrances]] and [[rules-gift|Gift]].</li><li><strong>Grade I:</strong> 2 Stamps per session, and the Margin succeeds on 7+. See [[rules-grade|Grade]].</li></ul>",
     "Skills rise afterwards with Tenure: [[rules-compline|Compline and Tenure]]."
   ] },
 
@@ -724,7 +724,7 @@ window.LEDGER = [
     "<ul><li><strong>[[compline|Compline]]:</strong> at session end, each player answers three questions, and each yes earns 1 Tenure: <em>Did you change someone's mind? Learn something Chorus didn't tell you? Bend a rule that should have held?</em></li><li><strong>Arc milestone:</strong> +3 Tenure to everyone when a story arc concludes.</li></ul>",
     "Expect about 2–2.5 Tenure per session. Seniority is the ship's real wealth.",
     "<strong>Spending Tenure</strong>",
-    "<table class=\"rules-table\"><thead><tr><th>Purchase</th><th>Cost</th></tr></thead><tbody><tr><th>Skill 0 → 1</th><td>1</td></tr><tr><th>Skill 1 → 2</th><td>2</td></tr><tr><th>Skill 2 → 3</th><td>6 (requires Grade III)</td></tr><tr><th>New open Trait</th><td>4 (maximum six open Traits)</td></tr></tbody></table>",
+    "<table class=\"rules-table\"><thead><tr><th>Purchase</th><th>Cost</th></tr></thead><tbody><tr><th>Skill 0 → 1</th><td>1</td></tr><tr><th>Skill 1 → 2</th><td>3 (skills stop at 2)</td></tr><tr><th>New open Trait</th><td>4 (maximum six open Traits)</td></tr><tr><th>Trait rank 1 → 2</th><td>6 (requires Grade III)</td></tr></tbody></table>",
     "<strong>Free Traits:</strong> the GM may award a Trait after a major story moment. And when the story resolves an Hindrance, it becomes a Trait and you write a new Hindrance.",
     "Your <strong>Grade</strong> follows the Tenure you have <em>earned</em>, never what you've spent: [[rules-grade|Grade]]. At session end you also clear all Minor Notices: [[rules-recovery|Recovery]]."
   ] },
@@ -734,7 +734,7 @@ window.LEDGER = [
   summary: "Every 6 Tenure earned is a new Grade: more Stamps, a better Margin, Commendations.",
   body: [
     "Grade is set by <strong>lifetime Tenure earned</strong> (not spent). Every 6 Tenure earns the next Grade.",
-    "<table class=\"rules-table\"><thead><tr><th>Grade</th><th>Lifetime Tenure</th><th>You gain</th></tr></thead><tbody><tr><th>I</th><td>0</td><td>2 Stamps per session · Margin 7+</td></tr><tr><th>II</th><td>6</td><td><strong>Commendation</strong></td></tr><tr><th>III</th><td>12</td><td>+1 Stamp per session · <strong>skill rating 3 unlocked</strong></td></tr><tr><th>IV</th><td>18</td><td><strong>Margin 6+</strong></td></tr><tr><th>V</th><td>24</td><td>Commendation</td></tr><tr><th>VI</th><td>30</td><td>+1 Stamp per session</td></tr><tr><th>VII</th><td>36</td><td><strong>Margin 5+</strong></td></tr><tr><th>VIII</th><td>42</td><td>Commendation</td></tr><tr><th>IX</th><td>48</td><td>+1 Stamp per session</td></tr><tr><th>X</th><td>54</td><td><strong>Margin 4+</strong></td></tr></tbody></table>",
+    "<table class=\"rules-table\"><thead><tr><th>Grade</th><th>Lifetime Tenure</th><th>You gain</th></tr></thead><tbody><tr><th>I</th><td>0</td><td>2 Stamps per session · Margin 7+</td></tr><tr><th>II</th><td>6</td><td><strong>Commendation</strong></td></tr><tr><th>III</th><td>12</td><td>+1 Stamp per session · <strong>Trait rank 2 unlocked</strong></td></tr><tr><th>IV</th><td>18</td><td><strong>Margin 6+</strong></td></tr><tr><th>V</th><td>24</td><td>Commendation</td></tr><tr><th>VI</th><td>30</td><td>+1 Stamp per session</td></tr><tr><th>VII</th><td>36</td><td><strong>Margin 5+</strong></td></tr><tr><th>VIII</th><td>42</td><td>Commendation</td></tr><tr><th>IX</th><td>48</td><td>+1 Stamp per session</td></tr><tr><th>X</th><td>54</td><td><strong>Margin 4+</strong></td></tr></tbody></table>",
     "The Margin's 1 is always an Error and its 10 always Grace, at every Grade. Only its success threshold improves. A new character is Grade I: a specialist pool of 3–4 dice. By Grade III+ it's 4–5; a veteran at Grade VII+ has 5–6 with a better Margin. See [[rules-margin|the Margin]]."
   ] },
 
@@ -745,8 +745,8 @@ window.LEDGER = [
     "You gain a Commendation slot at Grades II, V and VIII. Always on in their narrow situation, with nothing to track. In the roll dialog you tick one when its situation applies.",
     "<strong>Template:</strong> <em>Because I [short phrase], when [specific situation], I [one rule-break].</em>",
     "<strong>Rule-break menu:</strong>",
-    "<ul><li>add <strong>2 dice</strong> instead of 1</li><li>treat the Difficulty as <strong>one lower</strong></li><li>ignore <strong>one obstacle</strong></li><li><strong>With Conditions</strong> becomes <strong>Approved</strong></li><li><strong>do the normally impossible</strong> (narrative permission)</li><li>a violet <strong>1 doesn't Resonate</strong></li></ul>",
-    "<strong>Examples:</strong> <em>Never Misses a Rivet:</em> when I Hullcraft against the clock, With Conditions becomes Approved. <em>Everyone's Cousin:</em> when I Persuade anyone born in Stem-Side, I add 2 dice. <em>The Bound Know My Voice</em> (Touched): when I Attune with my Gift, one violet 1 doesn't Resonate.",
+    "<ul><li><strong>a second Trait also applies</strong> (pick another Trait at its rank; Stretch rules apply)</li><li>treat the Difficulty as <strong>one lower</strong></li><li>ignore <strong>one obstacle</strong></li><li><strong>With Conditions</strong> becomes <strong>Approved</strong></li><li><strong>do the normally impossible</strong> (narrative permission)</li><li>a violet <strong>1 doesn't Resonate</strong></li></ul>",
+    "<strong>Examples:</strong> <em>Never Misses a Rivet:</em> when I Hullcraft against the clock, With Conditions becomes Approved. <em>Everyone's Cousin:</em> when I Persuade anyone born in Stem-Side, a second Trait also applies. <em>The Bound Know My Voice</em> (Touched): when I Attune with my Gift, one violet 1 doesn't Resonate.",
     "See [[rules-grade|Grade]]."
   ] },
 
@@ -760,18 +760,18 @@ window.LEDGER = [
 
 /* ── skills ── */
 
-{ id: "skill-athletics", kind: "rules", name: "Athletics", tag: "Skill · Body", aka: ["climbing", "running", "enduring", "pain"], summary: "Climbing, running, enduring. Also resisting pain.", body: ["Rated 0–3. Climbing, running, enduring. Resist pain with Athletics."] },
-{ id: "skill-scuffle", kind: "rules", name: "Scuffle", tag: "Skill · Body", aka: ["fighting", "combat", "brawl"], summary: "Fighting.", body: ["Rated 0–3. Fighting. See [[rules-acting|acting against an NPC]]."] },
-{ id: "skill-sneak", kind: "rules", name: "Sneak", tag: "Skill · Body", aka: ["stealth", "sleight of hand", "hide"], summary: "Stealth and sleight of hand.", body: ["Rated 0–3. Stealth and sleight of hand."] },
-{ id: "skill-lore", kind: "rules", name: "Lore", tag: "Skill · Mind", aka: ["history", "theology", "culture", "founders"], summary: "History, theology, culture, the founders.", body: ["Rated 0–3. History, theology, culture, the founders."] },
-{ id: "skill-science", kind: "rules", name: "Science", tag: "Skill · Mind", aka: ["biology", "chemistry", "astronomy", "analysis"], summary: "Biology, chemistry, astronomy, the Greens, analysis.", body: ["Rated 0–3. Biology, chemistry, astronomy, [[the-greens|the Greens]], analysis."] },
-{ id: "skill-notice", kind: "rules", name: "Notice", tag: "Skill · Mind", aka: ["perception", "investigation", "search", "spot"], summary: "Perception and investigation.", body: ["Rated 0–3. Perception and investigation."] },
-{ id: "skill-hullcraft", kind: "rules", name: "Hullcraft", tag: "Skill · Hands", aka: ["repair", "engineering", "systems", "making", "craft"], summary: "Repair, engineering, systems; also making things.", body: ["Rated 0–3. Repair, engineering, systems; also making things. (A separate Craft skill for artisans and Smallworks is possible if making things proves important in play.)"] },
-{ id: "skill-mend", kind: "rules", name: "Mend", tag: "Skill · Hands", aka: ["medicine", "care", "healing", "doctor"], summary: "Medicine and care.", body: ["Rated 0–3. Medicine and care. Helps recover Major Notices: see [[rules-recovery|Recovery]]."] },
-{ id: "skill-pilot", kind: "rules", name: "Pilot", tag: "Skill · Hands", aka: ["shuttles", "vehicles", "navigation", "fly"], summary: "Shuttles, vehicles, navigation.", body: ["Rated 0–3. Shuttles, vehicles, navigation."] },
-{ id: "skill-persuade", kind: "rules", name: "Persuade", tag: "Skill · People", aka: ["talking", "haggling", "reading people", "diplomacy"], summary: "Talking, haggling, reading people.", body: ["Rated 0–3. Talking, haggling, reading people."] },
-{ id: "skill-procedure", kind: "rules", name: "Procedure", tag: "Skill · People", aka: ["bureaucracy", "law", "forms", "the checklist", "paperwork"], summary: "Bureaucracy, law, forms, the Checklist.", body: ["Rated 0–3. Bureaucracy, law, forms, [[the-checklist|the Checklist]]. Resist bureaucratic pressure with Procedure."] },
-{ id: "skill-survival", kind: "rules", name: "Survival", tag: "Skill · Worlds", aka: ["fieldcraft", "foraging", "shelter", "hostile environments"], summary: "Fieldcraft, foraging, shelter, hostile environments.", body: ["Rated 0–3. Fieldcraft, foraging, shelter, hostile environments."] },
-{ id: "skill-attune", kind: "rules", name: "Attune", tag: "Skill · Divine", aka: ["bound", "sensing", "soothing", "coaxing"], summary: "Sensing, soothing and coaxing the Bound.", body: ["Rated 0–3. Sensing, soothing and coaxing [[the-bound|the Bound]]. Resist the Bound with Attune. With a Gift it is the most direct and most dangerous way to deal with them: see [[rules-traits|Traits]]."] }
+{ id: "skill-athletics", kind: "rules", name: "Athletics", tag: "Skill · Body", aka: ["climbing", "running", "enduring", "pain"], summary: "Climbing, running, enduring. Also resisting pain.", body: ["Rated 0–2. Climbing, running, enduring. Resist pain with Athletics."] },
+{ id: "skill-scuffle", kind: "rules", name: "Scuffle", tag: "Skill · Body", aka: ["fighting", "combat", "brawl"], summary: "Fighting.", body: ["Rated 0–2. Fighting. See [[rules-acting|acting against an NPC]]."] },
+{ id: "skill-sneak", kind: "rules", name: "Sneak", tag: "Skill · Body", aka: ["stealth", "sleight of hand", "hide"], summary: "Stealth and sleight of hand.", body: ["Rated 0–2. Stealth and sleight of hand."] },
+{ id: "skill-lore", kind: "rules", name: "Lore", tag: "Skill · Mind", aka: ["history", "theology", "culture", "founders"], summary: "History, theology, culture, the founders.", body: ["Rated 0–2. History, theology, culture, the founders."] },
+{ id: "skill-science", kind: "rules", name: "Science", tag: "Skill · Mind", aka: ["biology", "chemistry", "astronomy", "analysis"], summary: "Biology, chemistry, astronomy, the Greens, analysis.", body: ["Rated 0–2. Biology, chemistry, astronomy, [[the-greens|the Greens]], analysis."] },
+{ id: "skill-notice", kind: "rules", name: "Notice", tag: "Skill · Mind", aka: ["perception", "investigation", "search", "spot"], summary: "Perception and investigation.", body: ["Rated 0–2. Perception and investigation."] },
+{ id: "skill-hullcraft", kind: "rules", name: "Hullcraft", tag: "Skill · Hands", aka: ["repair", "engineering", "systems", "making", "craft"], summary: "Repair, engineering, systems; also making things.", body: ["Rated 0–2. Repair, engineering, systems; also making things. (A separate Craft skill for artisans and Smallworks is possible if making things proves important in play.)"] },
+{ id: "skill-mend", kind: "rules", name: "Mend", tag: "Skill · Hands", aka: ["medicine", "care", "healing", "doctor"], summary: "Medicine and care.", body: ["Rated 0–2. Medicine and care. Helps recover Major Notices: see [[rules-recovery|Recovery]]."] },
+{ id: "skill-pilot", kind: "rules", name: "Pilot", tag: "Skill · Hands", aka: ["shuttles", "vehicles", "navigation", "fly"], summary: "Shuttles, vehicles, navigation.", body: ["Rated 0–2. Shuttles, vehicles, navigation."] },
+{ id: "skill-persuade", kind: "rules", name: "Persuade", tag: "Skill · People", aka: ["talking", "haggling", "reading people", "diplomacy"], summary: "Talking, haggling, reading people.", body: ["Rated 0–2. Talking, haggling, reading people."] },
+{ id: "skill-procedure", kind: "rules", name: "Procedure", tag: "Skill · People", aka: ["bureaucracy", "law", "forms", "the checklist", "paperwork"], summary: "Bureaucracy, law, forms, the Checklist.", body: ["Rated 0–2. Bureaucracy, law, forms, [[the-checklist|the Checklist]]. Resist bureaucratic pressure with Procedure."] },
+{ id: "skill-survival", kind: "rules", name: "Survival", tag: "Skill · Worlds", aka: ["fieldcraft", "foraging", "shelter", "hostile environments"], summary: "Fieldcraft, foraging, shelter, hostile environments.", body: ["Rated 0–2. Fieldcraft, foraging, shelter, hostile environments."] },
+{ id: "skill-attune", kind: "rules", name: "Attune", tag: "Skill · Divine", aka: ["bound", "sensing", "soothing", "coaxing"], summary: "Sensing, soothing and coaxing the Bound.", body: ["Rated 0–2. Sensing, soothing and coaxing [[the-bound|the Bound]]. Resist the Bound with Attune. With a Gift it is the most direct and most dangerous way to deal with them: see [[rules-traits|Traits]]."] }
 
 ];

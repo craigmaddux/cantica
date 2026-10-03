@@ -1,6 +1,6 @@
 import { SYSTEM_ID, SKILL_GROUPS, SKILL_MAX, OPEN_TRAITS } from "../config.mjs";
 import { RULE_BREAKS } from "../rules.mjs";
-import { CREATION_BUDGET, CREATION_MAX, TRAIT_MAX, TRAIT_COST } from "../progression.mjs";
+import { CREATION_BUDGET, CREATION_MAX, TRAIT_MAX, TRAIT_COST, TRAIT_RANK_COST, TRAIT_RANK_GRADE } from "../progression.mjs";
 import PoolDialog from "./pool-dialog.mjs";
 import { openRegistration, holds, focusRegistration } from "./registration.mjs";
 import { trackContext, takeNotice, clearNotice, treatNotice, clearMinors } from "./notice-track.mjs";
@@ -27,6 +27,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       finishCreation: CharacterSheet.#onFinishCreation,
       register: CharacterSheet.#onRegister,
       buyTraitSlot: CharacterSheet.#onBuyTraitSlot,
+      setTraitRank: CharacterSheet.#onSetTraitRank,
       adjustStamps: CharacterSheet.#onAdjustStamps,
       startSession: CharacterSheet.#onStartSession,
       citeClause: CharacterSheet.#onCiteClause,
@@ -87,9 +88,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
         rating: system.skills[key],
         pips: Array.fromRange(SKILL_MAX, 1).map(n => ({
           n,
-          filled: system.skills[key] >= n,
-          // Rating 3 is locked below Grade III, and above 2 during creation.
-          locked: n === 3 && !isGM && (system.creation || system.grade < 3)
+          filled: system.skills[key] >= n
         }))
       }))
     }));
@@ -102,12 +101,26 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       over: system.creationRemaining < 0
     };
 
-    // Station and the open Traits (three to start; up to six).
-    context.openTraits = OPEN_TRAITS.slice(0, system.traitSlots).map((key, i) => ({
-      key,
-      value: system.traits[key],
-      prompt: TRAIT_PROMPTS[i] ?? "a knack nobody expects"
-    }));
+    // Station and the open Traits (three to start; up to six), each with a rank (two pips: rank 2 is bought).
+    const gm = isGM && this.isEditable;
+    const traitRow = (key, prompt, isStation) => {
+      const rank = this.actor.traitRank(key);
+      const written = Boolean(system.traits[key]);
+      return {
+        key, prompt, isStation,
+        value: system.traits[key],
+        rank,
+        pips: [
+          { n: 1, filled: written, base: true, disabled: true },
+          { n: 2, filled: written && rank >= 2, locked: rank < 2 && !gm && system.grade < TRAIT_RANK_GRADE, disabled: !written || !this.isEditable }
+        ]
+      };
+    };
+    context.traitRows = [
+      traitRow("station", i18n.localize("CANTICA.Trait.stationPrompt"), true),
+      ...OPEN_TRAITS.slice(0, system.traitSlots).map((key, i) => traitRow(key, TRAIT_PROMPTS[i] ?? "a knack nobody expects", false))
+    ];
+    context.rankHint = i18n.format("CANTICA.Traits.Rank.Hint", { cost: TRAIT_RANK_COST, grade: TRAIT_RANK_GRADE });
     context.canBuyTrait = !system.creation && system.traitSlots < TRAIT_MAX;
     context.traitCost = TRAIT_COST;
 
@@ -189,6 +202,30 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     if (go) await this.actor.finishCreation();
   }
 
+  /** Click the second pip to raise a Trait to rank 2 (costs Tenure); the GM may also lower it. */
+  static async #onSetTraitRank(event, target) {
+    const { key } = target.dataset;
+    const value = Number(target.dataset.value);
+    const rank = this.actor.traitRank(key);
+    if (value === 1 && rank === 1) return;
+
+    if (value > rank) {
+      const i18n = game.i18n;
+      if (!game.user.isGM) {
+        const go = await DialogV2.confirm({
+          window: { title: i18n.localize("CANTICA.Traits.Rank.Title") },
+          content: `<p>${i18n.format("CANTICA.Traits.Rank.Body", { cost: TRAIT_RANK_COST })}</p>`,
+          rejectClose: false
+        });
+        if (!go) return;
+      }
+      await this.actor.setTraitRank(key, value);
+    } else {
+      const result = await this.actor.setTraitRank(key, 1);
+      if (!result.ok) ui.notifications.warn(game.i18n.localize(`CANTICA.Traits.Rank.Deny.${result.reason}`));
+    }
+  }
+
   static async #onBuyTraitSlot() {
     const i18n = game.i18n;
     const go = await DialogV2.confirm({
@@ -243,7 +280,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   static async #onAddCommendation() {
     const system = this.actor.system;
     if (system.commendations.length >= system.commendationSlots) return;
-    const entry = { id: foundry.utils.randomID(), name: "", situation: "", ruleBreak: "dice2" };
+    const entry = { id: foundry.utils.randomID(), name: "", situation: "", ruleBreak: "trait2" };
     await this.actor.update({ "system.commendations": [...this.actor.toObject().system.commendations, entry] });
   }
 

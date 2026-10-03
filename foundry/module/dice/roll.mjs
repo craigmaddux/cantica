@@ -1,5 +1,5 @@
 import { SYSTEM_ID, OPEN_TRAITS } from "../config.mjs";
-import { buildPool, evaluateRoll, commendationEffects, effectiveDifficulty, WHITE_TARGET, VIOLET_TARGET } from "../rules.mjs";
+import { buildPool, evaluateRoll, commendationEffects, effectiveDifficulty, traitDice, WHITE_TARGET, VIOLET_TARGET } from "../rules.mjs";
 import { marginTarget as marginTargetFor } from "../progression.mjs";
 import { gainScrutiny } from "../scrutiny.mjs";
 import { sceneTraitDice } from "../scene.mjs";
@@ -30,7 +30,8 @@ export async function renderRollCard(state) {
  * @param {Actor} actor
  * @param {object} input
  * @param {string} input.skill              Skill key.
- * @param {string[]} [input.traitKeys]      Ticked Traits: station and the open Traits.
+ * @param {{key: string, stretch?: boolean}[]} [input.traits] The chosen character Trait (Station or an open Trait), each
+ *                                          adding dice equal to its rank, or 1 if stretched. A second only with a "second Trait" Commendation.
  * @param {boolean} [input.gift]            The Gift is in play.
  * @param {string[]} [input.encumbranceKeys] Hindrances in play: personal, circumstantial, drawback.
  * @param {{id: string, name: string, ruleBreak: string}[]} [input.commendations] Ticked Commendations.
@@ -48,7 +49,6 @@ export async function renderRollCard(state) {
 export async function rollPool(actor, input) {
   const i18n = game.i18n;
   const skill = input.skill;
-  const traitKeys = (input.traitKeys ?? []).filter(k => ROLL_TRAITS.includes(k) && actor.system.traits[k]);
   const gift = Boolean(input.gift && actor.system.touched);
   const baseDifficulty = Number.isFinite(Number(input.difficulty)) ? Number(input.difficulty) : 1;
   const greaterBound = Boolean(input.greaterBound);
@@ -64,19 +64,25 @@ export async function rollPool(actor, input) {
   const fx = commendationEffects(commendations);
   const difficulty = effectiveDifficulty(baseDifficulty, fx.difficultyShift);
 
+  // One character Trait per roll (two with a "second Trait" Commendation), each worth its rank, or 1 if stretched.
+  const seen = new Set();
+  const traits = (input.traits ?? [])
+    .filter(t => ROLL_TRAITS.includes(t?.key) && actor.system.traits[t.key] && !seen.has(t.key) && seen.add(t.key))
+    .slice(0, fx.secondTrait ? 2 : 1)
+    .map(t => ({ key: t.key, stretch: Boolean(t.stretch), dice: traitDice({ rank: actor.traitRank(t.key), stretch: Boolean(t.stretch) }) }));
+
   // One scene Trait may be picked, for +1 die.
   const sceneTrait = input.sceneTrait ?? null;
   const obstacles = Math.max(0, (input.obstacles || 0) - fx.obstaclesIgnored);
 
   const pool = buildPool({
     skill: actor.skillRating(skill),
-    traits: traitKeys.length,
+    traits: traits.reduce((sum, t) => sum + t.dice, 0),
     gift,
     circumstances: (input.circumstances || 0) + sceneTraitDice(sceneTrait),
     obstacles,
     bound: input.bound,
-    expedite,
-    bonus: fx.bonusDice
+    expedite
   });
 
   const parts = [`1d10[${COLORSETS.margin}]`];
@@ -111,7 +117,10 @@ export async function rollPool(actor, input) {
 
   const skillLabel = i18n.localize(`CANTICA.Skill.${skill}.label`);
   const factors = [i18n.localize("CANTICA.Roll.Margin"), `${skillLabel} ${actor.skillRating(skill)}`];
-  for (const key of traitKeys) factors.push(actor.system.traits[key]);
+  for (const t of traits) {
+    const note = t.stretch ? i18n.localize("CANTICA.Roll.Stretched") : t.dice > 1 ? `+${t.dice}` : "";
+    factors.push(`${actor.system.traits[t.key]}${note ? ` (${note})` : ""}`);
+  }
   if (gift) factors.push(actor.system.gift || i18n.localize("CANTICA.Roll.Gift"));
   for (const c of commendations) factors.push(`★ ${c.name || i18n.localize("CANTICA.Commendation.Heading")} (${i18n.localize(`CANTICA.Commendation.short.${c.ruleBreak}`)})`);
   if (input.circumstances) factors.push(`+${input.circumstances} ${i18n.localize("CANTICA.Roll.Circumstances")}`);
@@ -141,6 +150,7 @@ export async function rollPool(actor, input) {
     notes: [
       pool.capped && i18n.localize("CANTICA.Roll.Capped"),
       pool.floored && i18n.localize("CANTICA.Roll.Floored"),
+      gift && i18n.localize(`CANTICA.Roll.GiftEffect.${pool.giftEffect || "none"}`),
       marginTarget < 7 && i18n.format("CANTICA.Roll.MarginTarget", { n: marginTarget }),
       fx.upgradeConditions && i18n.localize("CANTICA.Roll.UpgradeNote"),
       ...fx.impossible.map(c => i18n.format("CANTICA.Roll.ImpossibleNote", { name: c.name || i18n.localize("CANTICA.Commendation.Heading") }))

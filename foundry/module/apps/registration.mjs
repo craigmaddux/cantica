@@ -1,6 +1,6 @@
 import { SYSTEM_ID, SKILL_GROUPS, SKILL_MAX } from "../config.mjs";
 import { STEPS } from "../registration-steps.mjs";
-import { CREATION_BUDGET, CREATION_MAX } from "../progression.mjs";
+import { CREATION_BUDGET } from "../progression.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -91,7 +91,7 @@ export default class Registration extends HandlebarsApplicationMixin(Application
           label: i18n.localize(`CANTICA.Skill.${key}.label`),
           hint: i18n.localize(`CANTICA.Skill.${key}.hint`),
           rating: system.skills[key],
-          pips: Array.fromRange(SKILL_MAX, 1).map(n => ({ n, filled: system.skills[key] >= n, locked: n > CREATION_MAX }))
+          pips: Array.fromRange(SKILL_MAX, 1).map(n => ({ n, filled: system.skills[key] >= n }))
         }))
       }));
       context.budget = { spent: system.skillSpent, total: CREATION_BUDGET, remaining: system.creationRemaining, over: system.creationRemaining < 0 };
