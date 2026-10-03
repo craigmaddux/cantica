@@ -15,7 +15,7 @@ export default class CardSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
 
   static DEFAULT_OPTIONS = {
     classes: ["cantica", "sheet", "card"],
-    position: { width: 480, height: 640 },
+    position: { width: 560, height: 720 },
     window: { resizable: true },
     form: { submitOnChange: true },
     actions: {

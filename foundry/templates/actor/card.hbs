@@ -1,7 +1,7 @@
 <div class="cantica-sheet card-sheet">
-  <header class="cantica-header">
-    <img class="portrait card-art" src="{{actor.img}}" alt="{{actor.name}}" {{#if isGM}}data-edit="img" data-action="editImage" title="{{localize 'CANTICA.Card.ChangeArt'}}"{{/if}}>
-    <div class="identity">
+  <header class="card-banner">
+    <img class="banner-art" src="{{actor.img}}" alt="{{actor.name}}" {{#if isGM}}data-edit="img" data-action="editImage" title="{{localize 'CANTICA.Card.ChangeArt'}}"{{/if}}>
+    <div class="banner-overlay">
       <div class="eyebrow">{{localize "CANTICA.Card.Eyebrow"}}</div>
       {{#if isGM}}
       <input class="name" type="text" name="name" value="{{actor.name}}" placeholder="{{localize 'CANTICA.Card.NamePlaceholder'}}">

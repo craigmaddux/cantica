@@ -716,3 +716,22 @@
 /* the pre-tabs layout named grid areas on these panels; here they simply flow in order */
 .record-main > .panel { grid-area: auto; }
 .record-main > .notices, .record-main > .commendations { grid-column: 1 / -1; }
+
+/* Scene Card: the art is a banner across the top of the sheet. */
+.sheet.card .card-banner { background: var(--void-deep); border-bottom: 1px solid var(--rule-bright); flex: none; height: 230px; overflow: hidden; position: relative; }
+.sheet.card .banner-art { display: block; height: 100%; object-fit: cover; object-position: center 40%; width: 100%; }
+.sheet.card .banner-art[data-edit] { cursor: pointer; }
+.sheet.card .banner-overlay {
+  background: linear-gradient(to top, rgba(2, 4, 10, 0.94) 0%, rgba(2, 4, 10, 0.72) 45%, rgba(2, 4, 10, 0) 100%);
+  bottom: 0;
+  left: 0;
+  padding: 2.4rem 1.1rem 0.75rem;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+}
+.sheet.card .banner-overlay input, .sheet.card .banner-overlay button { pointer-events: auto; }
+.sheet.card .banner-overlay .eyebrow { color: var(--ink-soft); font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.32em; text-transform: uppercase; }
+.sheet.card .banner-overlay .eyebrow::before { color: var(--warm); content: "◆ "; }
+.sheet.card .banner-overlay input.name { background: transparent; border: 0; border-bottom: 1px solid var(--rule-bright); font-size: 1.9rem; height: auto; padding: 0.1rem 0; width: 100%; }
+.sheet.card .banner-overlay .name-static { color: var(--ink-bright); font-size: 1.9rem; line-height: 1.2; text-shadow: 0 1px 8px #000; }
