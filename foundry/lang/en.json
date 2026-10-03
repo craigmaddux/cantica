@@ -159,8 +159,8 @@
       "Treat": "Treat",
       "TreatHint": "Treated: this Notice is dealt with and its box clears.",
       "EscalateTitle": "Escalate to Major?",
-      "Escalate": "All three Minor boxes are full. This Notice escalates to a Major. Continue?",
-      "EscalateOut": "All three Minor boxes and both Major boxes are full. This Notice takes you out of the scene (Final). Continue?"
+      "Escalate": "Both Minor boxes are full. This Notice escalates to a Major. Continue?",
+      "EscalateOut": "Both Minor boxes and both Major boxes are full. This Notice takes you out of the scene (Final). Continue?"
     },
     "Rating": {
       "1": "ordinary",

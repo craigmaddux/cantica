@@ -2,7 +2,7 @@
 
 A native system for **Cantica**, a generational ark ship run by a tired AI that is also an angel of Order. Experimental: the table plays Savage Worlds, and this is for prototyping the rules in Foundry.
 
-Implements spec **v0.5**, plus Scene Cards and the Ledger. Targets Foundry **v14** (minimum v13). Optional: the **Dice So Nice** module for amber, white and violet dice.
+Implements spec **v0.6**, plus Scene Cards and the Ledger. Targets Foundry **v14** (minimum v13). Optional: the **Dice So Nice** module for amber, white and violet dice.
 
 ## Install
 
@@ -25,7 +25,7 @@ New releases appear as in-app updates. On Molten, the same URL works; no CloudCo
 - **Gift** (Touched): adds its die and turns up to two dice violet.
 - **Every Margin of Error** gives the GM **+1 Scrutiny**.
 - **Stamps:** Expedite (a checkbox in the roll dialog) spends one for +1 die; Cite a Clause has a button on the sheet. You start each session with 2, +1 at Grades III, VI and IX.
-- **Notices:** one track of three Minor boxes, two Major boxes and a Final box. Each Notice is named, typed **B** (Body) or **S** (Standing), and has a *clears by* line.
+- **Notices:** one track of two Minor boxes, two Major boxes and a Final box. Each Notice is named, typed **B** (Body) or **S** (Standing), and has a *clears by* line.
 - **Grade** follows lifetime Tenure earned (every 6). **Skills** cost 1, 2 and 6 Tenure; rating 3 needs Grade III. **Commendations** arrive at Grades II, V and VIII.
 
 Appeal and Precedent are deliberately not in the system.

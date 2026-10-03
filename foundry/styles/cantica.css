@@ -582,7 +582,7 @@
 .skill-budget button { padding: 0.15rem 0.5rem; }
 .pip.locked { border-style: dashed; opacity: 0.45; }
 
-/* the Notice track: three Minor boxes, two Major, one Final */
+/* the Notice track: two Minor boxes, two Major, one Final */
 .track { display: grid; gap: 0.4rem; grid-template-columns: minmax(0, 1fr); }
 .track-row { display: grid; gap: 0.4rem; grid-auto-columns: minmax(0, 1fr); grid-auto-flow: column; }
 .track .box .clears-by { color: var(--ink-soft); font-size: 0.78rem; font-style: italic; }
@@ -735,3 +735,8 @@
 .sheet.card .banner-overlay .eyebrow::before { color: var(--warm); content: "◆ "; }
 .sheet.card .banner-overlay input.name { background: transparent; border: 0; border-bottom: 1px solid var(--rule-bright); font-size: 1.9rem; height: auto; padding: 0.1rem 0; width: 100%; }
 .sheet.card .banner-overlay .name-static { color: var(--ink-bright); font-size: 1.9rem; line-height: 1.2; text-shadow: 0 1px 8px #000; }
+
+/* Foundry gives every button a fixed height; the Ledger rows are buttons holding three lines of text. */
+.ledger-results .entry-head { height: auto; line-height: 1.35; min-height: 0; overflow: visible; white-space: normal; }
+.ledger-results .entry-head > * { line-height: 1.35; }
+.ledger-chips .chip { height: auto; line-height: 1.3; }

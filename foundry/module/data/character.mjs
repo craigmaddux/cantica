@@ -68,7 +68,7 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
         gradeUp: new NumberField({ required: true, nullable: false, integer: true, min: 0, initial: 0 })
       })),
 
-      // One shared track: 3 Minor boxes, 2 Major boxes, 1 Final box.
+      // One shared track: 2 Minor boxes, 2 Major boxes, 1 Final box.
       notices: noticeTrackField(),
 
       notes: text()

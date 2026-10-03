@@ -7,24 +7,22 @@ import {
 const minor = (track, name = "Bruised Ribs", tier = "major", type = "B") => placeNotice(track, tier, "minor", { name, type });
 const major = (track, name = "Cracked Wrist", tier = "major", type = "B") => placeNotice(track, tier, "major", { name, type });
 
-/** Fill the three Minor boxes. */
+/** Fill both Minor boxes. */
 const withMinors = () => {
   let t = emptyTrack();
-  for (const n of ["One", "Two", "Three"]) t = minor(t, n).track;
+  for (const n of ["One", "Two"]) t = minor(t, n).track;
   return t;
 };
 
-test("Minor Notices fill the three Minor boxes in order", () => {
+test("Minor Notices fill the two Minor boxes in order", () => {
   const a = minor(emptyTrack(), "Flustered");
   assert.equal(a.slot, "minor1");
   const b = minor(a.track, "Smitten");
   assert.equal(b.slot, "minor2");
-  const c = minor(b.track, "Winded");
-  assert.equal(c.slot, "minor3");
-  assert.equal(c.overflowed, false);
+  assert.equal(b.overflowed, false);
 });
 
-test("overflow: with all three Minors full, a Minor becomes a Major", () => {
+test("overflow: with both Minors full, a Minor becomes a Major", () => {
   const t = withMinors();
   assert.equal(minorsFull(t, "major"), true);
   const fourth = minor(t, "Doubt");
@@ -41,8 +39,8 @@ test("overflow: with both Major boxes full, the next hit is Final", () => {
   assert.equal(next.out, true);
   // a Minor with everything full also ends in Final
   let full = withMinors();
-  full = minor(full, "x").track;
-  full = minor(full, "y").track;
+  full = minor(full, "x").track; // major1
+  full = minor(full, "y").track; // major2
   assert.equal(minor(full, "z").slot, "final");
 });
 
@@ -87,7 +85,7 @@ test("Minor NPCs are unchanged: one Minor box; the next Notice, or any Major, ta
 test("visible boxes per tier", () => {
   assert.deepEqual(slotsFor("background"), ["final"]);
   assert.deepEqual(slotsFor("minor"), ["minor1", "final"]);
-  assert.deepEqual(slotsFor("major"), ["minor1", "minor2", "minor3", "major1", "major2", "final"]);
+  assert.deepEqual(slotsFor("major"), ["minor1", "minor2", "major1", "major2", "final"]);
 });
 
 test("slot kinds", () => {
@@ -98,7 +96,7 @@ test("end of session clears Minors only", () => {
   let t = withMinors();
   t = minor(t, "Doubt").track; // lands in Major
   const cleared = clearMinors(t);
-  for (const slot of ["minor1", "minor2", "minor3"]) assert.equal(isFilled(cleared[slot]), false);
+  for (const slot of ["minor1", "minor2"]) assert.equal(isFilled(cleared[slot]), false);
   assert.equal(isFilled(cleared.major1), true);
 });
 
@@ -113,4 +111,28 @@ test("v0.2 tracks migrate: major becomes major1", () => {
   assert.equal(migrated.major1.name, "Cracked Wrist");
   assert.equal("major" in migrated, false);
   assert.equal(migrateTrack({ major1: { name: "x" }, major: { name: "y" } }).major1.name, "x");
+});
+
+test("v0.5.0 tracks migrate: a filled third Minor moves up into a free Major box", () => {
+  const old = {
+    minor1: { name: "a", type: "B", clearsBy: "end of session" },
+    minor2: { name: "b", type: "B", clearsBy: "end of session" },
+    minor3: { name: "Doubt", type: "S", clearsBy: "end of session" },
+    major1: { name: "", type: "B", clearsBy: "" }, major2: { name: "", type: "B", clearsBy: "" }, final: { name: "", type: "B", clearsBy: "" }
+  };
+  const t = migrateTrack(old);
+  assert.equal("minor3" in t, false);
+  assert.equal(t.major1.name, "Doubt");
+  assert.equal(t.major1.clearsBy, "a scene with another person"); // the Major default for a Standing Notice
+});
+
+test("migration keeps a custom clears-by, skips taken boxes, and ignores an empty third Minor", () => {
+  const taken = migrateTrack({ minor3: { name: "Winded", type: "B", clearsBy: "a good sit down" }, major1: { name: "Broken Arm", type: "B", clearsBy: "treatment" } });
+  assert.equal(taken.major1.name, "Broken Arm");
+  assert.equal(taken.major2.name, "Winded");
+  assert.equal(taken.major2.clearsBy, "a good sit down");
+
+  const empty = migrateTrack({ minor3: { name: "", type: "B", clearsBy: "" } });
+  assert.equal("minor3" in empty, false);
+  assert.equal("major1" in empty, false);
 });

@@ -3,7 +3,7 @@ import { SLOTS, NOTICE_TYPES, migrateTrack } from "../notices.mjs";
 const { SchemaField, StringField } = foundry.data.fields;
 
 /**
- * The shared Notice track: three Minor boxes, two Major boxes, one Final.
+ * The shared Notice track: two Minor boxes, two Major boxes, one Final.
  * Each box is a named Notice of type B or S, with a "clears by" line.
  */
 export function noticeTrackField() {

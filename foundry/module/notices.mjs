@@ -1,30 +1,30 @@
 /**
- * The Notice track (spec v0.5). Pure functions, unit-tested in Node.
+ * The Notice track (spec v0.6). Pure functions, unit-tested in Node.
  *
  * One shared track for Characters and Major NPCs:
- *   [ Minor ] [ Minor ] [ Minor ]
+ *   [ Minor ] [ Minor ]
  *   [ Major ] [ Major ]
  *   [ Final ]
  * Each box holds a named Notice of type B (Body) or S (Standing), plus a "clears by" line.
  *
- * Overflow: with all three Minor boxes full, a new Minor becomes a Major; with both Major
+ * Overflow: with both Minor boxes full, a new Minor becomes a Major; with both Major
  * boxes full, the next hit is Final (taken out of the scene).
  */
 
-export const SLOTS = ["minor1", "minor2", "minor3", "major1", "major2", "final"];
+export const SLOTS = ["minor1", "minor2", "major1", "major2", "final"];
 export const NOTICE_TYPES = ["B", "S"];
 
 /** Which boxes each tier has. Final is always present; it means "taken out". */
 export const TIER_CAPACITY = {
   background: { minor: 0, major: 0 }, // any Notice takes them out
   minor: { minor: 1, major: 0 },      // the next Notice, or any Major, takes them out
-  major: { minor: 3, major: 2 }       // a full track, like a PC
+  major: { minor: 2, major: 2 }       // a full track, like a PC
 };
 
 /** Characters have the full track. */
 export const CHARACTER_TIER = "major";
 
-export const MINOR_SLOTS = ["minor1", "minor2", "minor3"];
+export const MINOR_SLOTS = ["minor1", "minor2"];
 export const MAJOR_SLOTS = ["major1", "major2"];
 
 export const slotKind = slot => (slot.startsWith("minor") ? "minor" : slot.startsWith("major") ? "major" : "final");
@@ -97,8 +97,10 @@ export function clearMinors(track) {
 }
 
 /**
- * Bring an older stored track (v0.2: minor1, minor2, major, final, no clears-by)
- * up to the current shape.
+ * Bring an older stored track up to the current shape:
+ *  - v0.2 had one Major box, named "major": it becomes major1.
+ *  - v0.5.0 had a third Minor box. A filled third Minor moves up into a free Major box (or Final),
+ *    and a default "end of session" clears-by becomes the Major default for its type.
  */
 export function migrateTrack(old) {
   if (!old || typeof old !== "object") return old;
@@ -106,6 +108,17 @@ export function migrateTrack(old) {
   if ("major" in next && !("major1" in next)) {
     next.major1 = next.major;
     delete next.major;
+  }
+  if ("minor3" in next) {
+    const third = next.minor3;
+    delete next.minor3;
+    if (isFilled(third)) {
+      const home = ["major1", "major2", "final"].find(slot => !isFilled(next[slot]));
+      if (home) {
+        const wasDefault = !third.clearsBy || third.clearsBy === "end of session";
+        next[home] = { ...third, clearsBy: wasDefault ? defaultClearsBy(slotKind(home), third.type) : third.clearsBy };
+      }
+    }
   }
   return next;
 }
