@@ -197,8 +197,7 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
       sceneName: sceneId ? form.elements.sceneCard.selectedOptions[0].textContent.trim() : "",
       sceneTrait,
       difficulty: Number(chosen.dataset.difficulty),
-      targetName: chosen.dataset.name ?? "",
-      greaterBound: Boolean(form.elements.greaterBound?.checked)
+      targetName: chosen.dataset.name ?? ""
     };
   }
 
@@ -226,9 +225,13 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
         : pool.floored ? i18n.localize("CANTICA.Roll.Floored")
           : input.gift ? i18n.localize(`CANTICA.Roll.GiftEffect.${pool.giftEffect || "none"}`) : "";
 
-    // The Margin of Error widens to 1-2 when any Encumbrance (or the Drawback) is in play.
+    // Any Hindrance (or the Drawback) in play is Greater Bound: the Margin of Error widens to 1-2,
+    // and so does Dissonance on any violet dice.
     const widened = input.encumbranceKeys.length > 0;
-    el.querySelector("[data-error-range]").textContent = i18n.format("CANTICA.Pool.ErrorRange", { range: widened ? "1–2" : "1" });
+    const range = widened ? "1–2" : "1";
+    el.querySelector("[data-error-range]").textContent = pool.violet > 0
+      ? i18n.format("CANTICA.Pool.ErrorAndDissonanceRange", { range })
+      : i18n.format("CANTICA.Pool.ErrorRange", { range });
   }
 
   static async #onSubmit(event, form, formData) {

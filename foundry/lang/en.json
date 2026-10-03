@@ -200,9 +200,7 @@
       "GiftNote": "Adds no die. Turns one white die violet (or adds one violet die to a pool that is only the Margin).",
       "Bound": "Bound gear",
       "Margin": "The Margin",
-      "EncumbranceNote": "If any Hindrance is in play, the Margin of Error widens to 1–2 and an Error earns a Stamp. Hindrances never add dice.",
-      "GreaterBound": "Greater Bound",
-      "GreaterBoundNote": "Dissonance on 1–2.",
+      "EncumbranceNote": "If any Hindrance is in play, the Margin of Error and any Dissonance both widen to 1–2, and an Error earns a Stamp. Hindrances never add dice.",
       "Dice": "dice",
       "Breakdown": "{amber} amber · {white} white · {violet} violet",
       "Roll": "Roll",
@@ -226,7 +224,8 @@
       "SecondTrait": "Your Commendation lets a second Trait also apply.",
       "BoundNote": "Gear running on divine infrastructure turns one white die violet. At most one die from gear and one from the Gift.",
       "Gear": "Gear",
-      "GearHint": "Gear never adds dice: the right tools let you roll at all. Anything else that helps or hinders is the table's call, or a scene Trait."
+      "GearHint": "Gear never adds dice: the right tools let you roll at all. Anything else that helps or hinders is the table's call, or a scene Trait.",
+      "ErrorAndDissonanceRange": "Margin of Error and Dissonance on {range}"
     },
     "Roll": {
       "Margin": "Margin",
@@ -353,7 +352,7 @@
     },
     "Encumbrance": {
       "Heading": "Hindrances",
-      "Hint": "Two troubles. If any is in play, the Margin of Error widens to 1–2 and an Error earns a Stamp. They never add dice.",
+      "Hint": "Two troubles. If any is in play, the Margin of Error and any Dissonance widen to 1–2, and an Error earns a Stamp. They never add dice.",
       "personal": "Personal",
       "personalHint": "A flaw.",
       "personalPrompt": "a flaw (Can't Leave a Machine Unfixed)",

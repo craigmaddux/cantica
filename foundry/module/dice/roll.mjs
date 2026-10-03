@@ -58,21 +58,22 @@ export async function rollExtraDie() {
  * @param {{id: string, name: string}} [input.sceneTrait] The one scene Trait picked for +1 die.
  * @param {number} [input.difficulty]       Successes needed: D0-D3, or an NPC's Rating.
  * @param {string} [input.targetName]       Name of the NPC whose Rating is the Difficulty.
- * @param {boolean} [input.greaterBound]    Dissonance on 1-2 (each adds 2 to the Hum). From the Refrain, everyone's violet dice do this too.
+ * @param {boolean} [input.greaterBound]    Force Greater Bound without a Hindrance (for macros). A Hindrance in play already is Greater Bound.
  */
 export async function rollPool(actor, input) {
   const i18n = game.i18n;
   const skill = input.skill;
   const gift = Boolean(input.gift && actor.system.touched);
   const baseDifficulty = Number.isFinite(Number(input.difficulty)) ? Number(input.difficulty) : 1;
-  // Greater Bound is optional and doubles the Hum a Dissonance adds. From the Refrain on, the Hum itself
-  // widens Dissonance to 1-2 for every violet die (no one is told why).
-  const greaterBound = Boolean(input.greaterBound);
-  const widened = greaterBound || widensDissonance(getHum());
-
-  // Hindrances never add dice. If any is in play, the Margin of Error widens to 1-2.
+  // Hindrances never add dice. If any is in play, that is Greater Bound: the Margin of Error and
+  // Dissonance both widen to 1-2, and each Dissonance adds 2 to the Hum.
   const encumbranceKeys = input.encumbranceKeys ?? [];
   const encumbrance = encumbranceKeys.length > 0 || Boolean(input.encumbrance);
+  const greaterBound = encumbrance || Boolean(input.greaterBound);
+
+  // From the Refrain on, the Hum itself widens Dissonance to 1-2 for every violet die (no one is told why),
+  // without doubling what a Dissonance adds.
+  const widened = greaterBound || widensDissonance(getHum());
 
   // Commendations: only ones the character really has, as many as the player ticked.
   const owned = new Map(actor.system.commendations.map(c => [c.id, c]));

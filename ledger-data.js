@@ -584,8 +584,8 @@ window.LEDGER = [
   summary: "Opt-in dice that succeed on 6+, but a 1 is Dissonance: something has gone wrong with the Bound.",
   body: [
     "Opt in when you draw on divine infrastructure: a Gift, Bound-powered gear, a plea at [[compline|Compline]], anything borrowed from [[engineering|Engineering]].",
-    "<ul><li><strong>Succeed on 6+</strong> (50%).</li><li><strong>1 = Dissonance:</strong> something has gone wrong with the Bound. A sour note in the ship's song, a light flickering in the wrong district, a Liturgist's bad dream.</li><li><strong>Greater Bound</strong> (optional tier): Dissonance on 1–2.</li><li><strong>Colored dice replace white dice; they never add to the count.</strong> Pool size comes from skill and reasons; color tells you the risk.</li><li><strong>Violet limit:</strong> at most one violet die from the Gift and one from Bound gear, two in total.</li></ul>",
-    "Only two special colors exist: amber (the Margin) and violet (the Bound). Risk: 10% per violet die for Dissonance (20% for Greater Bound)."
+    "<ul><li><strong>Succeed on 6+</strong> (50%).</li><li><strong>1 = Dissonance:</strong> something has gone wrong with the Bound. A sour note in the ship's song, a light flickering in the wrong district, a Liturgist's bad dream.</li><li><strong>Greater Bound:</strong> whenever a Hindrance is in play, Dissonance happens on 1–2, just as the Margin of Error does. See [[rules-hindrances|Hindrances]].</li><li><strong>Colored dice replace white dice; they never add to the count.</strong> Pool size comes from skill and reasons; color tells you the risk.</li><li><strong>Violet limit:</strong> at most one violet die from the Gift and one from Bound gear, two in total.</li></ul>",
+    "Only two special colors exist: amber (the Margin) and violet (the Bound). Risk: 10% per violet die for Dissonance (20% with a Hindrance in play)."
   ] },
 
 { id: "rules-traits", kind: "rules", name: "Traits", tag: "Rules",
@@ -599,11 +599,11 @@ window.LEDGER = [
 
 { id: "rules-hindrances", kind: "rules", name: "Hindrances", tag: "Rules",
   aka: ["hindrance", "hindrances", "encumbrance", "encumbrances", "flaw", "trouble", "personal hindrance", "circumstantial hindrance", "drawback"],
-  summary: "Two troubles. If any is in play, the Margin of Error widens to 1–2.",
+  summary: "Two troubles. If any is in play, the Margin of Error and Dissonance widen to 1–2.",
   body: [
     "Every character has <strong>two</strong>:",
     "<ul><li><strong>Personal:</strong> a flaw (<em>Can't Leave a Machine Unfixed</em>).</li><li><strong>Circumstantial:</strong> an obligation or situation (<em>Censured Once, Watched Ever Since</em>). See [[censure|censure]].</li></ul>",
-    "If <strong>any</strong> Hindrance is in play, the [[rules-margin|Margin of Error]] widens to 1–2, and an Error earns you a Stamp. Several in play do not widen it further. <strong>Hindrances never add dice.</strong>",
+    "If <strong>any</strong> Hindrance is in play, the [[rules-margin|Margin of Error]] widens to 1–2, and so does [[rules-violet|Dissonance]] on any violet dice (this is Greater Bound), and an Error earns you a Stamp. Several in play do not widen it further. <strong>Hindrances never add dice.</strong>",
     "When the story resolves an Hindrance, the old one becomes a Trait and you write a new Hindrance (<em>Censured Once, Watched Ever Since</em> → <em>Cleared My Name Before the Forum</em>)."
   ] },
 
