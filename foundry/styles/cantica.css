@@ -703,3 +703,16 @@
 /* Foundry hides every .tab that isn't .active, so the sheet's nav uses .sheet-tab. Its buttons also
    center their contents by default; skill names read left-aligned. */
 .skill .skill-roll { justify-content: flex-start; }
+
+/* Record tab: the left two thirds hold the character, the right third holds the skills. */
+.record-grid { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+.record-main { display: grid; gap: 0.9rem; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.record-main .notices, .record-main .commendations { grid-column: 1 / -1; }
+.record-skills .skill { gap: 0.35rem; }
+@media (max-width: 760px) {
+  .record-grid, .record-main { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* the pre-tabs layout named grid areas on these panels; here they simply flow in order */
+.record-main > .panel { grid-area: auto; }
+.record-main > .notices, .record-main > .commendations { grid-column: 1 / -1; }

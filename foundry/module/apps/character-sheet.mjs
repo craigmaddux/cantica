@@ -16,7 +16,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
 
   static DEFAULT_OPTIONS = {
     classes: ["cantica", "sheet", "character"],
-    position: { width: 800, height: 860 },
+    position: { width: 900, height: 860 },
     window: { resizable: true },
     form: { submitOnChange: true },
     actions: {
