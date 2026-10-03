@@ -1,5 +1,5 @@
-import { SYSTEM_ID, SKILL_GROUPS, DICE_TRAITS } from "../config.mjs";
-import { buildPool, DIFFICULTIES } from "../rules.mjs";
+import { SYSTEM_ID, SKILL_GROUPS } from "../config.mjs";
+import { buildPool, DIFFICULTIES, commendationEffects } from "../rules.mjs";
 import { tally, visibleTraits } from "../scene.mjs";
 import { sceneChoices } from "../cards.mjs";
 import { rollPool } from "../dice/roll.mjs";
@@ -7,14 +7,15 @@ import { rollPool } from "../dice/roll.mjs";
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 /**
- * The pool builder: pick the skill, tick relevant Traits, choose the scene you're in and
- * which of its Traits apply, set Bound dice, and see the pool before rolling.
+ * The pool builder: pick the skill, tick the Traits and Commendations that apply, say which
+ * Encumbrances are in play, choose the scene you're in and which of its Traits apply, set Bound
+ * dice, and see the pool before rolling.
  */
 export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2) {
   static DEFAULT_OPTIONS = {
     tag: "form",
     classes: ["cantica", "pool-dialog"],
-    position: { width: 460 },
+    position: { width: 480 },
     window: { title: "CANTICA.Pool.Title", icon: "fa-solid fa-dice-d10" },
     form: { handler: PoolDialog.#onSubmit, closeOnSubmit: true }
   };
@@ -40,7 +41,7 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
 
   async _prepareContext(options) {
     const i18n = game.i18n;
-    const { traits, touched, gift } = this.actor.system;
+    const { touched, gift } = this.actor.system;
     const targets = this.#npcTargets();
     const scene = sceneChoices(this.actor);
 
@@ -55,17 +56,36 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
           selected: key === this.skill
         }))
       })),
-      traits: DICE_TRAITS.map(key => ({
+
+      // Station and the open Traits that are filled in: +1 die each when relevant.
+      traits: this.actor.rollTraits.map(({ key, text }) => ({
         key,
-        label: i18n.localize(`CANTICA.Trait.${key}`),
-        text: traits[key],
-        disabled: !traits[key]
+        label: i18n.localize(key === "station" ? "CANTICA.Trait.station" : "CANTICA.Trait.open"),
+        text
       })),
-      encumbranceText: traits.encumbrance,
       touched,
       giftText: gift,
+
+      // One checkbox per Encumbrance (plus the Drawback). Any one in play widens the Margin of Error.
+      encumbrances: this.actor.encumbranceList.map(({ key, text }) => ({
+        key,
+        label: i18n.localize(key === "drawback" ? "CANTICA.Gift.Drawback" : `CANTICA.Encumbrance.${key}`),
+        text,
+        disabled: !text
+      })),
+
+      // Commendations the player ticks when the situation applies.
+      commendations: this.actor.system.commendations.map(c => ({
+        id: c.id,
+        name: c.name || i18n.localize("CANTICA.Commendation.Heading"),
+        situation: c.situation,
+        ruleBreak: c.ruleBreak,
+        effect: i18n.localize(`CANTICA.Commendation.short.${c.ruleBreak}`)
+      })),
+
       stamps: this.actor.system.stamps,
       canExpedite: this.actor.system.stamps > 0,
+      marginTarget: this.actor.system.marginTarget,
 
       // The scene: the card the token stands on, else the active card. The player can change it.
       hasScene: scene.cards.length > 0,
@@ -127,6 +147,7 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
   #readInput() {
     const form = this.element;
     const num = name => Math.max(0, Math.trunc(Number(form.elements[name]?.value) || 0));
+    const checked = name => [...form.querySelectorAll(`input[name="${name}"]:checked`)];
     const chosen = form.elements.difficulty.selectedOptions[0];
 
     const sceneId = form.elements.sceneCard?.value ?? "";
@@ -137,8 +158,10 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
 
     return {
       skill: form.elements.skill.value,
-      traitKeys: [...form.querySelectorAll('input[name="traits"]:checked')].map(el => el.value),
+      traitKeys: checked("traits").map(el => el.value),
       gift: Boolean(form.elements.gift?.checked),
+      encumbranceKeys: checked("encumbrance").map(el => el.value),
+      commendations: checked("commendation").map(el => ({ id: el.value, name: el.dataset.name, ruleBreak: el.dataset.break })),
       circumstances: num("circumstances"),
       obstacles: num("obstacles"),
       bound: num("bound"),
@@ -147,7 +170,6 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
       difficulty: Number(chosen.dataset.difficulty),
       targetName: chosen.dataset.name ?? "",
       expedite: Boolean(form.elements.expedite?.checked),
-      encumbrance: Boolean(form.elements.encumbrance?.checked),
       greaterBound: Boolean(form.elements.greaterBound?.checked)
     };
   }
@@ -156,14 +178,16 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
     this.#syncSceneGroups();
     const input = this.#readInput();
     const scene = tally(input.sceneTraits);
+    const fx = commendationEffects(input.commendations);
     const pool = buildPool({
       skill: this.actor.skillRating(input.skill),
       traits: input.traitKeys.length,
       gift: input.gift,
       circumstances: input.circumstances + scene.circumstances,
-      obstacles: input.obstacles + scene.obstacles,
+      obstacles: Math.max(0, input.obstacles + scene.obstacles - fx.obstaclesIgnored),
       bound: input.bound,
-      expedite: input.expedite
+      expedite: input.expedite,
+      bonus: fx.bonusDice
     });
     const i18n = game.i18n;
     const el = this.element.querySelector("[data-preview]");
@@ -174,6 +198,10 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
     el.querySelector("[data-note]").textContent =
       pool.capped ? i18n.localize("CANTICA.Roll.Capped")
         : pool.floored ? i18n.localize("CANTICA.Roll.Floored") : "";
+
+    // The Margin of Error widens to 1-2 when any Encumbrance (or the Drawback) is in play.
+    const widened = input.encumbranceKeys.length > 0;
+    el.querySelector("[data-error-range]").textContent = i18n.format("CANTICA.Pool.ErrorRange", { range: widened ? "1–2" : "1" });
   }
 
   static async #onSubmit(event, form, formData) {

@@ -20,14 +20,23 @@
     },
     "traits": {
       "station": "Third-Shift Recycler Technician",
-      "deck": "Stem-Side Born, Stem-Side Stubborn",
-      "bond": "Owes Deya Marsh More Than Tallies",
-      "encumbrance": "Censured Once, Watched Ever Since"
+      "trait1": "Stem-Side Born, Stem-Side Stubborn",
+      "trait2": "Owes Deya Marsh More Than Tallies",
+      "trait3": "Reads Schematics Like Scripture"
+    },
+    "traitSlots": 3,
+    "encumbrances": {
+      "personal": "Can't Leave a Machine Unfixed",
+      "circumstantial": "Censured Once, Watched Ever Since"
     },
     "touched": true,
     "gift": "Machines Hum Her Name",
-    "stamps": 1,
-    "tenure": 0,
-    "notes": "Sample character from the design doc. Repairing a failing recycler: Margin + Hullcraft 3 + Station + Gift = 6 dice, two of them violet."
+    "drawback": "Hears Them When They're Hurting",
+    "registered": true,
+    "stamps": 3,
+    "tenureEarned": 12,
+    "tenureUnspent": 6,
+    "creation": false,
+    "notes": "Sample character from the design doc, at Grade III. Repairing a failing recycler: Margin + Hullcraft 3 + Station + Gift = 6 dice, two of them violet. Her Drawback is in play (the recycler is hurting), so the Margin of Error widens to 1–2."
   }
 }

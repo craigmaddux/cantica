@@ -7,6 +7,7 @@
     <button type="button" data-action="reset">{{localize "CANTICA.Scrutiny.Reset"}}</button>
   </div>
   {{/if}}
+  <button type="button" class="ledger-open" data-action="openLedger"><i class="fa-solid fa-book-open"></i> {{localize "CANTICA.Ledger.Title"}}</button>
   <div class="active-scene" title="{{localize 'CANTICA.Card.ActiveHint'}}">
     <span class="active-label">{{localize "CANTICA.Card.ActiveScene"}}</span>
     <span class="active-name">{{#if activeCard}}{{activeCard}}{{else}}—{{/if}}</span>

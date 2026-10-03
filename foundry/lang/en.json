@@ -15,8 +15,7 @@
       "ChangePortrait": "Change portrait",
       "Traits": "Traits",
       "Skills": "Skills",
-      "Notes": "Notes",
-      "SpreadHint": "Skill spread. The starting spread is one 3, two 2s, three 1s and seven 0s; it drifts as Tenure raises skills."
+      "Notes": "Notes"
     },
     "Character": {
       "touched": {
@@ -86,32 +85,43 @@
       "attune": {
         "label": "Attune",
         "hint": "Sensing, soothing and coaxing the Bound. Also resisting the Bound."
+      },
+      "Costs": "0→1: 1 · 1→2: 2 · 2→3: 6",
+      "CostHint": "Skills are bought with unspent Tenure. Rating 3 needs Grade III.",
+      "Deny": {
+        "range": "That isn't a rating.",
+        "creationMax": "At creation, no skill goes above 2.",
+        "creationBudget": "That's more than the 12 Tenure creation budget.",
+        "noRefund": "Skills can't be lowered once creation is finished. Ask the GM.",
+        "needGrade": "Rating 3 unlocks at Grade III.",
+        "needTenure": "Not enough unspent Tenure."
       }
     },
     "Trait": {
       "station": "Station",
       "stationHint": "Your work assignment.",
-      "deck": "Deck",
-      "deckHint": "Where you come from.",
-      "bond": "Bond",
-      "bondHint": "A person or faction tie.",
-      "encumbrance": "Encumbrance",
-      "encumbranceHint": "Your trouble. It tilts the Margin when in play and earns Stamps.",
-      "gift": "Gift"
+      "gift": "Gift",
+      "stationPrompt": "what you do (your high concept)",
+      "open": "Trait"
     },
     "Stamps": {
       "Label": "Stamps",
-      "Hint": "Earned when Encumbrance bites, sometimes from a Margin of Grace, and for withdrawing from a scene. Spend: Expedite (+1 die), Countersign (give to an ally's roll), Reclassify (downgrade a Notice as it lands), Cite a Clause, Amend the Scene.",
+      "Hint": "Earned when any Encumbrance bites, sometimes from a Margin of Grace, and for withdrawing from a scene. Spend: Expedite (+1 die), Countersign (give to an ally's roll), Reclassify (downgrade a Notice as it lands), Cite a Clause, Amend the Scene.",
       "Cite": "Cite a Clause",
       "CiteTitle": "Cite a Clause",
       "CitePrompt": "Which rule do you declare exists and applies here?",
       "Cites": "Cites a Clause",
       "CiteNote": "Binding, and it helps. The GM adds one detail of how it actually reads.",
-      "None": "No Stamps to spend."
+      "None": "No Stamps to spend.",
+      "Session": "Start session",
+      "SessionHint": "Stamps up to what your Grade begins each session with: 2, and one more at Grades III, VI and IX.",
+      "SessionStarted": "Stamps set to at least {n}."
     },
     "Tenure": {
       "Label": "Tenure",
-      "Hint": "Earned at Compline. Spent to raise skills and add Traits."
+      "Hint": "Spent on skills and Traits. Grade follows Tenure earned, never what you've spent.",
+      "Earned": "earned",
+      "Unspent": "Unspent Tenure"
     },
     "Scrutiny": {
       "Label": "Scrutiny",
@@ -142,7 +152,15 @@
       "ClearMinorsHint": "End of session: clear all Minor Notices.",
       "Receives": "Receives a Notice",
       "Overflowed": "The track was full: the Notice escalated.",
-      "TakenOut": "Taken out of the scene"
+      "TakenOut": "Taken out of the scene",
+      "ClearsBy": "Clears by",
+      "ClearsByHint": "blank = the default for its type",
+      "ClearsByShort": "clears by:",
+      "Treat": "Treat",
+      "TreatHint": "Treated: this Notice is dealt with and its box clears.",
+      "EscalateTitle": "Escalate to Major?",
+      "Escalate": "All three Minor boxes are full. This Notice escalates to a Major. Continue?",
+      "EscalateOut": "All three Minor boxes and both Major boxes are full. This Notice takes you out of the scene (Final). Continue?"
     },
     "Rating": {
       "1": "ordinary",
@@ -190,8 +208,7 @@
       "Expedite": "Expedite",
       "ExpediteNote": "Spend a Stamp for +1 die. One per roll.",
       "Margin": "The Margin",
-      "Encumbrance": "Encumbrance in play",
-      "EncumbranceNote": "The Margin of Error widens to 1–2, and an Error earns a Stamp.",
+      "EncumbranceNote": "If any Encumbrance is in play, the Margin of Error widens to 1–2 and an Error earns a Stamp. Encumbrances never add dice.",
       "GreaterBound": "Greater Bound",
       "GreaterBoundNote": "Resonance on 1–2.",
       "Dice": "dice",
@@ -204,7 +221,10 @@
         "token": "Your token is on this card. Change it if that's wrong.",
         "active": "Using the active scene. Change it if you're somewhere else.",
         "none": "No scene found. Pick one if it applies."
-      }
+      },
+      "NoTraits": "Fill in Station and your Traits on the sheet to use them here.",
+      "CommendationHint": "Tick a Commendation when its situation applies.",
+      "ErrorRange": "Margin of Error on {range}"
     },
     "Roll": {
       "Margin": "Margin",
@@ -227,7 +247,11 @@
       "StampEarned": "Encumbrance bites: +1 Stamp.",
       "ResonanceCount": "Resonance ×{n}",
       "ResonanceText": "The Bound notice. Something sings back.",
-      "InScene": "in"
+      "InScene": "in",
+      "InPlay": "In play: {text}",
+      "MarginTarget": "The Margin succeeds on {n}+ at this Grade.",
+      "UpgradeNote": "A Commendation turns With Conditions into Approved.",
+      "ImpossibleNote": "{name}: the GM allows the normally impossible."
     },
     "Tier": {
       "denied": "Denied",
@@ -272,6 +296,130 @@
       "NoTraits": "No Traits yet.",
       "NoCharacter": "You need a character to spend a Stamp. Select your token first.",
       "NoGM": "A GM has to be online to add a Trait."
+    },
+    "Tabs": {
+      "Label": "Sheet sections",
+      "record": "Record",
+      "gift": "Gift",
+      "notes": "Notes",
+      "history": "History"
+    },
+    "Traits": {
+      "Buy": "Buy",
+      "BuyHint": "A new open Trait slot (maximum six).",
+      "BuyTitle": "Buy an open Trait",
+      "BuyBody": "A new open Trait costs {cost} Tenure. Buy it?",
+      "Bought": "A new open Trait",
+      "Deny": {
+        "max": "You already have six open Traits.",
+        "needTenure": "A new open Trait costs 4 Tenure."
+      }
+    },
+    "Grade": {
+      "Label": "Grade",
+      "Margin": "Margin",
+      "Hint": "Set by lifetime Tenure earned: every 6 Tenure earns the next Grade. Grade sets your Stamps per session, the Margin's success threshold, and your Commendation slots, and unlocks skill rating 3 at Grade III.",
+      "Reached": "Reaches a new Grade",
+      "ReachedNote": "Seniority is the ship's real wealth."
+    },
+    "Creation": {
+      "Label": "Creation",
+      "Tenure": "Tenure",
+      "Max": "max rating",
+      "Finish": "Finish creation",
+      "Hint": "12 Tenure to buy skills, maximum rating 2. The standard spread is three skills at 2 and three at 1.",
+      "FinishTitle": "Finish character creation?",
+      "FinishBody": "After this, skills are bought with Tenure you earn, and can't be lowered. Station, Traits and Encumbrances stay editable."
+    },
+    "Encumbrance": {
+      "Heading": "Encumbrances",
+      "Hint": "Two troubles. If any is in play, the Margin of Error widens to 1–2 and an Error earns a Stamp. They never add dice.",
+      "personal": "Personal",
+      "personalHint": "A flaw.",
+      "personalPrompt": "a flaw (Can't Leave a Machine Unfixed)",
+      "circumstantial": "Circumstantial",
+      "circumstantialHint": "An obligation or situation.",
+      "circumstantialPrompt": "an obligation or situation (Censured Once, Watched Ever Since)"
+    },
+    "Gift": {
+      "Heading": "Gift and Drawback",
+      "Hint": "Touched gifts are small, specific and quiet: useful, inconvenient, and occasionally both. A Gift adds its die and turns up to two dice violet. Its Drawback works as a third Encumbrance.",
+      "GiftPrompt": "how (Machines Hum Her Name)",
+      "Drawback": "Drawback",
+      "DrawbackHint": "The inconvenient side of the same Gift.",
+      "DrawbackPrompt": "the other side (Hears Them When They're Hurting)",
+      "DrawbackNote": "In play, the Drawback is an Encumbrance: it widens the Margin of Error and earns a Stamp.",
+      "Registered": "Registered (Form TH-14(C))",
+      "RegisteredHint": "Being unregistered makes a good circumstantial Encumbrance."
+    },
+    "Commendation": {
+      "Heading": "Commendations",
+      "Add": "Add",
+      "Delete": "Remove",
+      "None": "No Commendations yet.",
+      "Hint": "Because I [short phrase], when [specific situation], I [one rule-break]. Slots come at Grades II, V and VIII.",
+      "NamePlaceholder": "Never Misses a Rivet",
+      "SituationPlaceholder": "when I Hullcraft against the clock",
+      "dice2": "Add 2 dice (instead of 1)",
+      "difficulty": "Treat the Difficulty as one lower",
+      "obstacle": "Ignore one obstacle",
+      "conditions": "With Conditions becomes Approved",
+      "impossible": "Do the normally impossible (narrative)",
+      "resonance": "A violet 1 doesn't Resonate",
+      "short": {
+        "dice2": "+2 dice",
+        "difficulty": "Difficulty −1",
+        "obstacle": "ignore an obstacle",
+        "conditions": "Conditions → Approved",
+        "impossible": "the impossible",
+        "resonance": "no Resonance"
+      }
+    },
+    "History": {
+      "Heading": "History",
+      "Compline": "Compline",
+      "Arc": "Arc milestone (+3)",
+      "AwardTenure": "Award Tenure",
+      "AwardTitle": "Award Tenure",
+      "Amount": "Amount",
+      "Reason": "Reason",
+      "Session": "Session",
+      "Award": "Award",
+      "None": "Nothing logged yet.",
+      "earned": "Tenure",
+      "spent": "Spent",
+      "compline": "Compline",
+      "note": "Note",
+      "GradeUp": "★ Grade {grade}",
+      "NoAnswers": "No answers",
+      "ArcMilestone": "Arc milestone",
+      "ComplineTitle": "Compline: {name}",
+      "ComplineHint": "Each yes earns 1 Tenure.",
+      "Q1": "Did you change someone's mind?",
+      "Q2": "Did you learn something Chorus didn't tell you?",
+      "Q3": "Did you bend a rule that should have held?"
+    },
+    "Ledger": {
+      "Title": "Ledger",
+      "Keybind": "Open the Ledger",
+      "Search": "Search the ledger: a name, a place, a word…",
+      "All": "All",
+      "Count": "{n} of {total} entries",
+      "Empty": "Nothing under that name. Try fewer letters.",
+      "Share": "Share to chat",
+      "Show": "Show to players",
+      "OpenSheet": "Open",
+      "DragHint": "Drag onto the tabletop",
+      "Full": "Full answer: Inquiry",
+      "Import": "Import Cantica lore",
+      "ImportHint": "Make an NPC for every person and a Scene Card for every place. Anything already imported is left alone."
+    },
+    "Lore": {
+      "GMOnly": "Only a GM can import the lore.",
+      "Missing": "The lore bundle isn't installed. Install a release of the system: it ships with the ledger entries.",
+      "Imported": "Imported {created} new, {existing} already in the world.",
+      "People": "People",
+      "Places": "Places"
     }
   }
 }

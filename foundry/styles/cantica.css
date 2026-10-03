@@ -523,3 +523,179 @@
 .active-scene .active-name { color: var(--ink-bright); font-size: 0.95rem; }
 
 .pool-dialog .scene-traits[hidden] { display: none; }
+
+/* ═══════════════ v0.5: character sheet tabs, Grade, Notice track, Commendations, History ═══════════════ */
+
+[hidden] { display: none !important; }
+
+.sheet.character .cantica-body {
+  display: block;
+  grid-template-areas: none;
+  overflow: hidden;
+  padding: 0;
+}
+.sheet.character .tab-panel { height: 100%; overflow-y: auto; padding: 0.9rem 1.1rem 1.1rem; }
+
+.sheet-tabs { background: var(--void-deep); border-bottom: 1px solid var(--rule-bright); display: flex; gap: 0; }
+.sheet-tabs .tab {
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  color: var(--ink-dim);
+  padding: 0.5rem 1.1rem;
+}
+.sheet-tabs .tab:hover { color: var(--warm-bright); box-shadow: none; }
+.sheet-tabs .tab.active { background: var(--hull-bright); border-bottom-color: var(--warm); color: var(--warm-bright); }
+
+.record-grid { display: grid; gap: 0.9rem; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.record-main { display: flex; flex-direction: column; gap: 0.9rem; min-width: 0; }
+.record-skills { align-self: start; }
+
+.counter .counter-sub { color: var(--ink-dim); font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.14em; text-transform: uppercase; }
+.counter.grade { min-width: 78px; }
+.grade-value { color: var(--warm-bright); font-family: var(--font-display); font-size: 1.7rem; line-height: 1.1; }
+.counters { flex-wrap: wrap; justify-content: flex-end; }
+.counter .cite { font-size: 0.58rem; padding: 0.12rem 0.4rem; }
+
+.trait.open input { font-style: italic; }
+.trait.open input::placeholder, .trait input::placeholder { color: var(--ink-faint); font-style: italic; }
+.trait.enc label { color: var(--warn); }
+.trait.enc input { border-color: var(--rule-bright); }
+
+/* skill budget and locked pips */
+.skill-budget {
+  align-items: center;
+  background: var(--void-deep);
+  border: 1px solid var(--rule-bright);
+  color: var(--ink-soft);
+  display: flex;
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  gap: 0.4rem 0.8rem;
+  justify-content: space-between;
+  letter-spacing: 0.08em;
+  padding: 0.35rem 0.55rem;
+}
+.skill-budget strong { color: var(--warm-bright); font-weight: 500; }
+.skill-budget.over strong { color: var(--warn); }
+.skill-budget button { padding: 0.15rem 0.5rem; }
+.pip.locked { border-style: dashed; opacity: 0.45; }
+
+/* the Notice track: three Minor boxes, two Major, one Final */
+.track { display: grid; gap: 0.4rem; grid-template-columns: minmax(0, 1fr); }
+.track-row { display: grid; gap: 0.4rem; grid-auto-columns: minmax(0, 1fr); grid-auto-flow: column; }
+.track .box .clears-by { color: var(--ink-soft); font-size: 0.78rem; font-style: italic; }
+.track .box .treat { padding: 0.15rem 0.5rem; }
+
+/* commendations */
+.commendation { background: var(--void-deep); border: 1px solid var(--rule-bright); border-left: 3px solid var(--warm); display: grid; gap: 0.3rem; padding: 0.4rem 0.5rem; }
+.commendation-row { align-items: center; display: grid; gap: 0.3rem; grid-template-columns: 1fr auto; }
+.commendation-row button { padding: 0.15rem 0.5rem; }
+.panel .empty { color: var(--ink-dim); font-style: italic; margin: 0; }
+
+/* gift tab and notes tab */
+.gift-tab .panel, .notes-tab .panel { max-width: 40rem; }
+.touched.registered { margin-top: 0.4rem; }
+.notes-tab textarea { min-height: 22rem; }
+
+/* history */
+.log { display: grid; gap: 0.25rem; list-style: none; margin: 0; padding: 0; }
+.log-entry {
+  align-items: baseline;
+  background: var(--void-deep);
+  border: 1px solid var(--rule);
+  display: grid;
+  gap: 0.15rem 0.7rem;
+  grid-template-columns: 5.2rem 4.6rem 2.6rem minmax(0, 1fr);
+  padding: 0.35rem 0.55rem;
+}
+.log-date { color: var(--ink-dim); font-family: var(--font-mono); font-size: 0.6rem; }
+.log-kind { color: var(--ink-soft); font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.16em; text-transform: uppercase; }
+.log-amount { color: var(--warm-bright); font-family: var(--font-mono); font-size: 0.8rem; }
+.log-entry.spent .log-amount { color: var(--ink-soft); }
+.log-reason { color: var(--ink); font-size: 0.88rem; }
+.log-grade { color: var(--warm-bright); font-family: var(--font-mono); font-size: 0.62rem; grid-column: 1 / -1; letter-spacing: 0.2em; text-transform: uppercase; }
+.log-entry.grade-up { background: var(--warm-glow); border-color: var(--warm); box-shadow: 0 0 12px var(--warm-glow); }
+
+/* ═══════════════ the pool builder (v0.5) ═══════════════ */
+
+.pool-dialog .commendation .check-label { color: var(--warm-bright); }
+.pool-dialog .commendations { border-color: var(--warm-deep); }
+.encumbrance-note { color: var(--warn) !important; }
+
+/* ═══════════════ chat cards: lore and Grade ═══════════════ */
+
+.cantica-card.lore-card { border-left-color: var(--bound); }
+.cantica-card .lore-img { border: 1px solid var(--rule-bright); max-height: 14rem; max-width: 100%; object-fit: cover; }
+.cantica-card .lore-text p { margin: 0 0 0.5rem; }
+.cantica-card .lore-text ul { margin: 0 0 0.5rem 1rem; padding: 0; }
+.cantica-card.grade-card .verdict { font-size: 1.1rem; }
+
+/* ═══════════════ the Ledger window ═══════════════ */
+
+.ledger-window .window-content { background: var(--hull); padding: 0; }
+.ledger-app { display: flex; flex-direction: column; height: 100%; }
+.ledger-controls { background: var(--hull); border-bottom: 1px solid var(--rule); display: grid; flex: none; gap: 0.45rem; padding: 0.6rem 0.8rem 0.5rem; }
+.ledger-search input { background: var(--void-deep); border: 1px solid var(--rule-bright); border-radius: 0; color: var(--ink-bright); font-family: var(--font-body); font-size: 0.95rem; padding: 0.45rem 0.7rem; width: 100%; }
+.ledger-search input:focus { border-color: var(--warm); box-shadow: 0 0 0 1px var(--warm-glow); outline: none; }
+.ledger-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+.ledger-chips .chip { background: transparent; border: 1px solid var(--rule-bright); color: var(--ink-soft); font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.14em; padding: 0.22rem 0.55rem; text-transform: uppercase; }
+.ledger-chips .chip.on { background: var(--warm-glow); border-color: var(--warm); color: var(--warm-bright); }
+.ledger-chips .chip .n { color: var(--ink-dim); margin-left: 0.2rem; }
+.ledger-meta { align-items: center; display: flex; justify-content: space-between; }
+.ledger-count { color: var(--ink-dim); font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.2em; text-transform: uppercase; }
+.ledger-meta .import { border-color: var(--warm-deep); color: var(--warm); padding: 0.2rem 0.6rem; }
+
+.ledger-results { flex: 1; overflow-y: auto; padding: 0.4rem 0.8rem 1rem; }
+.ledger-results ul { list-style: none; margin: 0; padding: 0; }
+.ledger-results .group-title { align-items: center; color: var(--warm); display: flex; font-family: var(--font-mono); font-size: 0.6rem; font-weight: 500; gap: 0.5rem; letter-spacing: 0.28em; margin: 0.9rem 0 0.2rem; text-transform: uppercase; }
+.ledger-results .group-title::after { background: var(--warm-deep); content: ""; flex: 1; height: 1px; opacity: 0.3; order: 2; }
+.ledger-results .group-title .n { color: var(--ink-faint); order: 3; }
+
+.ledger-results .entry { border-bottom: 1px solid var(--rule); }
+.ledger-results .entry.open { background: var(--hull-bright); box-shadow: inset 2px 0 0 var(--warm); }
+.ledger-results .entry-head { align-items: baseline; background: transparent; border: 0; color: inherit; cursor: pointer; display: grid; font: inherit; gap: 0 0.7rem; grid-template-columns: 3.8rem minmax(0, 1fr) 1rem; letter-spacing: 0; padding: 0.55rem 0.3rem; text-align: left; text-transform: none; width: 100%; }
+.ledger-results .entry-head:hover { background: var(--hull-bright); box-shadow: none; }
+.ledger-results .kind { font-family: var(--font-mono); font-size: 0.5rem; letter-spacing: 0.18em; text-transform: uppercase; }
+.ledger-results .kind-people { color: var(--warm); }
+.ledger-results .kind-places { color: var(--bound); }
+.ledger-results .kind-groups { color: var(--liturgy); }
+.ledger-results .kind-terms { color: var(--ink-soft); }
+.ledger-results .kind-rumors { color: var(--warn); }
+.ledger-results .kind-rules { color: var(--bound-bright); }
+.ledger-results .entry-main { display: grid; min-width: 0; }
+.ledger-results .entry-name { color: var(--ink-bright); font-family: var(--font-body); font-size: 1rem; }
+.ledger-results .entry-tag { color: var(--ink-dim); font-family: var(--font-mono); font-size: 0.52rem; letter-spacing: 0.14em; text-transform: uppercase; }
+.ledger-results .entry-summary { color: var(--ink-soft); font-size: 0.8rem; }
+.ledger-results .chev { color: var(--ink-faint); font-size: 0.75rem; }
+.ledger-results .entry.open .chev { color: var(--warm); transform: rotate(90deg); }
+
+.ledger-results .entry-body { color: var(--ink); font-size: 0.85rem; line-height: 1.55; padding: 0.1rem 0.8rem 0.9rem 4.5rem; }
+.ledger-results .entry-img { border: 1px solid var(--rule-bright); float: right; margin: 0.2rem 0 0.5rem 0.9rem; max-width: 10rem; width: 36%; }
+.ledger-results .entry-img.draggable { cursor: grab; }
+.ledger-results .entry-img.draggable:hover { border-color: var(--warm); box-shadow: 0 0 10px var(--warm-glow); }
+.ledger-results .entry-text p { margin: 0 0 0.6rem; }
+.ledger-results .entry-text ul { list-style: none; margin: 0 0 0.6rem; padding: 0; }
+.ledger-results .entry-text li { margin-bottom: 0.3rem; padding-left: 0.9rem; position: relative; }
+.ledger-results .entry-text li::before { color: var(--warm-deep); content: "◆"; font-size: 0.45rem; left: 0; position: absolute; top: 0.4rem; }
+.ledger-results .entry-text strong { color: var(--ink-bright); font-weight: 500; }
+.ledger-results .rules-table { border-collapse: collapse; clear: both; font-size: 0.74rem; margin: 0.2rem 0 0.8rem; width: 100%; }
+.ledger-results .rules-table th, .ledger-results .rules-table td { border: 1px solid var(--rule); padding: 0.25rem 0.4rem; text-align: left; vertical-align: top; }
+.ledger-results .rules-table thead th { background: var(--void-deep); color: var(--warm); font-family: var(--font-mono); font-size: 0.52rem; letter-spacing: 0.12em; text-transform: uppercase; }
+.ledger-results .track-demo { display: flex; gap: 0.3rem; margin: 0.3rem 0 0.7rem; }
+.ledger-results .track-demo span { border: 1px solid var(--rule-bright); flex: 1; font-family: var(--font-mono); font-size: 0.55rem; letter-spacing: 0.14em; padding: 0.35rem 0.2rem; text-align: center; text-transform: uppercase; }
+.ledger-results a.xref { border-bottom: 1px dotted var(--bound-deep); color: var(--bound); cursor: pointer; text-decoration: none; }
+.ledger-results a.xref:hover { color: var(--bound-bright); }
+.ledger-results .entry-foot { align-items: center; clear: both; display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; padding-top: 0.2rem; }
+.ledger-results .entry-actions { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.ledger-results .entry-actions button { padding: 0.18rem 0.55rem; }
+.ledger-results .full { color: var(--warm); font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.12em; text-decoration: none; text-transform: uppercase; }
+.ledger-results .full:hover { color: var(--warm-bright); text-decoration: underline; }
+.ledger-empty { color: var(--ink-soft); font-style: italic; padding: 1.2rem; text-align: center; }
+
+.scrutiny .ledger-open { padding: 0.2rem 0.6rem; width: 100%; }
+.cantica-ledger-button { margin-left: 0.3rem; }
+
+/* the pre-tabs layout named grid areas on .skills; the Record tab has its own grid */
+.sheet.character .record-skills { grid-area: auto; }

@@ -5,6 +5,7 @@
   </header>
   <blockquote>{{notice}} <span class="dc">{{type}}</span></blockquote>
   <p class="note">{{box}} · {{status}}</p>
+  {{#if clearsBy}}<p class="note">{{localize "CANTICA.Track.ClearsByShort"}} {{clearsBy}}</p>{{/if}}
   {{#if overflowed}}<p class="note">{{localize "CANTICA.Track.Overflowed"}}</p>{{/if}}
   {{#if out}}<div class="verdict">{{localize "CANTICA.Track.TakenOut"}}</div>{{/if}}
 </div>

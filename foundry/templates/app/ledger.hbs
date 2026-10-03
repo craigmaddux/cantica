@@ -1,0 +1,20 @@
+<div class="ledger-app">
+  {{#if available}}
+  <div class="ledger-controls">
+    <div class="ledger-search">
+      <input type="search" placeholder="{{localize 'CANTICA.Ledger.Search'}}" autocomplete="off" spellcheck="false" aria-label="{{localize 'CANTICA.Ledger.Search'}}">
+    </div>
+    <div class="ledger-chips" role="group"></div>
+    <div class="ledger-meta">
+      <span class="ledger-count"></span>
+      {{#if canImport}}
+      <button type="button" class="import" data-action="importLore" title="{{localize 'CANTICA.Ledger.ImportHint'}}"><i class="fa-solid fa-download"></i> {{localize "CANTICA.Ledger.Import"}} ({{missing}})</button>
+      {{/if}}
+    </div>
+  </div>
+  <div class="ledger-results"></div>
+  <p class="ledger-empty" hidden>{{localize "CANTICA.Ledger.Empty"}}</p>
+  {{else}}
+  <p class="ledger-empty">{{localize "CANTICA.Lore.Missing"}}</p>
+  {{/if}}
+</div>

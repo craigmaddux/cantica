@@ -27,11 +27,13 @@
   <fieldset>
     <legend>{{localize "CANTICA.Pool.Traits"}}</legend>
     {{#each traits}}
-    <label class="check {{#if disabled}}off{{/if}}">
-      <input type="checkbox" name="traits" value="{{key}}" {{#if disabled}}disabled{{/if}}>
+    <label class="check">
+      <input type="checkbox" name="traits" value="{{key}}">
       <span class="check-label">{{label}}</span>
-      <span class="check-text">{{#if text}}{{text}}{{else}}—{{/if}}</span>
+      <span class="check-text">{{text}}</span>
     </label>
+    {{else}}
+    <p class="hint">{{localize "CANTICA.Pool.NoTraits"}}</p>
     {{/each}}
     {{#if touched}}
     <label class="check gift">
@@ -42,6 +44,21 @@
     </label>
     {{/if}}
   </fieldset>
+
+  {{#if commendations.length}}
+  <fieldset class="commendations">
+    <legend>{{localize "CANTICA.Commendation.Heading"}}</legend>
+    {{#each commendations}}
+    <label class="check commendation">
+      <input type="checkbox" name="commendation" value="{{id}}" data-name="{{name}}" data-break="{{ruleBreak}}">
+      <span class="check-label">★</span>
+      <span class="check-text">{{name}}</span>
+      <span class="check-note">{{#if situation}}{{situation}} · {{/if}}{{effect}}</span>
+    </label>
+    {{/each}}
+    <p class="hint">{{localize "CANTICA.Pool.CommendationHint"}}</p>
+  </fieldset>
+  {{/if}}
 
   {{#if hasScene}}
   <fieldset class="scene">
@@ -91,13 +108,15 @@
   </fieldset>
 
   <fieldset>
-    <legend>{{localize "CANTICA.Pool.Margin"}}</legend>
-    <label class="check">
-      <input type="checkbox" name="encumbrance">
-      <span class="check-label">{{localize "CANTICA.Pool.Encumbrance"}}</span>
-      <span class="check-text">{{#if encumbranceText}}{{encumbranceText}}{{else}}—{{/if}}</span>
-      <span class="check-note">{{localize "CANTICA.Pool.EncumbranceNote"}}</span>
+    <legend>{{localize "CANTICA.Encumbrance.Heading"}}</legend>
+    {{#each encumbrances}}
+    <label class="check {{#if disabled}}off{{/if}}">
+      <input type="checkbox" name="encumbrance" value="{{key}}" {{#if disabled}}disabled{{/if}}>
+      <span class="check-label">{{label}}</span>
+      <span class="check-text">{{#if text}}{{text}}{{else}}—{{/if}}</span>
     </label>
+    {{/each}}
+    <p class="hint">{{localize "CANTICA.Pool.EncumbranceNote"}}</p>
     <label class="check">
       <input type="checkbox" name="greaterBound">
       <span class="check-label">{{localize "CANTICA.Pool.GreaterBound"}}</span>
@@ -109,6 +128,7 @@
     <span class="preview-total"><span data-total>1</span> {{localize "CANTICA.Pool.Dice"}}</span>
     <span class="preview-breakdown" data-breakdown></span>
     <span class="preview-note" data-note></span>
+    <span class="preview-breakdown" data-error-range></span>
   </div>
 
   <footer>

@@ -16,6 +16,8 @@ import PoolDialog from "./module/apps/pool-dialog.mjs";
 import { rollPool } from "./module/dice/roll.mjs";
 import { registerDiceColors } from "./module/dice/dsn.mjs";
 import { onRenderChatMessage } from "./module/chat.mjs";
+import Ledger from "./module/apps/ledger.mjs";
+import { initLore, importLore } from "./module/lore.mjs";
 import { registerCards, listenForCards, activeCard, detectCard, setActiveCard } from "./module/cards.mjs";
 import { registerScrutiny, listenForScrutiny, showScrutiny, getScrutiny, gainScrutiny } from "./module/scrutiny.mjs";
 
@@ -50,9 +52,22 @@ Hooks.once("init", () => {
 
   registerScrutiny();
   registerCards();
+  initLore();
+
+  // The Ledger: Gloss's entries, inside Foundry.
+  let ledger = null;
+  const openLedger = id => {
+    ledger ??= new Ledger();
+    return id ? ledger.openEntry(id) : ledger.render({ force: true });
+  };
+  game.keybindings.register(SYSTEM_ID, "openLedger", {
+    name: "CANTICA.Ledger.Keybind",
+    editable: [],
+    onDown: () => { openLedger(); return true; }
+  });
 
   // Handy for macros: game.cantica.rollPool(actor, { skill: "hullcraft" }) or new game.cantica.PoolDialog({ actor }).
-  game.cantica = { rules, notices, rollPool, PoolDialog, showScrutiny, getScrutiny, gainScrutiny, activeCard, detectCard, setActiveCard };
+  game.cantica = { rules, notices, rollPool, PoolDialog, showScrutiny, getScrutiny, gainScrutiny, activeCard, detectCard, setActiveCard, openLedger, importLore };
 
   return foundry.applications.handlebars.loadTemplates([
     `systems/${SYSTEM_ID}/templates/actor/character.hbs`,
@@ -64,7 +79,10 @@ Hooks.once("init", () => {
     `systems/${SYSTEM_ID}/templates/chat/roll.hbs`,
     `systems/${SYSTEM_ID}/templates/chat/clause.hbs`,
     `systems/${SYSTEM_ID}/templates/chat/notice.hbs`,
-    `systems/${SYSTEM_ID}/templates/chat/amend.hbs`
+    `systems/${SYSTEM_ID}/templates/chat/amend.hbs`,
+    `systems/${SYSTEM_ID}/templates/chat/grade.hbs`,
+    `systems/${SYSTEM_ID}/templates/chat/lore.hbs`,
+    `systems/${SYSTEM_ID}/templates/app/ledger.hbs`
   ]);
 });
 
@@ -78,3 +96,16 @@ Hooks.once("ready", () => {
 Hooks.once("diceSoNiceReady", dice3d => registerDiceColors(dice3d));
 
 Hooks.on("renderChatMessageHTML", onRenderChatMessage);
+
+// A Ledger button in the Actors directory header.
+Hooks.on("renderActorDirectory", (app, html) => {
+  const root = html instanceof HTMLElement ? html : html?.[0];
+  const actions = root?.querySelector(".header-actions");
+  if (!actions || actions.querySelector(".cantica-ledger-button")) return;
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "cantica-ledger-button";
+  button.innerHTML = `<i class="fa-solid fa-book-open"></i> ${game.i18n.localize("CANTICA.Ledger.Title")}`;
+  button.addEventListener("click", () => game.cantica.openLedger());
+  actions.append(button);
+});

@@ -1,6 +1,6 @@
 import { SYSTEM_ID, NPC_TIERS } from "../config.mjs";
 import { RATINGS } from "../rules.mjs";
-import { trackContext, takeNotice, clearNotice, clearMinors } from "./notice-track.mjs";
+import { trackContext, takeNotice, clearNotice, treatNotice, clearMinors } from "./notice-track.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -12,7 +12,7 @@ export default class NpcSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     position: { width: 480, height: 620 },
     window: { resizable: true },
     form: { submitOnChange: true },
-    actions: { takeNotice, clearNotice, clearMinors }
+    actions: { takeNotice, clearNotice, treatNotice, clearMinors }
   };
 
   static PARTS = {

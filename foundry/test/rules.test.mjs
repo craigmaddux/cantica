@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { buildPool, evaluateRoll, tierFor } from "../module/rules.mjs";
+import { buildPool, evaluateRoll, tierFor, commendationEffects, effectiveDifficulty } from "../module/rules.mjs";
+import { marginTarget } from "../module/progression.mjs";
 
 test("Margin alone: Skill 0 still rolls one die", () => {
   const p = buildPool({});
@@ -142,4 +143,66 @@ test("odds reference table (spec v0.2): Denied / With Conditions / Approved / Co
       });
     }
   }
+});
+
+// ---- v0.5: Grade and Commendations ----
+
+test("Commendation dice are extra dice, still subject to the cap", () => {
+  assert.equal(buildPool({ skill: 2, bonus: 2 }).total, 5);
+  assert.equal(buildPool({ skill: 3, traits: 2, bonus: 2 }).total, 7);
+});
+
+test("the Margin's success threshold follows Grade; 1 is always Error and 10 always Grace", () => {
+  // Grade I-III: a 6 on the Margin is not a success. Grade IV: it is.
+  assert.equal(evaluateRoll({ margin: 6 }, { marginTarget: marginTarget(3) }).marginSuccess, false);
+  assert.equal(evaluateRoll({ margin: 6 }, { marginTarget: marginTarget(4) }).marginSuccess, true);
+  assert.equal(evaluateRoll({ margin: 4 }, { marginTarget: marginTarget(10) }).marginSuccess, true);
+  assert.equal(evaluateRoll({ margin: 3 }, { marginTarget: marginTarget(10) }).marginSuccess, false);
+
+  for (const grade of [1, 4, 7, 10]) {
+    const opts = { marginTarget: marginTarget(grade) };
+    assert.equal(evaluateRoll({ margin: 1 }, opts).error, true, `Grade ${grade} 1 is Error`);
+    assert.equal(evaluateRoll({ margin: 10 }, opts).grace, true, `Grade ${grade} 10 is Grace`);
+    assert.equal(evaluateRoll({ margin: 10 }, opts).marginSuccess, true);
+  }
+});
+
+test("a better Margin threshold adds a success and can change the tier", () => {
+  const dice = { margin: 5, white: [8] };
+  assert.equal(evaluateRoll(dice, { difficulty: 2, marginTarget: 7 }).tier, "denied");
+  assert.equal(evaluateRoll(dice, { difficulty: 2, marginTarget: 5 }).tier, "conditions");
+});
+
+test("Commendation: With Conditions becomes Approved, nothing else changes", () => {
+  const dice = { margin: 8, white: [3] };
+  assert.equal(evaluateRoll(dice, { difficulty: 1 }).tier, "conditions");
+  assert.equal(evaluateRoll(dice, { difficulty: 1, upgradeConditions: true }).tier, "approved");
+  assert.equal(evaluateRoll({ margin: 2, white: [3] }, { difficulty: 1, upgradeConditions: true }).tier, "denied");
+  assert.equal(evaluateRoll({ margin: 8, white: [9] }, { difficulty: 1, upgradeConditions: true }).tier, "approved");
+});
+
+test("Commendation: a violet 1 doesn't Resonate", () => {
+  const dice = { margin: 5, violet: [1, 1, 8] };
+  assert.equal(evaluateRoll(dice).resonance, 2);
+  assert.equal(evaluateRoll(dice, { suppressResonance: 1 }).resonance, 1);
+  assert.equal(evaluateRoll(dice, { suppressResonance: 5 }).resonance, 0);
+});
+
+test("Commendation effects from the rule-break menu", () => {
+  const fx = commendationEffects([
+    { ruleBreak: "dice2" }, { ruleBreak: "difficulty" }, { ruleBreak: "obstacle" },
+    { ruleBreak: "conditions" }, { ruleBreak: "resonance" }, { ruleBreak: "impossible", name: "Walked Out" }
+  ]);
+  assert.equal(fx.bonusDice, 2);
+  assert.equal(fx.difficultyShift, -1);
+  assert.equal(fx.obstaclesIgnored, 1);
+  assert.equal(fx.upgradeConditions, true);
+  assert.equal(fx.suppressResonance, 1);
+  assert.equal(fx.impossible.length, 1);
+  assert.deepEqual(commendationEffects([]).bonusDice, 0);
+});
+
+test("a Commendation never takes Difficulty below 0", () => {
+  assert.equal(effectiveDifficulty(2, -1), 1);
+  assert.equal(effectiveDifficulty(0, -1), 0);
 });

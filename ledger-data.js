@@ -159,7 +159,7 @@ window.LEDGER = [
     "Three markets to know: [[bay-floor|the Bay Floor]], [[upper-gallery|the Upper Gallery]] and [[wet-market|the Wet Market]]. The people here want the lights to work, the food fresh and the noise ordinances enforced, which makes Stem-Side the unofficial heart of the [[hullbound|Hullbound]]. It also has a bar with a very shy jukebox: see [[the-bar|the Bar]]."
   ] },
 
-{ id: "bay-floor", kind: "places", name: "The Bay Floor", tag: "Stem-Side market", inquiry: 15,
+{ id: "bay-floor", kind: "places", name: "The Bay Floor", tag: "Stem-Side market", inquiry: 15, img: "assets/stem-side-markets.webp",
   aka: ["haggling", "negotiate"],
   summary: "On the old cargo deck. Open 22 hours a day. Everything is negotiated.",
   body: [
@@ -549,8 +549,8 @@ window.LEDGER = [
   summary: "Margin + Skill + Traits + Circumstances − Obstacles. Cap 7.",
   body: [
     "<strong>Pool = the Margin + Skill (0–3) + 1 per relevant Trait + 1 per Circumstance − 1 per Obstacle. Cap: 7.</strong>",
-    "<ul><li><strong>The Margin:</strong> one amber die, always rolled. See [[rules-margin|the Margin]].</li><li><strong>Skill:</strong> 0–3 dice.</li><li><strong>Traits:</strong> +1 die each when relevant; each counts once per roll. See [[rules-traits|Traits]].</li><li><strong>Circumstances:</strong> +1 each: gear, a scene Trait, another PC assisting, a form filed in advance.</li><li><strong>Obstacles:</strong> −1 each: wind, wet rock, darkness, a relevant NPC Tag, a relevant Notice on you.</li><li><strong>Expedite:</strong> spend a Stamp for +1 die, once per roll. See [[rules-stamps|Stamps]].</li></ul>",
-    "Typical pools are 3–5 dice. A full 7 takes everything at once, for example Margin + Skill 3 + Trait + an assist + the environment."
+    "<ul><li><strong>The Margin:</strong> one amber die, always rolled. See [[rules-margin|the Margin]].</li><li><strong>Skill:</strong> 0–3 dice.</li><li><strong>Traits:</strong> +1 die each when relevant (Station and your open Traits); each counts once per roll. See [[rules-traits|Traits]].</li><li><strong>Commendations:</strong> +2 dice instead of +1 when one of that kind applies. See [[rules-commendations|Commendations]].</li><li><strong>Circumstances:</strong> +1 each: gear, a scene Trait, another PC assisting, a form filed in advance.</li><li><strong>Obstacles:</strong> −1 each: wind, wet rock, darkness, a relevant NPC Tag, a relevant Notice on you.</li><li><strong>Expedite:</strong> spend a Stamp for +1 die, once per roll. See [[rules-stamps|Stamps]].</li></ul>",
+    "Typical pools are 3–5 dice. A full 7 takes everything at once, for example Margin + Skill 3 + Trait + an assist + the environment. [[rules-encumbrances|Encumbrances]] never add dice."
   ] },
 
 { id: "rules-difficulty", kind: "rules", name: "Difficulty and results", tag: "Rules",
@@ -566,9 +566,9 @@ window.LEDGER = [
   aka: ["margin of grace", "margin of error", "amber", "twist", "complication", "grace", "error"],
   summary: "One amber die, every roll. A 10 is Grace; a 1 is Error and a complication.",
   body: [
-    "One per roll, always. It counts toward successes like a white die (7+), and it guarantees nobody ever rolls zero dice, even at Skill 0.",
-    "<ul><li><strong>10: Margin of Grace.</strong> Something goes unexpectedly right: a detail, a helping hand, or a Stamp.</li><li><strong>1: Margin of Error.</strong> A twist: the GM introduces a complication, <strong>and gains 1 [[rules-scrutiny|Scrutiny]]</strong>.</li><li><strong>Encumbrance in play:</strong> the Margin of Error widens to <strong>1–2</strong>. Any Error is your flaw biting, and <strong>you earn a Stamp</strong> (the GM still gains Scrutiny).</li></ul>",
-    "Risk: 10% for Grace; 10% for Error (20% with Encumbrance)."
+    "One per roll, always. It counts toward successes like a white die, and it guarantees nobody ever rolls zero dice, even at Skill 0. It succeeds on <strong>7+ at Grades I–III</strong>, improving with [[rules-grade|Grade]] to 6+ (IV–VI), 5+ (VII–IX) and 4+ (X).",
+    "<ul><li><strong>10: Margin of Grace.</strong> Something goes unexpectedly right: a detail, a helping hand, or a Stamp. Always a 10, at every Grade.</li><li><strong>1: Margin of Error.</strong> A twist: the GM introduces a complication, <strong>and gains 1 [[rules-scrutiny|Scrutiny]]</strong>. Always a 1, at every Grade.</li><li><strong>Encumbrance in play:</strong> if <strong>any</strong> [[rules-encumbrances|Encumbrance]] (or a Touched character's Drawback) is in play, the Margin of Error widens to <strong>1–2</strong>. Any Error is your flaw biting, and <strong>you earn a Stamp</strong> (the GM still gains Scrutiny). Several in play still means 1–2.</li></ul>",
+    "Risk: 10% for Grace; 10% for Error (20% with an Encumbrance in play)."
   ] },
 
 { id: "rules-violet", kind: "rules", name: "Violet dice (the Bound)", tag: "Rules",
@@ -580,22 +580,42 @@ window.LEDGER = [
     "Only two special colors exist: amber (the Margin) and violet (the Bound). Risk: 10% per violet die for Resonance (20% for Greater Bound)."
   ] },
 
-{ id: "rules-traits", kind: "rules", name: "Traits and the Gift", tag: "Rules",
-  aka: ["station", "deck", "bond", "encumbrance", "gift", "touched trait"],
-  summary: "Four freeform phrases: Station, Deck, Bond, Encumbrance. Touched characters add a Gift.",
+{ id: "rules-traits", kind: "rules", name: "Traits", tag: "Rules",
+  aka: ["station", "open traits", "high concept", "aspects", "trait"],
+  summary: "Station plus three open Traits: freeform phrases. Each relevant one adds a die.",
   body: [
-    "<ul><li><strong>Station:</strong> your work assignment (<em>Third-Shift Recycler Technician</em>).</li><li><strong>Deck:</strong> where you come from (<em>Stem-Side Born, Stem-Side Stubborn</em>).</li><li><strong>Bond:</strong> a person or faction tie (<em>Owes Deya Marsh More Than Tallies</em>).</li><li><strong>Encumbrance:</strong> your trouble; it tilts the Margin when in play (<em>Censured Once, Watched Ever Since</em>).</li></ul>",
-    "Traits add +1 die when relevant, and each counts once per roll.",
-    "<strong>Touched characters add a Gift</strong> (<em>Machines Hum Her Name</em>). A Gift is a Trait: it says <em>how</em>, and a skill still says <em>what</em>. It never rolls on its own. In play it adds its die and turns <strong>up to two dice violet</strong>. Gift + Attune is the most direct and most dangerous way to deal with [[the-bound|the Bound]]."
+    "Freeform phrases, Fate-style. Each relevant Trait adds +1 die, and each counts once per roll.",
+    "<ul><li><strong>Station</strong> (required): what you do, your high concept. It ties to your [[work-assignment|work assignment]] and the economy (<em>Third-Shift Recycler Technician</em>).</li><li><strong>Three open Traits:</strong> anything. Suggested prompts, not required labels: <em>where you come from · who you owe or love · what you believe · a knack nobody expects.</em> (<em>Stem-Side Born, Stem-Side Stubborn</em> · <em>Owes Deya Marsh More Than Tallies</em> · <em>Reads Schematics Like Scripture</em>)</li></ul>",
+    "You can buy up to three more open Traits, for 4 Tenure each (six in all). The GM may also award one after a major story moment (<em>Walked Out of the Quiet Dock</em>). Your troubles are not Traits: see [[rules-encumbrances|Encumbrances]]. Touched characters also have a [[rules-gift|Gift]]."
+  ] },
+
+{ id: "rules-encumbrances", kind: "rules", name: "Encumbrances", tag: "Rules",
+  aka: ["flaw", "trouble", "personal encumbrance", "circumstantial encumbrance", "drawback"],
+  summary: "Two troubles. If any is in play, the Margin of Error widens to 1–2.",
+  body: [
+    "Every character has <strong>two</strong>:",
+    "<ul><li><strong>Personal:</strong> a flaw (<em>Can't Leave a Machine Unfixed</em>).</li><li><strong>Circumstantial:</strong> an obligation or situation (<em>Censured Once, Watched Ever Since</em>). See [[censure|censure]].</li></ul>",
+    "If <strong>any</strong> Encumbrance is in play, the [[rules-margin|Margin of Error]] widens to 1–2, and an Error earns you a Stamp. Several in play do not widen it further. <strong>Encumbrances never add dice.</strong>",
+    "When the story resolves an Encumbrance, the old one becomes a Trait and you write a new Encumbrance (<em>Censured Once, Watched Ever Since</em> → <em>Cleared My Name Before the Forum</em>)."
+  ] },
+
+{ id: "rules-gift", kind: "rules", name: "Gift and Drawback (Touched)", tag: "Rules",
+  aka: ["gift", "drawback", "registered", "touched", "form th-14"],
+  summary: "A Touched character's Gift adds a die and turns dice violet. Its Drawback is a third Encumbrance.",
+  body: [
+    "[[the-touched|Touched]] gifts are small, specific and quiet: useful, inconvenient, and occasionally both at once. Touched characters aren't shunned; people just aren't sure what to make of them.",
+    "<ul><li><strong>Gift:</strong> a Trait that says <em>how</em>; a skill still says <em>what</em>. In play it adds its die and turns <strong>up to two dice violet</strong>. It never rolls on its own.</li><li><strong>Drawback:</strong> the inconvenient side of the same Gift. <strong>It works as a third Encumbrance:</strong> it widens the Margin of Error and earns Stamps.</li><li><strong>Registered:</strong> yes or no ([[the-registry|Form TH-14(C)]]). Being unregistered makes a good circumstantial Encumbrance.</li></ul>",
+    "<table class=\"rules-table\"><thead><tr><th>Gift</th><th>Drawback</th></tr></thead><tbody><tr><td><em>Machines Hum Her Name</em></td><td><em>Hears Them When They're Hurting</em></td></tr><tr><td><em>Knows When a Threshold Is Crossed</em></td><td><em>Can't Not Notice</em></td></tr><tr><td><em>Feels a Promise Break</em></td><td><em>Feels Every One</em></td></tr></tbody></table>",
+    "Gift + Attune is the most direct and most dangerous way to deal with [[the-bound|the Bound]]. See [[rules-violet|violet dice]]."
   ] },
 
 { id: "rules-stamps", kind: "rules", name: "Stamps", tag: "Rules (player currency)",
   aka: ["expedite", "countersign", "reclassify", "cite a clause", "amend the scene", "withdraw", "metacurrency"],
   summary: "Earned by trouble, spent for dice, help, and the right to say what the rules say.",
   body: [
-    "<strong>Earned:</strong> when Encumbrance bites (a Margin of Error while it's in play); sometimes from a Margin of Grace; and for <strong>withdrawing</strong> from a scene before being taken out.",
+    "<strong>Earned:</strong> when an Encumbrance bites (a Margin of Error while any Encumbrance or Drawback is in play); sometimes from a Margin of Grace; for <strong>withdrawing</strong> from a scene before being taken out; and <strong>each player starts each session with 2</strong> (more at higher [[rules-grade|Grades]]).",
     "<table class=\"rules-table\"><thead><tr><th>Spend</th><th>Effect</th></tr></thead><tbody><tr><th>Expedite</th><td>+1 die to a roll (one per roll)</td></tr><tr><th>Countersign</th><td>give a Stamp to an ally's roll</td></tr><tr><th>Reclassify</th><td>downgrade a Notice as it lands (Major → Minor, Minor → none)</td></tr><tr><th>Cite a Clause</th><td>declare that a rule in the Checklist or the founders' procedures exists and applies; the GM adds one detail of how it actually reads</td></tr><tr><th>Amend the Scene</th><td>declare a new scene Trait (a steam pipe bursts, useful scrap turns up, a hatch was unlocked all along). Worth +1 die to anyone who can plausibly use it; the GM may add one small detail</td></tr></tbody></table>",
-    "A Clause amends the rules; an Amendment amends the room."
+    "A Clause amends the rules; an Amendment amends the room. See [[rules-scene-cards|Scene cards]]."
   ] },
 
 { id: "rules-scrutiny", kind: "rules", name: "Scrutiny", tag: "Rules (GM currency)",
@@ -607,12 +627,12 @@ window.LEDGER = [
   ] },
 
 { id: "rules-notices", kind: "rules", name: "Notices (harm)", tag: "Rules",
-  aka: ["harm", "wounds", "injury", "damage", "health", "hit points", "track", "body", "standing"],
-  summary: "No hit points. Harm is a track of named Notices: 2 Minor, 1 Major, 1 Final.",
+  aka: ["harm", "wounds", "injury", "damage", "health", "hit points", "track", "body", "standing", "clears by"],
+  summary: "No hit points. Harm is a track of named Notices: 3 Minor, 2 Major, 1 Final.",
   body: [
     "Physical and social conflict use the same rules: a fight, a flirtation and a hearing before [[orin-fell|Magistrate Fell]] all work alike. Harm lands as <strong>named Notices</strong> on one shared track:",
-    "<div class=\"track-demo\"><span>Minor</span><span>Minor</span><span>Major</span><span>Final</span></div>",
-    "<ul><li>Each box holds a named Notice marked <strong>B</strong> (Body) or <strong>S</strong> (Standing, i.e. social).</li><li><strong>Minor</strong> (<em>Pending Review</em>): <em>Bruised Ribs (B)</em>, <em>Smitten (S)</em>, <em>Flustered (S)</em>.</li><li><strong>Major</strong> (<em>Escalated</em>): <em>Cracked Wrist (B)</em>, <em>Doubt in the Mission (S)</em>.</li><li><strong>Final</strong> (<em>Closed</em>): taken out of the scene. <strong>Death only if lethal stakes were declared beforehand</strong>; otherwise you are captured, humiliated, persuaded or carried off.</li><li><strong>Overflow:</strong> with both Minor boxes full, a new Minor becomes a Major. With the Major box full, the next hit is Final.</li><li><strong>They matter:</strong> a relevant Notice on you is an obstacle (−1 die). A relevant Notice on an NPC gives players +1 die when they exploit it.</li><li><strong>Withdraw:</strong> before a roll that could take you out, concede. Narrate your own exit, skip the Final box, and earn a Stamp.</li></ul>",
+    "<div class=\"track-demo\"><span>Minor</span><span>Minor</span><span>Minor</span></div><div class=\"track-demo\"><span>Major</span><span>Major</span></div><div class=\"track-demo\"><span>Final</span></div>",
+    "<ul><li>Each box holds a named Notice marked <strong>B</strong> (Body) or <strong>S</strong> (Standing, i.e. social), and a <strong>clears by</strong> line.</li><li><strong>Minor</strong> (<em>Pending Review</em>): <em>Bruised Ribs (B)</em>, <em>Smitten (S)</em>, <em>Flustered (S)</em>.</li><li><strong>Major</strong> (<em>Escalated</em>): <em>Cracked Wrist (B)</em>, <em>Doubt in the Mission (S)</em>.</li><li><strong>Final</strong> (<em>Closed</em>): taken out of the scene. <strong>Death only if lethal stakes were declared beforehand</strong>; otherwise you are captured, humiliated, persuaded or carried off.</li><li><strong>Overflow:</strong> with all three Minor boxes full, a new Minor becomes a Major (you're asked first). With both Major boxes full, the next hit is Final.</li><li><strong>Clears by</strong> defaults to the type and severity (Minor: <em>end of session</em>; Major Body: <em>treatment</em>; Major Standing: <em>a scene with another person</em>) and can be edited (<em>talk it through with Marguerite</em>).</li><li><strong>They matter:</strong> a relevant Notice on you is an obstacle (−1 die). A relevant Notice on an NPC gives players +1 die when they exploit it.</li><li><strong>Withdraw:</strong> before a roll that could take you out, concede. Narrate your own exit, skip the Final box, and earn a Stamp.</li></ul>",
     "See [[rules-recovery|Recovery]], [[rules-acting|acting against an NPC]] and [[rules-resisting|resisting one]]."
   ] },
 
@@ -662,6 +682,14 @@ window.LEDGER = [
     "<ul><li><strong>Every success fills one box.</strong> Count raw successes, not result tiers.</li><li>Each round, every player rolls once with any approach.</li><li><strong>A Margin of Error moves the Deadline up one round.</strong> The GM can also spend [[rules-scrutiny|Scrutiny]] to do so.</li><li>Docket full before the Deadline: it works. Otherwise it fails, or succeeds at a real cost.</li></ul>"
   ] },
 
+{ id: "rules-scene-cards", kind: "rules", name: "Scene cards and scene Traits", tag: "Rules (the table)",
+  aka: ["scene card", "scene trait", "environment", "location", "amend the scene", "active scene"],
+  summary: "A place on the table carries Traits: −1 Obstacles and +1 Circumstances for anyone there.",
+  body: [
+    "In Foundry, a place is a <strong>scene card</strong> you can drag onto the tabletop. Its Traits are the environmental dice for anyone standing on it: an <strong>Obstacle</strong> is −1 (darkness, steam, a crowd in the way), a <strong>Circumstance</strong> is +1 (a spare coupling in the locker, a convenient pipe).",
+    "<ul><li>The roll uses the scene your token is standing on, or else the <strong>active</strong> scene; you can change it in the roll dialog.</li><li>Obstacles apply unless you untick them; Circumstances are opt-in, for anyone who can plausibly use them.</li><li>The GM may keep a Trait hidden until it matters.</li><li><strong>Amend the Scene:</strong> spend a Stamp to add a Trait yourself. See [[rules-stamps|Stamps]].</li></ul>"
+  ] },
+
 { id: "rules-hazards", kind: "rules", name: "Harm outside conflict", tag: "Rules", aka: ["hazard", "fall", "toxic", "environment"],
   summary: "Hazards work like resisting an NPC: the GM sets a Rating, you roll.",
   body: [
@@ -680,18 +708,46 @@ window.LEDGER = [
     "Athletics through pain, Attune against the Bound, Procedure against bureaucratic pressure. See [[skill-athletics|Athletics]], [[skill-attune|Attune]] and [[skill-procedure|Procedure]]."
   ] },
 
-{ id: "rules-spread", kind: "rules", name: "Starting skills", tag: "Rules", aka: ["character creation", "starting spread", "create a character"],
-  summary: "Thirteen skills rated 0–3: one at 3, two at 2, three at 1, seven at 0.",
+{ id: "rules-creation", kind: "rules", name: "Character creation", tag: "Rules",
+  aka: ["starting skills", "starting spread", "create a character", "new character", "12 tenure"],
+  summary: "12 Tenure to buy skills, maximum rating 2: three skills at 2, three at 1, seven at 0.",
   body: [
-    "Skills are rated 0–3. Your starting spread is <strong>one skill at 3, two at 2, three at 1, and the remaining seven at 0</strong>. Add four Traits (<strong>Station, Deck, Bond, Encumbrance</strong>) and, if you are [[the-touched|Touched]], a Gift. See [[rules-traits|Traits]]. Skills rise with Tenure: [[rules-compline|Compline and Tenure]]."
+    "<ul><li><strong>12 Tenure</strong> to buy skills, and a <strong>maximum rating of 2</strong> at creation.</li><li><strong>Standard spread:</strong> three skills at 2, three at 1, the remaining seven at 0.</li><li><strong>Free:</strong> Station, three open Traits and two Encumbrances (plus Gift, Drawback and Registered if [[the-touched|Touched]]). See [[rules-traits|Traits]], [[rules-encumbrances|Encumbrances]] and [[rules-gift|Gift]].</li><li><strong>Grade I:</strong> 2 Stamps per session, and the Margin succeeds on 7+. See [[rules-grade|Grade]].</li></ul>",
+    "Skills rise afterwards with Tenure: [[rules-compline|Compline and Tenure]]."
   ] },
 
-{ id: "rules-compline", kind: "rules", name: "Compline and Tenure", tag: "Rules (advancement)", aka: ["advancement", "experience", "xp", "level up", "end of session", "tenure"],
-  summary: "At session end each player answers three questions. Each yes earns Tenure.",
+{ id: "rules-compline", kind: "rules", name: "Advancement: Compline and Tenure", tag: "Rules (advancement)",
+  aka: ["advancement", "experience", "xp", "level up", "end of session", "tenure", "spending tenure", "arc milestone"],
+  summary: "Each yes at Compline earns Tenure. Spend it on skills and Traits.",
   body: [
-    "At the end of a session, [[compline|Compline]] is sung and each player answers aloud:",
-    "<ul><li><em>Did you change someone's mind?</em></li><li><em>Did you learn something Chorus didn't tell you?</em></li><li><em>Did you bend a rule that should have held?</em></li></ul>",
-    "Each yes earns <strong>Tenure</strong>, spent to raise skills and add Traits. Seniority is the ship's real wealth. (At session end you also clear all Minor Notices: [[rules-recovery|Recovery]].)"
+    "<strong>Earning Tenure</strong>",
+    "<ul><li><strong>[[compline|Compline]]:</strong> at session end, each player answers three questions, and each yes earns 1 Tenure: <em>Did you change someone's mind? Learn something Chorus didn't tell you? Bend a rule that should have held?</em></li><li><strong>Arc milestone:</strong> +3 Tenure to everyone when a story arc concludes.</li></ul>",
+    "Expect about 2–2.5 Tenure per session. Seniority is the ship's real wealth.",
+    "<strong>Spending Tenure</strong>",
+    "<table class=\"rules-table\"><thead><tr><th>Purchase</th><th>Cost</th></tr></thead><tbody><tr><th>Skill 0 → 1</th><td>1</td></tr><tr><th>Skill 1 → 2</th><td>2</td></tr><tr><th>Skill 2 → 3</th><td>6 (requires Grade III)</td></tr><tr><th>New open Trait</th><td>4 (maximum six open Traits)</td></tr></tbody></table>",
+    "<strong>Free Traits:</strong> the GM may award a Trait after a major story moment. And when the story resolves an Encumbrance, it becomes a Trait and you write a new Encumbrance.",
+    "Your <strong>Grade</strong> follows the Tenure you have <em>earned</em>, never what you've spent: [[rules-grade|Grade]]. At session end you also clear all Minor Notices: [[rules-recovery|Recovery]]."
+  ] },
+
+{ id: "rules-grade", kind: "rules", name: "Grade", tag: "Rules (advancement)",
+  aka: ["grade i", "grade ii", "grade iii", "level", "seniority", "margin 6", "margin 5", "margin 4"],
+  summary: "Every 6 Tenure earned is a new Grade: more Stamps, a better Margin, Commendations.",
+  body: [
+    "Grade is set by <strong>lifetime Tenure earned</strong> (not spent). Every 6 Tenure earns the next Grade.",
+    "<table class=\"rules-table\"><thead><tr><th>Grade</th><th>Lifetime Tenure</th><th>You gain</th></tr></thead><tbody><tr><th>I</th><td>0</td><td>2 Stamps per session · Margin 7+</td></tr><tr><th>II</th><td>6</td><td><strong>Commendation</strong></td></tr><tr><th>III</th><td>12</td><td>+1 Stamp per session · <strong>skill rating 3 unlocked</strong></td></tr><tr><th>IV</th><td>18</td><td><strong>Margin 6+</strong></td></tr><tr><th>V</th><td>24</td><td>Commendation</td></tr><tr><th>VI</th><td>30</td><td>+1 Stamp per session</td></tr><tr><th>VII</th><td>36</td><td><strong>Margin 5+</strong></td></tr><tr><th>VIII</th><td>42</td><td>Commendation</td></tr><tr><th>IX</th><td>48</td><td>+1 Stamp per session</td></tr><tr><th>X</th><td>54</td><td><strong>Margin 4+</strong></td></tr></tbody></table>",
+    "The Margin's 1 is always an Error and its 10 always Grace, at every Grade. Only its success threshold improves. A new character is Grade I: a specialist pool of 3–4 dice. By Grade III+ it's 4–5; a veteran at Grade VII+ has 5–6 with a better Margin. See [[rules-margin|the Margin]]."
+  ] },
+
+{ id: "rules-commendations", kind: "rules", name: "Commendations", tag: "Rules (advancement)",
+  aka: ["commendation", "heroic", "rule-break", "rule break", "movie moment"],
+  summary: "Heroic, movie-moment capabilities: always on in their narrow situation.",
+  body: [
+    "You gain a Commendation slot at Grades II, V and VIII. Always on in their narrow situation, with nothing to track. In the roll dialog you tick one when its situation applies.",
+    "<strong>Template:</strong> <em>Because I [short phrase], when [specific situation], I [one rule-break].</em>",
+    "<strong>Rule-break menu:</strong>",
+    "<ul><li>add <strong>2 dice</strong> instead of 1</li><li>treat the Difficulty as <strong>one lower</strong></li><li>ignore <strong>one obstacle</strong></li><li><strong>With Conditions</strong> becomes <strong>Approved</strong></li><li><strong>do the normally impossible</strong> (narrative permission)</li><li>a violet <strong>1 doesn't Resonate</strong></li></ul>",
+    "<strong>Examples:</strong> <em>Never Misses a Rivet:</em> when I Hullcraft against the clock, With Conditions becomes Approved. <em>Everyone's Cousin:</em> when I Persuade anyone born in Stem-Side, I add 2 dice. <em>The Bound Know My Voice</em> (Touched): when I Attune with my Gift, one violet 1 doesn't Resonate.",
+    "See [[rules-grade|Grade]]."
   ] },
 
 { id: "rules-odds", kind: "rules", name: "Odds reference", tag: "Rules", aka: ["probability", "chances", "percent", "odds"],
@@ -699,7 +755,7 @@ window.LEDGER = [
   body: [
     "White dice, 7+ on a d10. Each cell is <strong>Denied / With Conditions / Approved / Commended</strong>, in percent.",
     "<table class=\"rules-table odds\"><thead><tr><th>Dice</th><th>D0 Easy</th><th>D1 Standard</th><th>D2 Hard</th><th>D3 Heroic</th></tr></thead><tbody><tr><th>3</th><td>— / 22 / 43 / 35</td><td>22 / 43 / 29 / 6</td><td>65 / 29 / 6 / 0</td><td>—</td></tr><tr><th>4</th><td>— / 13 / 35 / 52</td><td>13 / 35 / 35 / 18</td><td>48 / 35 / 15 / 3</td><td>82 / 15 / 3 / 0</td></tr><tr><th>5</th><td>— / 8 / 26 / 66</td><td>8 / 26 / 35 / 32</td><td>34 / 35 / 23 / 9</td><td>68 / 23 / 8 / 1</td></tr><tr><th>7</th><td>— / 3 / 13 / 84</td><td>3 / 13 / 26 / 58</td><td>16 / 26 / 29 / 29</td><td>42 / 29 / 19 / 10</td></tr></tbody></table>",
-    "Standard is forgiving: an ordinary pool rarely fails outright, and With Conditions comes up constantly. Hard fails about half the time at 4 dice; teamwork and Stamps push that down. Heroic needs a full pool and luck, as it should."
+    "Standard is forgiving: an ordinary pool rarely fails outright, and With Conditions comes up constantly. Hard fails about half the time at 4 dice; teamwork and Stamps push that down. Heroic needs a full pool and luck, as it should. These figures treat the Margin like a white die (7+), as at Grades I–III; a better Margin at higher Grades improves them."
   ] },
 
 /* ── skills ── */

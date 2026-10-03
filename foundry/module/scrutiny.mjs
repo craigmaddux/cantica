@@ -69,7 +69,8 @@ class ScrutinyTracker extends HandlebarsApplicationMixin(ApplicationV2) {
     window: { title: "CANTICA.Scrutiny.Label", icon: "fa-solid fa-eye", minimizable: true, resizable: false },
     actions: {
       adjust: ScrutinyTracker.#onAdjust,
-      reset: ScrutinyTracker.#onReset
+      reset: ScrutinyTracker.#onReset,
+      openLedger: () => game.cantica?.openLedger()
     }
   };
 

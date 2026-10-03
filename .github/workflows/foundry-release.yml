@@ -36,8 +36,12 @@ jobs:
              '.version = $v | .url = $url | .manifest = $manifest | .download = $download' \
              system.json > system.tmp && mv system.tmp system.json
 
+      - name: Bundle the lore (ledger entries and their art)
+        working-directory: .
+        run: node foundry/scripts/bundle-lore.mjs
+
       - name: Build system.zip
-        run: zip -r system.zip system.json cantica.mjs module templates styles lang assets samples
+        run: zip -r system.zip system.json cantica.mjs module templates styles lang assets samples lore
 
       - name: Publish release
         uses: softprops/action-gh-release@v2

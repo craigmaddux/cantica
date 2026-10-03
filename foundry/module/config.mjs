@@ -1,4 +1,4 @@
-/** Static Cantica configuration: skills, groups, Traits and Notice statuses. */
+/** Static Cantica configuration: skills, groups, Traits and tiers. */
 
 export const SYSTEM_ID = "cantica";
 
@@ -16,27 +16,19 @@ export const SKILLS = Object.values(SKILL_GROUPS).flat();
 
 export const SKILL_MAX = 3;
 
-/** Starting spread: one skill at 3, two at 2, three at 1, the other seven at 0. */
-export const STARTING_SPREAD = { 3: 1, 2: 2, 1: 3, 0: 7 };
+/** Standard starting spread: three skills at 2, three at 1, the other seven at 0 (12 Tenure). */
+export const STARTING_SPREAD = { 2: 3, 1: 3, 0: 7 };
 
-/** The four Traits every character has. The Gift is handled separately. */
-export const TRAITS = ["station", "deck", "bond", "encumbrance"];
+/** Station is required; the open Traits are free text. A character starts with three and can buy up to six. */
+export const OPEN_TRAITS = ["trait1", "trait2", "trait3", "trait4", "trait5", "trait6"];
 
-/**
- * Traits that add a die when relevant. Encumbrance is the character's trouble:
- * it never adds a die, it widens the Margin of Error and earns Stamps.
- */
-export const DICE_TRAITS = ["station", "deck", "bond"];
+/** The two Encumbrances every character has. Neither ever adds a die. */
+export const ENCUMBRANCES = ["personal", "circumstantial"];
 
 /** NPC tiers: how much of the Notice track they have. */
 export const NPC_TIERS = ["background", "minor", "major"];
 
-/** Display status of each Notice box (Minor = Pending Review, Major = Escalated, Final = Closed). */
-export const SLOT_INFO = {
-  minor1: { kind: "minor" },
-  minor2: { kind: "minor" },
-  major: { kind: "major" },
-  final: { kind: "final" }
-};
-
 export const TIERS = ["denied", "conditions", "approved", "commended"];
+
+/** Kinds of History log entry. */
+export const HISTORY_KINDS = ["earned", "spent", "compline", "note"];

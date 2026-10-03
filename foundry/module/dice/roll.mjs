@@ -1,5 +1,6 @@
-import { SYSTEM_ID, DICE_TRAITS } from "../config.mjs";
-import { buildPool, evaluateRoll, WHITE_TARGET, VIOLET_TARGET } from "../rules.mjs";
+import { SYSTEM_ID, OPEN_TRAITS } from "../config.mjs";
+import { buildPool, evaluateRoll, commendationEffects, effectiveDifficulty, WHITE_TARGET, VIOLET_TARGET } from "../rules.mjs";
+import { marginTarget as marginTargetFor } from "../progression.mjs";
 import { gainScrutiny } from "../scrutiny.mjs";
 import { tally } from "../scene.mjs";
 
@@ -10,44 +11,60 @@ export const COLORSETS = {
   violet: "cantica-violet"
 };
 
+const ROLL_TRAITS = ["station", ...OPEN_TRAITS];
+
 /**
  * Build the pool, roll it, post the chat card, and settle Stamps and Scrutiny.
  * @param {Actor} actor
  * @param {object} input
- * @param {string} input.skill            Skill key.
- * @param {string[]} [input.traitKeys]    Ticked Traits among station/deck/bond.
- * @param {boolean} [input.gift]          The Gift is in play.
- * @param {number} [input.circumstances]  Environmental advantages (+1 each).
- * @param {number} [input.obstacles]      Environmental penalties (-1 each).
- * @param {number} [input.bound]          Extra violet dice from other sources.
- * @param {number} [input.difficulty]     Successes needed: D0-D3, or an NPC's Rating.
- * @param {string} [input.targetName]     Name of the NPC whose Rating is the Difficulty.
- * @param {boolean} [input.expedite]      Spend a Stamp for +1 die (one per roll).
- * @param {boolean} [input.encumbrance]   Encumbrance in play (the Margin of Error widens to 1-2).
- * @param {boolean} [input.greaterBound]  Resonance on 1-2.
+ * @param {string} input.skill              Skill key.
+ * @param {string[]} [input.traitKeys]      Ticked Traits: station and the open Traits.
+ * @param {boolean} [input.gift]            The Gift is in play.
+ * @param {string[]} [input.encumbranceKeys] Encumbrances in play: personal, circumstantial, drawback.
+ * @param {{id: string, name: string, ruleBreak: string}[]} [input.commendations] Ticked Commendations.
+ * @param {number} [input.circumstances]    Environmental advantages (+1 each).
+ * @param {number} [input.obstacles]        Environmental penalties (-1 each).
+ * @param {number} [input.bound]            Extra violet dice from other sources.
+ * @param {string} [input.sceneName]        The Scene Card the roll happens in.
+ * @param {{name: string, effect: string}[]} [input.sceneTraits] Ticked Traits of that card.
+ * @param {number} [input.difficulty]       Successes needed: D0-D3, or an NPC's Rating.
+ * @param {string} [input.targetName]       Name of the NPC whose Rating is the Difficulty.
+ * @param {boolean} [input.expedite]        Spend a Stamp for +1 die (one per roll).
+ * @param {boolean} [input.greaterBound]    Resonance on 1-2.
  */
 export async function rollPool(actor, input) {
   const i18n = game.i18n;
   const skill = input.skill;
-  const traitKeys = (input.traitKeys ?? []).filter(k => DICE_TRAITS.includes(k));
+  const traitKeys = (input.traitKeys ?? []).filter(k => ROLL_TRAITS.includes(k) && actor.system.traits[k]);
   const gift = Boolean(input.gift && actor.system.touched);
-  const difficulty = Number.isFinite(Number(input.difficulty)) ? Number(input.difficulty) : 1;
-  const encumbrance = Boolean(input.encumbrance);
+  const baseDifficulty = Number.isFinite(Number(input.difficulty)) ? Number(input.difficulty) : 1;
   const greaterBound = Boolean(input.greaterBound);
   const expedite = Boolean(input.expedite) && actor.system.stamps > 0;
 
-  // Ticked Traits of the scene the character is in: +1 per Circumstance, −1 per Obstacle.
+  // Encumbrances never add dice. If any is in play, the Margin of Error widens to 1-2.
+  const encumbranceKeys = input.encumbranceKeys ?? [];
+  const encumbrance = encumbranceKeys.length > 0 || Boolean(input.encumbrance);
+
+  // Commendations: only ones the character really has, as many as the player ticked.
+  const owned = new Map(actor.system.commendations.map(c => [c.id, c]));
+  const commendations = (input.commendations ?? []).map(c => owned.get(c.id)).filter(Boolean);
+  const fx = commendationEffects(commendations);
+  const difficulty = effectiveDifficulty(baseDifficulty, fx.difficultyShift);
+
+  // Ticked Traits of the scene the character is in: +1 per Circumstance, -1 per Obstacle.
   const sceneTraits = input.sceneTraits ?? [];
   const scene = tally(sceneTraits);
+  const obstacles = Math.max(0, (input.obstacles || 0) + scene.obstacles - fx.obstaclesIgnored);
 
   const pool = buildPool({
     skill: actor.skillRating(skill),
     traits: traitKeys.length,
     gift,
     circumstances: (input.circumstances || 0) + scene.circumstances,
-    obstacles: (input.obstacles || 0) + scene.obstacles,
+    obstacles,
     bound: input.bound,
-    expedite
+    expedite,
+    bonus: fx.bonusDice
   });
 
   const parts = [`1d10[${COLORSETS.margin}]`];
@@ -63,20 +80,28 @@ export async function rollPool(actor, input) {
   const margin = results(COLORSETS.margin)[0];
   const white = results(COLORSETS.white);
   const violet = results(COLORSETS.violet);
-  const outcome = evaluateRoll({ margin, white, violet }, { difficulty, encumbrance, greaterBound });
+
+  // The Margin's success threshold improves with Grade: 7+ at I-III, down to 4+ at X.
+  const marginTarget = actor.system.marginTarget ?? marginTargetFor(1);
+  const outcome = evaluateRoll({ margin, white, violet }, {
+    difficulty, encumbrance, greaterBound, marginTarget,
+    upgradeConditions: fx.upgradeConditions,
+    suppressResonance: fx.suppressResonance
+  });
 
   // Everything the card shows, localized here so the template stays dumb.
   const resonanceMax = greaterBound ? 2 : 1;
   const dice = [
-    { kind: "margin", value: margin, success: margin >= WHITE_TARGET, flag: outcome.grace ? "grace" : outcome.error ? "error" : "" },
+    { kind: "margin", value: margin, success: margin >= marginTarget, flag: outcome.grace ? "grace" : outcome.error ? "error" : "" },
     ...white.map(value => ({ kind: "white", value, success: value >= WHITE_TARGET, flag: "" })),
     ...violet.map(value => ({ kind: "violet", value, success: value >= VIOLET_TARGET, flag: value <= resonanceMax ? "resonance" : "" }))
   ];
 
   const skillLabel = i18n.localize(`CANTICA.Skill.${skill}.label`);
   const factors = [i18n.localize("CANTICA.Roll.Margin"), `${skillLabel} ${actor.skillRating(skill)}`];
-  for (const key of traitKeys) factors.push(actor.system.traits[key] || i18n.localize(`CANTICA.Trait.${key}`));
+  for (const key of traitKeys) factors.push(actor.system.traits[key]);
   if (gift) factors.push(actor.system.gift || i18n.localize("CANTICA.Roll.Gift"));
+  for (const c of commendations) factors.push(`★ ${c.name || i18n.localize("CANTICA.Commendation.Heading")} (${i18n.localize(`CANTICA.Commendation.short.${c.ruleBreak}`)})`);
   if (input.circumstances) factors.push(`+${input.circumstances} ${i18n.localize("CANTICA.Roll.Circumstances")}`);
   if (input.obstacles) factors.push(`−${input.obstacles} ${i18n.localize("CANTICA.Roll.Obstacles")}`);
   if (input.bound) factors.push(`${input.bound} ${i18n.localize("CANTICA.Roll.BoundSource")}`);
@@ -84,9 +109,14 @@ export async function rollPool(actor, input) {
   if (expedite) factors.push(i18n.localize("CANTICA.Roll.Expedite"));
 
   const ladder = i18n.has(`CANTICA.Difficulty.${difficulty}`) ? i18n.localize(`CANTICA.Difficulty.${difficulty}`) : "";
-  const difficultyText = input.targetName
-    ? i18n.format("CANTICA.Roll.VsTarget", { name: input.targetName, rating: difficulty })
-    : `D${difficulty}${ladder ? ` · ${ladder}` : ""}`;
+  let difficultyText = input.targetName
+    ? i18n.format("CANTICA.Roll.VsTarget", { name: input.targetName, rating: baseDifficulty })
+    : `D${baseDifficulty}${i18n.has(`CANTICA.Difficulty.${baseDifficulty}`) ? ` · ${i18n.localize(`CANTICA.Difficulty.${baseDifficulty}`)}` : ""}`;
+  if (difficulty !== baseDifficulty) difficultyText += ` → D${difficulty}${ladder ? ` · ${ladder}` : ""}`;
+
+  const encumbranceTexts = encumbranceKeys
+    .map(key => (key === "drawback" ? actor.system.drawback : actor.system.encumbrances[key]))
+    .filter(Boolean);
 
   const context = {
     actorName: actor.name,
@@ -98,8 +128,12 @@ export async function rollPool(actor, input) {
     factors,
     notes: [
       pool.capped && i18n.localize("CANTICA.Roll.Capped"),
-      pool.floored && i18n.localize("CANTICA.Roll.Floored")
+      pool.floored && i18n.localize("CANTICA.Roll.Floored"),
+      marginTarget < 7 && i18n.format("CANTICA.Roll.MarginTarget", { n: marginTarget }),
+      fx.upgradeConditions && i18n.localize("CANTICA.Roll.UpgradeNote"),
+      ...fx.impossible.map(c => i18n.format("CANTICA.Roll.ImpossibleNote", { name: c.name || i18n.localize("CANTICA.Commendation.Heading") }))
     ].filter(Boolean),
+    encumbranceNote: encumbranceTexts.length ? i18n.format("CANTICA.Roll.InPlay", { text: encumbranceTexts.join(" · ") }) : "",
     dice,
     outcome,
     tierLabel: i18n.localize(`CANTICA.Tier.${outcome.tier}`),
@@ -119,7 +153,7 @@ export async function rollPool(actor, input) {
   ChatMessage.applyRollMode(data, game.settings.get("core", "rollMode"));
   const message = await ChatMessage.create(data);
 
-  // Stamps: Expedite spends one; Encumbrance biting earns one. Settle them in a single update.
+  // Stamps: Expedite spends one; an Encumbrance biting earns one. Settle them in a single update.
   const stampDelta = (outcome.stampEarned ? 1 : 0) - (expedite ? 1 : 0);
   if (stampDelta) await actor.adjustStamps(stampDelta);
 
