@@ -1,12 +1,14 @@
 import { SYSTEM_ID, SKILL_GROUPS, DICE_TRAITS } from "../config.mjs";
 import { buildPool, DIFFICULTIES } from "../rules.mjs";
+import { tally, visibleTraits } from "../scene.mjs";
+import { sceneChoices } from "../cards.mjs";
 import { rollPool } from "../dice/roll.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 /**
- * The pool builder: pick the skill, tick relevant Traits, set environmental
- * dice and Bound dice, and see the pool before rolling.
+ * The pool builder: pick the skill, tick relevant Traits, choose the scene you're in and
+ * which of its Traits apply, set Bound dice, and see the pool before rolling.
  */
 export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2) {
   static DEFAULT_OPTIONS = {
@@ -39,6 +41,9 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
   async _prepareContext(options) {
     const i18n = game.i18n;
     const { traits, touched, gift } = this.actor.system;
+    const targets = this.#npcTargets();
+    const scene = sceneChoices(this.actor);
+
     return {
       actor: this.actor,
       skillGroups: Object.entries(SKILL_GROUPS).map(([group, keys]) => ({
@@ -62,8 +67,26 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
       stamps: this.actor.system.stamps,
       canExpedite: this.actor.system.stamps > 0,
 
+      // The scene: the card the token stands on, else the active card. The player can change it.
+      hasScene: scene.cards.length > 0,
+      sceneNone: !scene.selectedId,
+      sceneHint: i18n.localize(`CANTICA.Pool.SceneSource.${scene.source}`),
+      sceneCards: scene.cards.map(card => ({
+        id: card.id,
+        name: card.name,
+        selected: card.id === scene.selectedId,
+        traits: visibleTraits(card.system.traits, game.user.isGM).map(trait => ({
+          value: `${card.id}:${trait.id}`,
+          name: trait.name,
+          note: trait.note,
+          effect: trait.effect,
+          sign: trait.effect === "circumstance" ? "+1" : "−1",
+          checked: trait.auto
+        }))
+      })),
+
       // A targeted NPC's Rating is used directly as the Difficulty. Preselect the first target.
-      targets: this.#npcTargets().map(({ id, name, rating }, i) => ({
+      targets: targets.map(({ id, name, rating }, i) => ({
         value: `target:${id}`,
         name,
         rating,
@@ -73,7 +96,7 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
       difficulties: Object.keys(DIFFICULTIES).map(level => ({
         value: level,
         label: `D${level} · ${i18n.localize(`CANTICA.Difficulty.${level}`)}`,
-        selected: Number(level) === 1 && !this.#npcTargets().length
+        selected: Number(level) === 1 && !targets.length
       }))
     };
   }
@@ -94,11 +117,24 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
     this.#updatePreview();
   }
 
+  /** Show only the Trait list of the chosen scene. */
+  #syncSceneGroups() {
+    const chosen = this.element.elements.sceneCard?.value ?? "";
+    this.element.querySelectorAll(".scene-traits").forEach(group => { group.hidden = group.dataset.card !== chosen; });
+  }
+
   /** Read the current form state. Reads the DOM directly so the preview and the roll can't disagree. */
   #readInput() {
     const form = this.element;
     const num = name => Math.max(0, Math.trunc(Number(form.elements[name]?.value) || 0));
     const chosen = form.elements.difficulty.selectedOptions[0];
+
+    const sceneId = form.elements.sceneCard?.value ?? "";
+    const sceneTraits = sceneId
+      ? [...form.querySelectorAll(`.scene-traits[data-card="${sceneId}"] input[name="sceneTrait"]:checked`)]
+        .map(el => ({ name: el.dataset.name, effect: el.dataset.effect }))
+      : [];
+
     return {
       skill: form.elements.skill.value,
       traitKeys: [...form.querySelectorAll('input[name="traits"]:checked')].map(el => el.value),
@@ -106,6 +142,8 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
       circumstances: num("circumstances"),
       obstacles: num("obstacles"),
       bound: num("bound"),
+      sceneName: sceneId ? form.elements.sceneCard.selectedOptions[0].textContent.trim() : "",
+      sceneTraits,
       difficulty: Number(chosen.dataset.difficulty),
       targetName: chosen.dataset.name ?? "",
       expedite: Boolean(form.elements.expedite?.checked),
@@ -115,13 +153,15 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
   }
 
   #updatePreview() {
+    this.#syncSceneGroups();
     const input = this.#readInput();
+    const scene = tally(input.sceneTraits);
     const pool = buildPool({
       skill: this.actor.skillRating(input.skill),
       traits: input.traitKeys.length,
       gift: input.gift,
-      circumstances: input.circumstances,
-      obstacles: input.obstacles,
+      circumstances: input.circumstances + scene.circumstances,
+      obstacles: input.obstacles + scene.obstacles,
       bound: input.bound,
       expedite: input.expedite
     });

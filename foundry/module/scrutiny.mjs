@@ -56,6 +56,11 @@ export function showScrutiny() {
   return tracker.render({ force: true });
 }
 
+/** Re-render the table window (the active scene's name appears on it). */
+export function refreshScrutinyTracker() {
+  if (tracker?.rendered) tracker.render();
+}
+
 class ScrutinyTracker extends HandlebarsApplicationMixin(ApplicationV2) {
   static DEFAULT_OPTIONS = {
     id: "cantica-scrutiny",
@@ -73,7 +78,8 @@ class ScrutinyTracker extends HandlebarsApplicationMixin(ApplicationV2) {
   };
 
   async _prepareContext() {
-    return { value: getScrutiny(), isGM: game.user.isGM };
+    const card = game.actors.find(a => a.type === "card" && a.system.active);
+    return { value: getScrutiny(), isGM: game.user.isGM, activeCard: card?.name ?? "" };
   }
 
   static async #onAdjust(event, target) {

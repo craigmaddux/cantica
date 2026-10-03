@@ -456,3 +456,70 @@
 .cantica-card .margin .scrutiny { color: var(--warn); font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; }
 .cantica-card.notice-card blockquote { border-left: 2px solid var(--warm-deep); color: var(--ink-bright); font-size: 1.05rem; font-style: italic; margin: 0.2rem 0; padding-left: 0.7rem; }
 .cantica-card.notice-card.tier-denied blockquote { border-left-color: var(--warn); }
+
+/* ═══════════════ Scene Cards ═══════════════ */
+
+.sheet.card .cantica-header .card-art { aspect-ratio: 4 / 3; height: auto; width: 120px; }
+.sheet.card .name-static { color: var(--ink-bright); font-size: 1.7rem; line-height: 1.25; }
+.cantica-body.card-body {
+  grid-template-areas: "description" "traits";
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto 1fr;
+}
+.card-body .description { grid-area: description; }
+.card-body .scene-traits-panel { grid-area: traits; }
+.card-text { color: var(--ink); font-style: italic; margin: 0; }
+
+.active-row { align-items: center; display: flex; gap: 0.5rem; margin-top: 0.35rem; }
+.active-row button { padding: 0.15rem 0.6rem; }
+.badge {
+  background: var(--warm-glow);
+  border: 1px solid var(--warm);
+  color: var(--warm-bright);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  padding: 0.15rem 0.5rem;
+  text-transform: uppercase;
+}
+
+.trait-list { display: grid; gap: 0.35rem; list-style: none; margin: 0; padding: 0; }
+.scene-trait { background: var(--void-deep); border: 1px solid var(--rule-bright); border-left: 3px solid var(--warn); }
+.scene-trait.circumstance { border-left-color: var(--bound); }
+.scene-trait.secret { border-style: dashed; opacity: 0.85; }
+.scene-trait summary { align-items: center; cursor: pointer; display: flex; gap: 0.6rem; list-style: none; padding: 0.4rem 0.6rem; }
+.scene-trait summary::-webkit-details-marker { display: none; }
+.scene-trait summary::before { color: var(--ink-faint); content: "▸"; font-size: 0.7rem; }
+.scene-trait details[open] > summary::before { color: var(--warm); content: "▾"; }
+.scene-trait .chip {
+  color: var(--warn);
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  min-width: 1.6rem;
+}
+.scene-trait.circumstance .chip { color: var(--bound); }
+.scene-trait .tname { color: var(--ink-bright); flex: 1; }
+.scene-trait .mode { color: var(--ink-dim); font-family: var(--font-mono); font-size: 0.55rem; letter-spacing: 0.18em; text-transform: uppercase; }
+.scene-trait .secret-tag { color: var(--liturgy); }
+.scene-trait .note { color: var(--ink-soft); font-size: 0.85rem; margin: 0; padding: 0 0.6rem 0.6rem 2.3rem; }
+.trait-edit { display: grid; gap: 0.35rem; padding: 0 0.6rem 0.6rem 2.3rem; }
+.trait-controls { align-items: center; display: flex; flex-wrap: wrap; gap: 0.4rem 0.9rem; }
+.trait-controls label { color: var(--ink-soft); font-size: 0.8rem; }
+.trait-controls button { margin-left: auto; padding: 0.15rem 0.5rem; }
+.scene-trait-list .empty, .trait-list .empty { color: var(--ink-dim); font-style: italic; }
+
+/* Scene section of the pool builder */
+.pool-dialog .scene-traits { display: grid; gap: 0.3rem; }
+.scene-check .sign { font-size: 0.8rem; }
+.scene-check.obstacle .sign { color: var(--warn); }
+.scene-check.circumstance .sign { color: var(--bound); }
+
+/* Scene name on cards and the table window */
+.cantica-card .where { color: var(--ink-dim); font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; }
+.cantica-card.amend-card blockquote { border-left: 2px solid var(--bound); color: var(--ink-bright); font-size: 1.05rem; font-style: italic; margin: 0.2rem 0; padding-left: 0.7rem; }
+
+.active-scene { border-top: 1px solid var(--rule); display: grid; gap: 0.1rem; padding-top: 0.45rem; text-align: center; width: 100%; }
+.active-scene .active-label { color: var(--ink-dim); font-family: var(--font-mono); font-size: 0.52rem; letter-spacing: 0.26em; text-transform: uppercase; }
+.active-scene .active-name { color: var(--ink-bright); font-size: 0.95rem; }
+
+.pool-dialog .scene-traits[hidden] { display: none; }

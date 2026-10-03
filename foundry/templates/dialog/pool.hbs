@@ -43,6 +43,33 @@
     {{/if}}
   </fieldset>
 
+  {{#if hasScene}}
+  <fieldset class="scene">
+    <legend>{{localize "CANTICA.Pool.Scene"}}</legend>
+    <div class="field">
+      <select name="sceneCard" aria-label="{{localize 'CANTICA.Pool.Scene'}}">
+        <option value="" {{#if sceneNone}}selected{{/if}}>{{localize "CANTICA.Pool.NoScene"}}</option>
+        {{#each sceneCards}}<option value="{{id}}" {{#if selected}}selected{{/if}}>{{name}}</option>{{/each}}
+      </select>
+      <p class="hint">{{sceneHint}}</p>
+    </div>
+    {{#each sceneCards}}
+    <div class="scene-traits" data-card="{{id}}" {{#unless selected}}hidden{{/unless}}>
+      {{#each traits}}
+      <label class="check scene-check {{effect}}" title="{{note}}">
+        <input type="checkbox" name="sceneTrait" value="{{value}}" data-name="{{name}}" data-effect="{{effect}}" {{#if checked}}checked{{/if}}>
+        <span class="check-label sign">{{sign}}</span>
+        <span class="check-text">{{name}}</span>
+        {{#if note}}<span class="check-note">{{note}}</span>{{/if}}
+      </label>
+      {{else}}
+      <p class="hint">{{localize "CANTICA.Pool.NoSceneTraits"}}</p>
+      {{/each}}
+    </div>
+    {{/each}}
+  </fieldset>
+  {{/if}}
+
   <fieldset>
     <legend>{{localize "CANTICA.Pool.Environment"}}</legend>
     <div class="steppers">

@@ -1,0 +1,73 @@
+<div class="cantica-sheet card-sheet">
+  <header class="cantica-header">
+    <img class="portrait card-art" src="{{actor.img}}" alt="{{actor.name}}" {{#if isGM}}data-edit="img" data-action="editImage" title="{{localize 'CANTICA.Card.ChangeArt'}}"{{/if}}>
+    <div class="identity">
+      <div class="eyebrow">{{localize "CANTICA.Card.Eyebrow"}}</div>
+      {{#if isGM}}
+      <input class="name" type="text" name="name" value="{{actor.name}}" placeholder="{{localize 'CANTICA.Card.NamePlaceholder'}}">
+      {{else}}
+      <div class="name name-static">{{actor.name}}</div>
+      {{/if}}
+      <div class="active-row">
+        {{#if system.active}}<span class="badge">{{localize "CANTICA.Card.Active"}}</span>{{/if}}
+        {{#if isGM}}<button type="button" data-action="setActive" {{#if system.active}}disabled{{/if}}>{{localize "CANTICA.Card.MakeActive"}}</button>{{/if}}
+      </div>
+    </div>
+  </header>
+
+  <div class="cantica-body card-body">
+    <section class="panel description">
+      <h2>{{localize "CANTICA.Card.Description"}}</h2>
+      {{#if isGM}}
+      <textarea name="system.description" rows="3" placeholder="{{localize 'CANTICA.Card.DescriptionPlaceholder'}}">{{system.description}}</textarea>
+      {{else}}
+      <p class="card-text">{{#if system.description}}{{system.description}}{{else}}—{{/if}}</p>
+      {{/if}}
+    </section>
+
+    <section class="panel scene-traits-panel">
+      <h2>
+        {{localize "CANTICA.Card.Traits"}}
+        {{#if isGM}}
+        <button type="button" class="add" data-action="addTrait">{{localize "CANTICA.Card.AddTrait"}}</button>
+        {{else}}
+        <button type="button" class="add" data-action="amend" title="{{localize 'CANTICA.Card.AmendHint'}}">{{localize "CANTICA.Card.AmendButton"}}</button>
+        {{/if}}
+      </h2>
+      <p class="hint">{{localize "CANTICA.Card.TraitsHint"}}</p>
+
+      <ul class="trait-list">
+        {{#each traits}}
+        <li class="scene-trait {{effect}} {{#if hidden}}secret{{/if}}">
+          <details data-trait="{{id}}" {{#if open}}open{{/if}}>
+            <summary>
+              <span class="chip">{{sign}}</span>
+              <span class="tname">{{#if name}}{{name}}{{else}}—{{/if}}</span>
+              <span class="mode">{{mode}}</span>
+              {{#if hidden}}<span class="mode secret-tag">{{localize "CANTICA.Card.GMOnly"}}</span>{{/if}}
+            </summary>
+            {{#if @root.isGM}}
+            <div class="trait-edit">
+              <input type="text" name="system.traits.{{index}}.name" value="{{name}}" placeholder="{{localize 'CANTICA.Card.TraitName'}}">
+              <input type="text" name="system.traits.{{index}}.note" value="{{note}}" placeholder="{{localize 'CANTICA.Card.TraitNote'}}">
+              <div class="trait-controls">
+                <select name="system.traits.{{index}}.effect">
+                  {{#each effects}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+                </select>
+                <label title="{{localize 'CANTICA.Card.AutoHint'}}"><input type="checkbox" name="system.traits.{{index}}.auto" {{checked auto}}> {{localize "CANTICA.Card.AutoLabel"}}</label>
+                <label title="{{localize 'CANTICA.Card.HiddenHint'}}"><input type="checkbox" name="system.traits.{{index}}.hidden" {{checked hidden}}> {{localize "CANTICA.Card.GMOnly"}}</label>
+                <button type="button" data-action="deleteTrait" data-trait="{{id}}" title="{{localize 'CANTICA.Card.Delete'}}"><i class="fa-solid fa-trash"></i></button>
+              </div>
+            </div>
+            {{else}}
+            {{#if note}}<p class="note">{{note}}</p>{{else}}<p class="note">{{localize "CANTICA.Card.NoNote"}}</p>{{/if}}
+            {{/if}}
+          </details>
+        </li>
+        {{else}}
+        <li class="empty">{{localize "CANTICA.Card.NoTraits"}}</li>
+        {{/each}}
+      </ul>
+    </section>
+  </div>
+</div>

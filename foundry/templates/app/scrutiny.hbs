@@ -7,4 +7,8 @@
     <button type="button" data-action="reset">{{localize "CANTICA.Scrutiny.Reset"}}</button>
   </div>
   {{/if}}
+  <div class="active-scene" title="{{localize 'CANTICA.Card.ActiveHint'}}">
+    <span class="active-label">{{localize "CANTICA.Card.ActiveScene"}}</span>
+    <span class="active-name">{{#if activeCard}}{{activeCard}}{{else}}—{{/if}}</span>
+  </div>
 </div>

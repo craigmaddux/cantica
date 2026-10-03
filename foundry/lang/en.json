@@ -2,7 +2,8 @@
   "TYPES": {
     "Actor": {
       "character": "Character",
-      "npc": "NPC"
+      "npc": "NPC",
+      "card": "Scene Card"
     }
   },
   "CANTICA": {
@@ -34,19 +35,58 @@
       "divine": "Divine"
     },
     "Skill": {
-      "athletics": { "label": "Athletics", "hint": "Climbing, running, enduring. Also resisting pain." },
-      "scuffle": { "label": "Scuffle", "hint": "Fighting." },
-      "sneak": { "label": "Sneak", "hint": "Stealth and sleight of hand." },
-      "lore": { "label": "Lore", "hint": "History, theology, culture, the founders." },
-      "science": { "label": "Science", "hint": "Biology, chemistry, astronomy, the Greens, analysis." },
-      "notice": { "label": "Notice", "hint": "Perception and investigation." },
-      "hullcraft": { "label": "Hullcraft", "hint": "Repair, engineering, systems; also making things." },
-      "mend": { "label": "Mend", "hint": "Medicine and care." },
-      "pilot": { "label": "Pilot", "hint": "Shuttles, vehicles, navigation." },
-      "persuade": { "label": "Persuade", "hint": "Talking, haggling, reading people." },
-      "procedure": { "label": "Procedure", "hint": "Bureaucracy, law, forms, the Checklist. Also resisting bureaucratic pressure." },
-      "survival": { "label": "Survival", "hint": "Fieldcraft, foraging, shelter, hostile environments." },
-      "attune": { "label": "Attune", "hint": "Sensing, soothing and coaxing the Bound. Also resisting the Bound." }
+      "athletics": {
+        "label": "Athletics",
+        "hint": "Climbing, running, enduring. Also resisting pain."
+      },
+      "scuffle": {
+        "label": "Scuffle",
+        "hint": "Fighting."
+      },
+      "sneak": {
+        "label": "Sneak",
+        "hint": "Stealth and sleight of hand."
+      },
+      "lore": {
+        "label": "Lore",
+        "hint": "History, theology, culture, the founders."
+      },
+      "science": {
+        "label": "Science",
+        "hint": "Biology, chemistry, astronomy, the Greens, analysis."
+      },
+      "notice": {
+        "label": "Notice",
+        "hint": "Perception and investigation."
+      },
+      "hullcraft": {
+        "label": "Hullcraft",
+        "hint": "Repair, engineering, systems; also making things."
+      },
+      "mend": {
+        "label": "Mend",
+        "hint": "Medicine and care."
+      },
+      "pilot": {
+        "label": "Pilot",
+        "hint": "Shuttles, vehicles, navigation."
+      },
+      "persuade": {
+        "label": "Persuade",
+        "hint": "Talking, haggling, reading people."
+      },
+      "procedure": {
+        "label": "Procedure",
+        "hint": "Bureaucracy, law, forms, the Checklist. Also resisting bureaucratic pressure."
+      },
+      "survival": {
+        "label": "Survival",
+        "hint": "Fieldcraft, foraging, shelter, hostile environments."
+      },
+      "attune": {
+        "label": "Attune",
+        "hint": "Sensing, soothing and coaxing the Bound. Also resisting the Bound."
+      }
     },
     "Trait": {
       "station": "Station",
@@ -156,7 +196,15 @@
       "GreaterBoundNote": "Resonance on 1–2.",
       "Dice": "dice",
       "Breakdown": "{amber} amber · {white} white · {violet} violet",
-      "Roll": "Roll"
+      "Roll": "Roll",
+      "Scene": "Scene",
+      "NoScene": "No scene",
+      "NoSceneTraits": "This scene has no Traits.",
+      "SceneSource": {
+        "token": "Your token is on this card. Change it if that's wrong.",
+        "active": "Using the active scene. Change it if you're somewhere else.",
+        "none": "No scene found. Pick one if it applies."
+      }
     },
     "Roll": {
       "Margin": "Margin",
@@ -178,13 +226,52 @@
       "ScrutinyGained": "Scrutiny +1",
       "StampEarned": "Encumbrance bites: +1 Stamp.",
       "ResonanceCount": "Resonance ×{n}",
-      "ResonanceText": "The Bound notice. Something sings back."
+      "ResonanceText": "The Bound notice. Something sings back.",
+      "InScene": "in"
     },
     "Tier": {
       "denied": "Denied",
       "conditions": "Approved, With Conditions",
       "approved": "Approved",
       "commended": "Commended"
+    },
+    "CardSheetLabel": "Cantica Scene Card",
+    "Card": {
+      "Eyebrow": "Scene Card",
+      "ChangeArt": "Change the card art",
+      "NamePlaceholder": "Engine Room",
+      "Active": "Active scene",
+      "MakeActive": "Make active",
+      "ActiveScene": "Scene",
+      "ActiveHint": "The active scene: where everyone falls back to when their token isn't standing on a card.",
+      "Description": "The place",
+      "DescriptionPlaceholder": "What it looks, sounds and smells like.",
+      "Traits": "Traits",
+      "TraitsHint": "Environmental dice for anyone here. Obstacles (−1) apply unless unticked; Circumstances (+1) are opt-in, for anyone who can plausibly use them.",
+      "AddTrait": "Add",
+      "AmendButton": "Add Trait · spend a Stamp",
+      "AmendHint": "Amend the Scene: spend a Stamp to declare a new Trait (a steam pipe bursts, useful scrap turns up, a hatch was unlocked all along). Worth +1 die to anyone who can plausibly use it; the GM may add one small detail.",
+      "AmendTitle": "Amend the Scene: {card}",
+      "AmendConfirm": "Amend (spend a Stamp)",
+      "AmendSent": "Asking the GM to add “{name}”.",
+      "AmendNote": "Worth +1 die to anyone who can plausibly use it. The GM may add one small detail.",
+      "Amends": "Amends the Scene",
+      "NewTrait": "New Trait",
+      "TraitName": "Trait",
+      "TraitNote": "A note on how it works (optional)",
+      "circumstance": "Circumstance (+1 die)",
+      "obstacle": "Obstacle (−1 die)",
+      "Auto": "always",
+      "OptIn": "opt-in",
+      "AutoLabel": "Applies automatically",
+      "AutoHint": "Ticked by default in the roll dialog. Players can still untick it.",
+      "GMOnly": "GM only",
+      "HiddenHint": "Hidden from players until you untick this.",
+      "Delete": "Remove this Trait",
+      "NoNote": "No further detail.",
+      "NoTraits": "No Traits yet.",
+      "NoCharacter": "You need a character to spend a Stamp. Select your token first.",
+      "NoGM": "A GM has to be online to add a Trait."
     }
   }
 }

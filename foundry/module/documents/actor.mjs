@@ -1,6 +1,29 @@
 import { SKILLS } from "../config.mjs";
 
 export default class CanticaActor extends foundry.documents.Actor {
+  /** Scene Cards are drawn onto the tabletop: a big, neutral, linked token that everyone can see. */
+  async _preCreate(data, options, user) {
+    const allowed = await super._preCreate(data, options, user);
+    if (allowed === false) return false;
+
+    if (this.type === "card") {
+      const { DOCUMENT_OWNERSHIP_LEVELS, TOKEN_DISPLAY_MODES, TOKEN_DISPOSITIONS } = CONST;
+      this.updateSource({
+        "ownership.default": DOCUMENT_OWNERSHIP_LEVELS.OBSERVER,
+        prototypeToken: {
+          actorLink: true,
+          width: 4,
+          height: 3,
+          lockRotation: true,
+          displayName: TOKEN_DISPLAY_MODES.HOVER,
+          disposition: TOKEN_DISPOSITIONS.NEUTRAL,
+          sight: { enabled: false },
+          texture: { fit: "cover" }
+        }
+      });
+    }
+  }
+
   /** Roll data for formulas and macros: `@skills.hullcraft` etc. */
   getRollData() {
     const data = super.getRollData();

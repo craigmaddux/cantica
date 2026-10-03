@@ -2,6 +2,7 @@
   <header>
     <div class="who">{{actorName}}</div>
     <div class="what">{{skillLabel}} <span class="dc">{{difficultyText}}</span></div>
+    {{#if sceneName}}<div class="where">{{localize "CANTICA.Roll.InScene"}} {{sceneName}}</div>{{/if}}
   </header>
 
   <ul class="factors">

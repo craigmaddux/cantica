@@ -1,6 +1,7 @@
 import { SYSTEM_ID, DICE_TRAITS } from "../config.mjs";
 import { buildPool, evaluateRoll, WHITE_TARGET, VIOLET_TARGET } from "../rules.mjs";
 import { gainScrutiny } from "../scrutiny.mjs";
+import { tally } from "../scene.mjs";
 
 /** Dice So Nice colorset names (flavors), registered in dsn.mjs. */
 export const COLORSETS = {
@@ -35,12 +36,16 @@ export async function rollPool(actor, input) {
   const greaterBound = Boolean(input.greaterBound);
   const expedite = Boolean(input.expedite) && actor.system.stamps > 0;
 
+  // Ticked Traits of the scene the character is in: +1 per Circumstance, −1 per Obstacle.
+  const sceneTraits = input.sceneTraits ?? [];
+  const scene = tally(sceneTraits);
+
   const pool = buildPool({
     skill: actor.skillRating(skill),
     traits: traitKeys.length,
     gift,
-    circumstances: input.circumstances,
-    obstacles: input.obstacles,
+    circumstances: (input.circumstances || 0) + scene.circumstances,
+    obstacles: (input.obstacles || 0) + scene.obstacles,
     bound: input.bound,
     expedite
   });
@@ -75,6 +80,7 @@ export async function rollPool(actor, input) {
   if (input.circumstances) factors.push(`+${input.circumstances} ${i18n.localize("CANTICA.Roll.Circumstances")}`);
   if (input.obstacles) factors.push(`−${input.obstacles} ${i18n.localize("CANTICA.Roll.Obstacles")}`);
   if (input.bound) factors.push(`${input.bound} ${i18n.localize("CANTICA.Roll.BoundSource")}`);
+  for (const trait of sceneTraits) factors.push(`${trait.effect === "circumstance" ? "+1" : "−1"} ${trait.name}`);
   if (expedite) factors.push(i18n.localize("CANTICA.Roll.Expedite"));
 
   const ladder = i18n.has(`CANTICA.Difficulty.${difficulty}`) ? i18n.localize(`CANTICA.Difficulty.${difficulty}`) : "";
@@ -87,6 +93,7 @@ export async function rollPool(actor, input) {
     skillLabel,
     difficulty,
     difficultyText,
+    sceneName: input.sceneName || "",
     pool,
     factors,
     notes: [
