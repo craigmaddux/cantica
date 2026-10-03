@@ -164,16 +164,9 @@ async function onAddTraitRequest(data) {
 /* -------------------------------------------- */
 
 export function registerCards() {
-  // New art for a card: carry it to the tokens already on the tabletop. One GM client does it.
-  Hooks.on("updateActor", async (actor, changes, options, userId) => {
-    if (actor.type !== "card") return;
-    refreshScrutinyTracker();
-    if (!("img" in changes) || userId !== game.user.id || !game.user.isGM) return;
-
-    for (const scene of game.scenes) {
-      const updates = scene.tokens.filter(t => t.actorId === actor.id).map(t => ({ _id: t.id, "texture.src": actor.img }));
-      if (updates.length) await scene.updateEmbeddedDocuments("Token", updates);
-    }
+  // The table window shows the active scene's name. (New art and edits are repainted by card-art.mjs.)
+  Hooks.on("updateActor", actor => {
+    if (actor.type === "card") refreshScrutinyTracker();
   });
 
   Hooks.on("deleteActor", actor => { if (actor.type === "card") refreshScrutinyTracker(); });

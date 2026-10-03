@@ -295,7 +295,8 @@
       "TableHint": "Put this scene on every player's screen as a panel they can move and close.",
       "PopOut": "Open panel",
       "PopOutHint": "Open this scene as a panel on your screen only.",
-      "OpenSheet": "Open card"
+      "OpenSheet": "Open card",
+      "PaintFailed": "Could not paint a scene card for the tabletop. The token will show its plain art. Check that this world's folder can be written to."
     },
     "Tabs": {
       "Label": "Sheet sections",

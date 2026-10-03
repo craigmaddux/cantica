@@ -2,7 +2,7 @@ import { SYSTEM_ID, SKILL_GROUPS, SKILL_MAX, OPEN_TRAITS } from "../config.mjs";
 import { RULE_BREAKS } from "../rules.mjs";
 import { CREATION_BUDGET, CREATION_MAX, TRAIT_MAX, TRAIT_COST } from "../progression.mjs";
 import PoolDialog from "./pool-dialog.mjs";
-import Registration from "./registration.mjs";
+import { openRegistration, holds, focusRegistration } from "./registration.mjs";
 import { trackContext, takeNotice, clearNotice, treatNotice, clearMinors } from "./notice-track.mjs";
 
 const { HandlebarsApplicationMixin, DialogV2 } = foundry.applications.api;
@@ -45,6 +45,15 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   static PARTS = {
     sheet: { template: `systems/${SYSTEM_ID}/templates/actor/character.hbs`, scrollable: [".tab-panel"] }
   };
+
+  /** While Register With Gloss is open for this character, the sheet stays closed. */
+  async render(options = {}, _options = {}) {
+    if (holds(this.actor.id)) {
+      focusRegistration(this.actor.id);
+      return this;
+    }
+    return super.render(options, _options);
+  }
 
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
@@ -166,7 +175,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
 
   /** Open Register With Gloss, the guided character creator. */
   static #onRegister() {
-    new Registration(this.actor).render({ force: true });
+    return openRegistration(this.actor);
   }
 
   /** Close character creation: from here on, skills are bought with Tenure. */

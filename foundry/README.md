@@ -45,7 +45,7 @@ The pool builder offers your Station and Traits, the Gift, one checkbox per Hind
 
 ## Register With Gloss
 
-A new character is created by a short conversation with Gloss. Each step asks one thing (your role, three Traits, your skills, two Hindrances, whether you're Touched), says what the answer does in the game, and offers a few examples you can click. Every answer is saved as you give it, so **Skip to the full sheet** is always there and loses nothing. It opens by itself for a brand-new character (there's a setting to turn that off), and a **Register With Gloss** button on the sheet reopens it during creation.
+A new character is created by a short conversation with Gloss. The full sheet stays closed while you do it, and appears when you finish, skip or close the walkthrough. Each step asks one thing (your role, three Traits, your skills, two Hindrances, whether you're Touched), says what the answer does in the game, and offers a few examples you can click. Every answer is saved as you give it, so **Skip to the full sheet** is always there and loses nothing. It opens by itself for a brand-new character (there's a setting to turn that off), and a **Register With Gloss** button on the sheet reopens it during creation.
 
 Gloss's words are all in `module/registration-steps.mjs`: edit the text between the quotes.
 
@@ -59,7 +59,7 @@ A Scene Card is a place. Its **Traits are just Traits**: short phrases (*Steam E
 
 Two ways to see a card at the table, and you can use both:
 
-- **On the map:** drag the card onto the canvas. The token is drawn like the card: its art, with an information plate over the lower part carrying the name, the place, and the Traits. It is sized to its art's proportions. Double-click opens the sheet.
+- **On the map:** drag the card onto the canvas. The token's picture is the whole card, painted into one image: your art **trimmed to the token's shape**, fading into a dark plate with the name, the place and the Traits. Resize the token and it repaints to match; edit the card and it repaints too. Because it's an ordinary token picture, characters stand on top of it. A GM's browser does the painting and saves the image in the world's `cantica-cards` folder (a GM has to be connected, and the folder writable). Double-click opens the sheet. `game.cantica.repaintCards()` repaints every card on the scene.
 - **A panel on every screen:** the GM clicks **Show on everyone's screen** on the card. A panel with the banner, description and Traits opens for every player, updates live as the card changes, and can be moved and resized (each player's position is remembered). Open as many as you like; **Open panel** shows one on your own screen only, and **Hide from everyone's screen** takes it away.
 
 ## The Ledger and the lore

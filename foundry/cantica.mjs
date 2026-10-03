@@ -17,8 +17,8 @@ import { rollPool } from "./module/dice/roll.mjs";
 import { registerDiceColors } from "./module/dice/dsn.mjs";
 import { onRenderChatMessage } from "./module/chat.mjs";
 import Ledger from "./module/apps/ledger.mjs";
-import { registerCardFaces } from "./module/card-face.mjs";
-import Registration from "./module/apps/registration.mjs";
+import { registerCardArt, repaintCards } from "./module/card-art.mjs";
+import { openRegistration, hold, release, holds } from "./module/apps/registration.mjs";
 import { registerPanels, reconcilePanels, openPanel, setShown } from "./module/scene-panel.mjs";
 import { initLore, importLore } from "./module/lore.mjs";
 import { registerCards, listenForCards, activeCard, detectCard, setActiveCard } from "./module/cards.mjs";
@@ -55,7 +55,7 @@ Hooks.once("init", () => {
 
   registerScrutiny();
   registerCards();
-  registerCardFaces();
+  registerCardArt();
   registerPanels();
 
   // Register With Gloss opens by itself for a brand-new character, unless the player turns that off.
@@ -82,7 +82,7 @@ Hooks.once("init", () => {
   });
 
   // Handy for macros: game.cantica.rollPool(actor, { skill: "hullcraft" }) or new game.cantica.PoolDialog({ actor }).
-  game.cantica = { rules, notices, rollPool, PoolDialog, showScrutiny, getScrutiny, gainScrutiny, activeCard, detectCard, setActiveCard, openLedger, importLore, openPanel, setShown, register: actor => new Registration(actor).render({ force: true }) };
+  game.cantica = { rules, notices, rollPool, PoolDialog, showScrutiny, getScrutiny, gainScrutiny, activeCard, detectCard, setActiveCard, openLedger, importLore, openPanel, setShown, repaintCards, register: openRegistration };
 
   return foundry.applications.handlebars.loadTemplates([
     `systems/${SYSTEM_ID}/templates/actor/character.hbs`,
@@ -127,9 +127,22 @@ Hooks.on("renderActorDirectory", (app, html) => {
   actions.append(button);
 });
 
-// A new character, made by this player, starts in creation: open the walkthrough.
-Hooks.on("createActor", (actor, options, userId) => {
+// A new character, made by this player, starts in creation: Register With Gloss opens, and the sheet
+// waits behind it. The hold is placed before the sheet can open, so which window appears first no
+// longer depends on timing.
+Hooks.on("preCreateActor", (actor, data, options, userId) => {
   if (userId !== game.user.id || actor.type !== "character" || !actor.system.creation) return;
-  if (!game.settings.get(SYSTEM_ID, "autoRegister")) return;
-  new Registration(actor).render({ force: true });
+  if (game.settings.get(SYSTEM_ID, "autoRegister")) hold(actor.id);
+});
+
+Hooks.on("createActor", async (actor, options, userId) => {
+  if (userId !== game.user.id || actor.type !== "character" || !actor.system.creation) return;
+  if (!holds(actor.id) && !game.settings.get(SYSTEM_ID, "autoRegister")) return;
+  try {
+    await openRegistration(actor);
+  } catch (error) {
+    console.error(error);
+    release(actor.id);
+    actor.sheet.render(true);
+  }
 });

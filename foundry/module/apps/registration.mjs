@@ -5,6 +5,27 @@ import { CREATION_BUDGET, CREATION_MAX } from "../progression.mjs";
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 /**
+ * Characters being registered. While a character is held, its sheet will not open: the walkthrough
+ * is the only window until it is finished, skipped or closed, and then the sheet appears.
+ */
+const holding = new Set();
+export const holds = id => holding.has(id);
+export const hold = id => holding.add(id);
+export const release = id => holding.delete(id);
+
+/** Open the walkthrough for a character, putting its sheet away first. */
+export async function openRegistration(actor) {
+  hold(actor.id);
+  if (actor.sheet?.rendered) await actor.sheet.close();
+  return new Registration(actor).render({ force: true });
+}
+
+/** Bring the walkthrough forward (used when someone tries to open the sheet meanwhile). */
+export function focusRegistration(id) {
+  foundry.applications.instances?.get(`cantica-registration-${id}`)?.bringToFront?.();
+}
+
+/**
  * Register With Gloss: character creation as a conversation. Each step asks one thing, says what it
  * does in the game, and offers a few examples. Every answer is saved to the character as it is given,
  * so skipping to the full sheet at any point loses nothing. Gloss's words live in registration-steps.mjs.
@@ -118,6 +139,13 @@ export default class Registration extends HandlebarsApplicationMixin(Application
     root.querySelector("[data-field]:not(button)")?.focus?.();
   }
 
+  /** However the walkthrough ends (finished, skipped, or closed), the sheet appears. */
+  _onClose(options) {
+    super._onClose?.(options);
+    release(this.actor.id);
+    if (this.actor.collection) this.actor.sheet.render(true);
+  }
+
   /** Save one answer to the character. */
   async #save(el) {
     const path = el.dataset.field;
@@ -153,7 +181,6 @@ export default class Registration extends HandlebarsApplicationMixin(Application
   static async #onSkip() {
     await this.#saveAll();
     await this.close();
-    this.actor.sheet.render(true);
   }
 
   /** Click an example: it fills the answer. */
@@ -187,6 +214,5 @@ export default class Registration extends HandlebarsApplicationMixin(Application
     await this.actor.finishCreation();
     await this.actor.startSession();
     await this.close();
-    this.actor.sheet.render(true);
   }
 }
