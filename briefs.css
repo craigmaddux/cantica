@@ -1,0 +1,79 @@
+/* Station Briefs. Loads after style.css, ledger.css and rules.css. */
+
+.briefs-wrap { margin: 0 auto; max-width: 56rem; }
+
+.how { background: var(--void-deep); border: 1px solid var(--rule); margin-bottom: 2rem; padding: 1rem 1.2rem 0.6rem; }
+.how h2 {
+  color: var(--warm);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  margin: 0 0 0.7rem;
+  text-transform: uppercase;
+}
+.how ul { list-style: none; margin: 0; padding: 0; }
+.how li { color: var(--ink); margin-bottom: 0.6rem; padding-left: 1rem; position: relative; }
+.how li::before { color: var(--warm-deep); content: "◆"; font-size: 0.5rem; left: 0; position: absolute; top: 0.45rem; }
+.how strong { color: var(--ink-bright); font-weight: 500; }
+.how a { color: var(--bound); }
+
+.brief-nav { display: grid; gap: 0.5rem; grid-template-columns: repeat(auto-fill, minmax(12.5rem, 1fr)); margin-bottom: 3rem; }
+.brief-nav a {
+  background: var(--void-deep);
+  border: 1px solid var(--rule);
+  border-top: 2px solid var(--warm-deep);
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.55rem 0.7rem;
+  text-decoration: none;
+}
+.brief-nav a:hover { border-color: var(--warm-deep); border-top-color: var(--warm); }
+.brief-nav strong { color: var(--ink-bright); font-family: 'Spectral', serif; font-weight: 500; }
+.brief-nav span { color: var(--ink-dim); font-size: 0.8rem; font-style: italic; }
+
+.brief { border-top: 1px solid var(--rule-bright); margin-bottom: 3.5rem; padding-top: 1.4rem; scroll-margin-top: calc(var(--hdr) + 1rem); }
+.brief header { margin-bottom: 0.9rem; }
+.brief-no { color: var(--warm); font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase; }
+.brief h2 { color: var(--ink-bright); font-family: 'Spectral', serif; font-size: 1.6rem; font-weight: 400; margin: 0.2rem 0 0.5rem; position: relative; }
+.brief .anchor { color: var(--ink-faint); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; left: -1.1rem; opacity: 0; position: absolute; text-decoration: none; top: 0.5rem; }
+.brief h2:hover .anchor, .brief .anchor:focus { color: var(--warm); opacity: 1; }
+.greeting { color: var(--ink-soft); font-family: 'Spectral', serif; font-size: 1.05rem; font-style: italic; margin: 0; }
+.tagline { color: var(--ink); margin: 0 0 1.2rem; }
+.tagline strong { color: var(--warm-bright); font-weight: 500; }
+
+.brief-grid { display: grid; gap: 1rem 1.5rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); margin-bottom: 1.2rem; }
+.brief-grid h3, .first-comm h3 {
+  border-bottom: 1px solid var(--rule);
+  color: var(--bound);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  margin: 0 0 0.5rem;
+  padding-bottom: 0.3rem;
+  text-transform: uppercase;
+}
+.first-comm h3 small { color: var(--ink-dim); letter-spacing: 0.1em; }
+.brief-grid ul { list-style: none; margin: 0; padding: 0; }
+.brief-grid li { color: var(--ink); font-family: 'Spectral', serif; font-style: italic; margin-bottom: 0.3rem; }
+.brief-grid .gift { color: var(--ink); font-style: italic; margin: 0 0 0.3rem; }
+.brief-grid .gift strong { color: var(--liturgy); font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; font-style: normal; font-weight: 500; letter-spacing: 0.15em; margin-right: 0.4rem; text-transform: uppercase; }
+
+.brief-grid .skill-chips li.skill-chip { align-items: center; display: flex; font-style: normal; justify-content: space-between; margin-bottom: 0.25rem; }
+.skill-chips .n { color: var(--ink-bright); }
+.skill-chips .pips { display: flex; gap: 4px; }
+.skill-chips .pips i { background: var(--warm); border: 1px solid var(--warm-bright); box-shadow: 0 0 6px var(--warm-glow); height: 11px; width: 11px; }
+.fine { color: var(--ink-dim); font-size: 0.75rem; margin: 0.4rem 0 0; }
+
+.shine { color: var(--ink); margin: 0 0 1rem; }
+.shine span { color: var(--warm); font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.2em; margin-right: 0.5rem; text-transform: uppercase; }
+
+.first-comm { background: var(--void-deep); border: 1px solid var(--rule); border-left: 2px solid var(--liturgy-deep, var(--warm-deep)); padding: 0.8rem 1rem; }
+.first-comm strong { color: var(--ink-bright); font-family: 'Spectral', serif; font-size: 1.05rem; font-weight: 500; }
+.first-comm p { color: var(--ink-soft); margin: 0.2rem 0 0; }
+
+@media (max-width: 700px) {
+  .brief .anchor { display: none; }
+  .brief-nav { grid-template-columns: 1fr 1fr; }
+}

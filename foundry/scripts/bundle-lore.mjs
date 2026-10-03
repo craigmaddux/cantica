@@ -23,6 +23,14 @@ fs.rmSync(out, { recursive: true, force: true });
 fs.mkdirSync(path.join(out, "assets"), { recursive: true });
 fs.copyFileSync(source, path.join(out, "ledger-data.js"));
 
+// The Station Briefs (the website's station-briefs-data.js), for Register With Gloss.
+const briefsSource = path.join(root, "station-briefs-data.js");
+const briefsCtx = { window: {} };
+vm.createContext(briefsCtx);
+vm.runInContext(fs.readFileSync(briefsSource, "utf8"), briefsCtx);
+if (!(briefsCtx.window.STATION_BRIEFS ?? []).length) throw new Error("station-briefs-data.js has no Briefs");
+fs.copyFileSync(briefsSource, path.join(out, "station-briefs-data.js"));
+
 const missing = [];
 const copied = new Set();
 for (const entry of entries) {
@@ -34,4 +42,4 @@ for (const entry of entries) {
 }
 if (missing.length) throw new Error("Missing art:\n  " + missing.join("\n  "));
 
-console.log(`lore bundled: ${entries.length} entries, ${copied.size} images -> foundry/lore/`);
+console.log(`lore bundled: ${entries.length} entries, ${briefsCtx.window.STATION_BRIEFS.length} Station Briefs, ${copied.size} images -> foundry/lore/`);

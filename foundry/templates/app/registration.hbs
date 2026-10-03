@@ -17,7 +17,36 @@
 
     {{!-- A question with a typed answer and examples --}}
     {{#if isText}}
+    {{#if briefCards.length}}
+    <div class="briefs">
+      <span class="examples-label">{{localize "CANTICA.Brief.Label"}}</span>
+      <div class="brief-cards">
+        {{#each briefCards}}
+        <button type="button" class="brief-card {{#if selected}}selected{{/if}}" data-action="pickBrief" data-id="{{id}}" title="{{tagline}}">
+          <strong>{{name}}</strong><span>{{tagline}}</span>
+        </button>
+        {{/each}}
+        <button type="button" class="brief-card else {{#if noBrief}}selected{{/if}}" data-action="pickBrief" data-id="">
+          <strong>{{localize "CANTICA.Brief.Else"}}</strong><span>{{localize "CANTICA.Brief.ElseHint"}}</span>
+        </button>
+      </div>
+      {{#if briefIntro}}
+      <blockquote class="brief-greeting">{{briefIntro.greeting}}</blockquote>
+      <p class="hint">{{briefIntro.blurb}} {{localize "CANTICA.Brief.Shine"}} {{briefIntro.shine}}.</p>
+      {{else}}
+      <p class="hint">{{localize "CANTICA.Brief.Hint"}}</p>
+      {{/if}}
+    </div>
+    {{/if}}
     <input class="answer" type="text" data-field="{{step.field}}" value="{{value}}" placeholder="{{step.placeholder}}">
+    {{#if suggestions.length}}
+    <div class="examples brief-suggestions">
+      <span class="examples-label">{{suggestionLabel}}</span>
+      {{#each suggestions}}
+      <button type="button" class="example brief" data-action="pick" data-field="{{../step.field}}" data-value="{{this}}">{{this}}</button>
+      {{/each}}
+    </div>
+    {{/if}}
     <div class="examples">
       <span class="examples-label">{{localize "CANTICA.Register.Examples"}}</span>
       {{#each step.examples}}
@@ -28,6 +57,7 @@
 
     {{!-- Skills: the 15 Tenure budget --}}
     {{#if isSkills}}
+    {{#if briefNote}}<p class="hint brief-note">{{briefNote}}</p>{{/if}}
     <div class="reg-budget {{#if budget.over}}over{{/if}}">
       {{localize "CANTICA.Creation.Label"}}: <strong>{{budget.spent}} / {{budget.total}}</strong> {{localize "CANTICA.Creation.Tenure"}}
       · <span>{{budget.remaining}} {{localize "CANTICA.Register.Left"}}</span>
@@ -64,6 +94,10 @@
     <p class="gloss ask">{{step.gift.drawbackGloss}}</p>
     <input class="answer" type="text" data-field="{{step.gift.drawbackField}}" value="{{drawback}}" placeholder="{{step.gift.drawbackPlaceholder}}">
     <div class="examples">
+      {{#if briefPair}}
+      <span class="examples-label">{{briefPairLabel}}</span>
+      <button type="button" class="example pair brief" data-action="pickPair" data-gift="{{briefPair.gift}}" data-drawback="{{briefPair.drawback}}">{{briefPair.gift}} <em>/</em> {{briefPair.drawback}}</button>
+      {{/if}}
       <span class="examples-label">{{localize "CANTICA.Register.Examples"}}</span>
       {{#each step.pairs}}
       <button type="button" class="example pair" data-action="pickPair" data-gift="{{gift}}" data-drawback="{{drawback}}">{{gift}} <em>/</em> {{drawback}}</button>
@@ -80,6 +114,7 @@
     {{#if isReview}}
     <dl class="reg-summary">
       <dt>{{localize "CANTICA.Register.Name"}}</dt><dd>{{summary.name}}</dd>
+      {{#if summary.brief}}<dt>{{localize "CANTICA.Brief.Name"}}</dt><dd><span class="tag">{{summary.brief}}</span></dd>{{/if}}
       <dt>{{localize "CANTICA.Sheet.Traits"}}</dt>
       <dd>{{#each summary.traits}}<span class="tag">{{this}}</span>{{else}}—{{/each}}</dd>
       <dt>{{localize "CANTICA.Encumbrance.Heading"}}</dt>

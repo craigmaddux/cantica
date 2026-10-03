@@ -46,6 +46,9 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
       drawback: text(),
       registered: new BooleanField({ initial: false }),
 
+      // The Station Brief the character started from (an id from station-briefs-data.js), or none.
+      brief: text(),
+
       stamps: count(),
 
       // Grade follows lifetime Tenure earned; unspent is what you can spend.

@@ -99,6 +99,9 @@
   margin: 0.2rem 0 0.5rem;
 }
 .part-blurb { color: var(--ink-soft); font-style: italic; margin: 0; }
+.part-note { background: var(--void-deep); border: 1px solid var(--rule); border-left: 2px solid var(--warm-deep); color: var(--ink); font-size: 0.9rem; margin: 0.9rem 0 0; padding: 0.55rem 0.8rem; }
+.part-note strong { color: var(--ink-bright); font-weight: 500; }
+.part-note a { color: var(--bound); }
 
 .rule { margin-bottom: 2.2rem; scroll-margin-top: calc(var(--hdr) + 1rem); }
 .rule h3 {

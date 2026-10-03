@@ -49,6 +49,8 @@ The pool builder asks you to pick one Trait (Station or an open Trait, with a St
 
 A new character is created by a short conversation with Gloss. The full sheet stays closed while you do it, and appears when you finish, skip or close the walkthrough. Each step asks one thing (your role, three Traits, your skills, two Hindrances, whether you're Touched), says what the answer does in the game, and offers a few examples you can click. Every answer is saved as you give it, so **Skip to the full sheet** is always there and loses nothing. It opens by itself for a brand-new character (there's a setting to turn that off), and a **Register With Gloss** button on the sheet reopens it during creation.
 
+**Station Briefs** are offered at the role step: ten primers (Engineering, the Proctor's Office, Lottery Survey, the Hospice, the Compline Walk, the Greens, the Bay Floor, the Sump, Navigators' Hall, the Registry) for people who want help building a class-like character. Picking one fills in Station and the skills (the standard spread, exactly 15 Tenure) and offers its Traits, Hindrances and Gift as clickable suggestions at the steps that follow; "Something else" starts from nothing. The sheet remembers the Brief (History tab), and at Grade II offers its Commendation as a suggestion with a *Take it* button. The Briefs are the website's `station-briefs-data.js`, bundled into the release with the lore.
+
 Gloss's words are all in `module/registration-steps.mjs`: edit the text between the quotes.
 
 ## Scene Cards

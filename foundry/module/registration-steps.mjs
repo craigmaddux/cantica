@@ -8,6 +8,8 @@
  *   explain  a plain note on what the answer does in the game (shown small, under the question)
  *   field    which part of the character sheet the answer fills in
  *   examples a few things other residents say; clicking one fills the answer in
+ *   briefs   offer the Station Briefs on this step (see briefs.mjs)
+ *   suggests "traits" or "hindrances": a chosen Brief's own examples are offered first
  *
  * Gloss's tone: warm, courteous, delighted to help, a little too eager. Never pushy.
  */
@@ -26,6 +28,8 @@ export const STEPS = [
   {
     id: "role",
     kind: "text",
+    // Offer the Station Briefs here (when they are installed), as well as the examples.
+    briefs: true,
     title: "Your role",
     gloss: "Welcome! What is the current role aboard the ship you have been assigned?",
     explain: "This is your Station, the first of your Traits. Whenever it is relevant to what you are doing, it adds a die to your roll.",
@@ -45,6 +49,7 @@ export const STEPS = [
   {
     id: "interest",
     kind: "text",
+    suggests: "traits",
     title: "A Trait",
     gloss: "Excellent. I do love getting to know more about people! What is a hobby or interest that you have?",
     explain: "This is a Trait. Like your role, it adds a die when it is relevant. Say it however you like, in a few words.",
@@ -62,6 +67,7 @@ export const STEPS = [
   {
     id: "quality",
     kind: "text",
+    suggests: "traits",
     title: "A Trait",
     gloss: "Lovely. And how would the people around you describe your best personality trait?",
     explain: "Another Trait. It does not have to be modest.",
@@ -79,6 +85,7 @@ export const STEPS = [
   {
     id: "knack",
     kind: "text",
+    suggests: "traits",
     title: "A Trait",
     gloss: "Wonderful. One more, and then we shall talk about what you are good at. Is there something you are known for, or a knack nobody would expect of you?",
     explain: "Your third Trait. You can earn more later.",
@@ -103,6 +110,7 @@ export const STEPS = [
   {
     id: "hindrance-personal",
     kind: "text",
+    suggests: "hindrances",
     title: "A Hindrance",
     gloss: "Thank you. Now, everyone has something that gets in their own way. How would the people around you describe the habit you can least help?",
     explain: "This is a Hindrance. It never adds dice. When one is in play, the Margin of Error widens, so things go sideways more often, and each time they do you earn a Stamp. It is how your troubles pay you back.",
@@ -120,6 +128,7 @@ export const STEPS = [
   {
     id: "hindrance-circumstantial",
     kind: "text",
+    suggests: "hindrances",
     title: "A Hindrance",
     gloss: "And is there anything in your life that tends to complicate things? Something that follows you about, whether you would like it to or not.",
     explain: "Your second Hindrance. It works just like the first.",

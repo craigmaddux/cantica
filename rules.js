@@ -15,6 +15,7 @@
       entries: ["rules-core", "rules-pool", "rules-gear", "rules-difficulty", "rules-margin", "rules-violet", "rules-odds"] },
     { id: "part-character", no: "Part III", title: "Your character",
       blurb: "Who you are is a few phrases and a few numbers. Gloss will walk you through making one.",
+      note: '<strong>Not sure where to start?</strong> The <a href="briefs.html">Station Briefs</a> are ten orientation packets, from Engineering to the Registry, each with suggested skills, Traits and Hindrances to borrow.',
       entries: ["rules-creation", "rules-traits", "rules-hindrances", "rules-gift"] },
     { id: "part-skills", no: "Part IV", title: "The skills", skills: true,
       blurb: "Thirteen skills, each rated 0 to 2. A skill says what you are doing; a Trait says why you are good at it." },
@@ -93,7 +94,8 @@
     PARTS.forEach(function (p) {
       out += '<section class="part" id="' + p.id + '" data-title="' + esc(p.title) + '">' +
         '<header class="part-head"><span class="part-no">' + p.no + "</span><h2>" + esc(p.title) + "</h2>" +
-        '<p class="part-blurb">' + esc(p.blurb) + "</p></header>";
+        '<p class="part-blurb">' + esc(p.blurb) + "</p>" +
+        (p.note ? '<p class="part-note">' + p.note + "</p>" : "") + "</header>";
       if (p.skills) {
         out += '<div class="skill-groups">' + skillsSection() + "</div>" +
           '<p class="rule-foot"><a href="ledger.html">Each skill has its own entry in the Ledger →</a></p>';

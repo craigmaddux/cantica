@@ -2,6 +2,7 @@ import { SYSTEM_ID, SKILL_GROUPS, SKILL_MAX, OPEN_TRAITS } from "../config.mjs";
 import { RULE_BREAKS } from "../rules.mjs";
 import { CREATION_BUDGET, CREATION_MAX, TRAIT_MAX, TRAIT_COST, TRAIT_RANK_COST, TRAIT_RANK_GRADE } from "../progression.mjs";
 import PoolDialog from "./pool-dialog.mjs";
+import { findBrief, commendationSuggestion } from "../briefs.mjs";
 import { openRegistration, holds, focusRegistration } from "./registration.mjs";
 import { trackContext, takeNotice, clearNotice, treatNotice, clearMinors } from "./notice-track.mjs";
 
@@ -32,6 +33,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       startSession: CharacterSheet.#onStartSession,
       citeClause: CharacterSheet.#onCiteClause,
       addCommendation: CharacterSheet.#onAddCommendation,
+      takeBriefCommendation: CharacterSheet.#onTakeBriefCommendation,
       deleteCommendation: CharacterSheet.#onDeleteCommendation,
       awardTenure: CharacterSheet.#onAwardTenure,
       compline: CharacterSheet.#onCompline,
@@ -133,6 +135,14 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     }));
     context.commendationSlots = slots;
     context.canAddCommendation = system.commendations.length < slots;
+
+    // The Station Brief the character started from: its Commendation is suggested once there is a slot for it.
+    const brief = findBrief(system.brief);
+    context.brief = brief ? { name: brief.name } : null;
+    const suggestion = context.canAddCommendation ? commendationSuggestion(brief, system.commendations) : null;
+    context.briefCommendation = suggestion
+      ? { ...suggestion, ruleLabel: i18n.localize(`CANTICA.Commendation.${suggestion.ruleBreak}`), briefName: brief.name }
+      : null;
 
     context.track = trackContext(this.actor);
 
@@ -281,6 +291,15 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     const system = this.actor.system;
     if (system.commendations.length >= system.commendationSlots) return;
     const entry = { id: foundry.utils.randomID(), name: "", situation: "", ruleBreak: "trait2" };
+    await this.actor.update({ "system.commendations": [...this.actor.toObject().system.commendations, entry] });
+  }
+
+  /** Take the Commendation the character's Station Brief suggests: it fills a free slot, and can be edited. */
+  static async #onTakeBriefCommendation() {
+    const system = this.actor.system;
+    const suggestion = commendationSuggestion(findBrief(system.brief), system.commendations);
+    if (!suggestion || system.commendations.length >= system.commendationSlots) return;
+    const entry = { id: foundry.utils.randomID(), name: suggestion.name, situation: suggestion.situation, ruleBreak: suggestion.ruleBreak };
     await this.actor.update({ "system.commendations": [...this.actor.toObject().system.commendations, entry] });
   }
 

@@ -83,6 +83,14 @@
             <button type="button" class="add" data-action="addCommendation" {{#unless canAddCommendation}}disabled{{/unless}} {{#unless editable}}disabled{{/unless}}>{{localize "CANTICA.Commendation.Add"}}</button>
           </h2>
           <p class="hint">{{localize "CANTICA.Commendation.Hint"}}</p>
+          {{#if briefCommendation}}
+          <div class="brief-suggestion">
+            <span class="brief-suggestion-label">{{localize "CANTICA.Brief.Suggests"}} <em>({{briefCommendation.briefName}})</em></span>
+            <strong>{{briefCommendation.name}}</strong>
+            <span>{{briefCommendation.situation}}: {{briefCommendation.ruleLabel}}</span>
+            <button type="button" data-action="takeBriefCommendation" {{#unless editable}}disabled{{/unless}}>{{localize "CANTICA.Brief.Take"}}</button>
+          </div>
+          {{/if}}
           {{#each commendations}}
           <div class="commendation">
             <input type="text" name="system.commendations.{{index}}.name" value="{{name}}" placeholder="{{localize 'CANTICA.Commendation.NamePlaceholder'}}" {{#unless @root.editable}}disabled{{/unless}}>
@@ -173,6 +181,7 @@
     <section class="tab-panel history-tab" data-tab="history" {{#unless tabHistory}}hidden{{/unless}}>
       <section class="panel history">
         <h2>{{localize "CANTICA.History.Heading"}}</h2>
+        {{#if brief}}<p class="hint brief-started">{{localize "CANTICA.Brief.StartedWith"}} <strong>{{brief.name}}</strong>.</p>{{/if}}
         {{#if canAward}}
         <div class="track-actions">
           <button type="button" data-action="compline">{{localize "CANTICA.History.Compline"}}</button>

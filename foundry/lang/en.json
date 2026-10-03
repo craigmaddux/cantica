@@ -530,6 +530,19 @@
       "Pick": "Which character spends the Stamp?",
       "PickTitle": "Countersign",
       "None": "You have no Stamp to spend."
+    },
+    "Brief": {
+      "Label": "Station Briefs",
+      "Name": "Brief",
+      "Else": "Something else",
+      "ElseHint": "Start from nothing.",
+      "Hint": "A Brief is a starting point, not a class. It fills in your Station and skills and offers Traits, Hindrances and a Gift as suggestions. Change any of it.",
+      "Shine": "You shine when",
+      "FromBrief": "From the {name} Brief",
+      "SkillsNote": "Filled in from the {name} Brief. Change any of it.",
+      "StartedWith": "Started with the Station Brief:",
+      "Suggests": "Your Brief suggests a Commendation",
+      "Take": "Take it"
     }
   }
 }

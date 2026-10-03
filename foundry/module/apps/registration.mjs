@@ -1,6 +1,7 @@
 import { SYSTEM_ID, SKILL_GROUPS, SKILL_MAX } from "../config.mjs";
 import { STEPS } from "../registration-steps.mjs";
 import { CREATION_BUDGET } from "../progression.mjs";
+import { loadBriefs, findBrief, briefSkills, suggestionsFor, giftFor } from "../briefs.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -43,6 +44,7 @@ export default class Registration extends HandlebarsApplicationMixin(Application
       skip: Registration.#onSkip,
       pick: Registration.#onPick,
       pickPair: Registration.#onPickPair,
+      pickBrief: Registration.#onPickBrief,
       setSkill: Registration.#onSetSkill,
       finish: Registration.#onFinish
     }
@@ -67,6 +69,7 @@ export default class Registration extends HandlebarsApplicationMixin(Application
     const actor = this.actor;
     const system = actor.system;
     const get = path => foundry.utils.getProperty(actor, path) ?? "";
+    const brief = findBrief(system.brief);
 
     const context = {
       step,
@@ -83,6 +86,18 @@ export default class Registration extends HandlebarsApplicationMixin(Application
       value: step.field ? get(step.field) : ""
     };
 
+    // Station Briefs: starting points offered at the role step, and suggestions at the steps after it.
+    if (step.briefs) {
+      const list = loadBriefs();
+      context.briefCards = list.map(b => ({ id: b.id, name: b.name, tagline: b.tagline, selected: b.id === system.brief }));
+      context.noBrief = !system.brief;
+      context.briefIntro = brief ? { greeting: brief.greeting, blurb: brief.blurb, shine: brief.shine } : null;
+    }
+    if (step.suggests && brief) {
+      context.suggestions = suggestionsFor(step.suggests, brief);
+      context.suggestionLabel = i18n.format("CANTICA.Brief.FromBrief", { name: brief.name });
+    }
+
     if (step.kind === "skills") {
       context.skillGroups = Object.entries(SKILL_GROUPS).map(([group, keys]) => ({
         label: i18n.localize(`CANTICA.Group.${group}`),
@@ -94,6 +109,7 @@ export default class Registration extends HandlebarsApplicationMixin(Application
           pips: Array.fromRange(SKILL_MAX, 1).map(n => ({ n, filled: system.skills[key] >= n }))
         }))
       }));
+      context.briefNote = brief && system.creation ? i18n.format("CANTICA.Brief.SkillsNote", { name: brief.name }) : "";
       context.budget = { spent: system.skillSpent, total: CREATION_BUDGET, remaining: system.creationRemaining, over: system.creationRemaining < 0 };
     }
 
@@ -102,6 +118,8 @@ export default class Registration extends HandlebarsApplicationMixin(Application
       context.gift = get(step.gift.field);
       context.drawback = get(step.gift.drawbackField);
       context.registered = system.registered;
+      context.briefPair = giftFor(brief);
+      context.briefPairLabel = brief ? i18n.format("CANTICA.Brief.FromBrief", { name: brief.name }) : "";
     }
 
     if (step.kind === "review") {
@@ -111,6 +129,7 @@ export default class Registration extends HandlebarsApplicationMixin(Application
         .map(([key, rating]) => `${i18n.localize(`CANTICA.Skill.${key}.label`)} ${rating}`);
       context.summary = {
         name: actor.name,
+        brief: brief?.name ?? "",
         traits,
         hindrances: [system.encumbrances.personal, system.encumbrances.circumstantial].filter(Boolean),
         skills,
@@ -189,6 +208,21 @@ export default class Registration extends HandlebarsApplicationMixin(Application
     const input = this.element.querySelector(`input[data-field="${field}"]`);
     if (input) input.value = value;
     await this.actor.update({ [field]: value });
+  }
+
+  /**
+   * Pick a Station Brief (or "Something else", which has no id): Station becomes the Brief's name and, during
+   * creation, the skills become its standard spread. Its Traits, Hindrances and Gift are only suggested later.
+   */
+  static async #onPickBrief(event, target) {
+    const brief = findBrief(target.dataset.id);
+    const update = { "system.brief": brief?.id ?? "" };
+    if (brief) {
+      update["system.traits.station"] = brief.name;
+      if (this.actor.system.creation) update["system.skills"] = briefSkills(brief);
+    }
+    await this.actor.update(update);
+    this.render();
   }
 
   /** Click a Gift and Drawback pair: it fills both. */

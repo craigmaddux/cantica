@@ -724,6 +724,15 @@ window.LEDGER = [
     "Skills rise afterwards with Tenure: [[rules-compline|Compline and Tenure]]."
   ] },
 
+{ id: "rules-station-briefs", kind: "rules", name: "Station Briefs", tag: "Rules",
+  aka: ["class", "classes", "archetype", "primer", "starting kit", "what should i play", "build a character", "role"],
+  summary: "Ten orientation packets for building a character with a class-like feel. Starting points, not classes.",
+  body: [
+    "A Station Brief is the orientation packet a resident might receive on assignment to a post: who you will be, what you are likely to be good at, and a few phrases to borrow. <strong>They are starting points, not classes.</strong> Take one as written, change any part, or ignore them all.",
+    "<ul><li><strong>Engineering:</strong> you keep the ship alive.</li><li><strong>The Proctor's Office:</strong> you keep the peace.</li><li><strong>Lottery Survey:</strong> you go out there.</li><li><strong>The Hospice:</strong> you heal people.</li><li><strong>The Compline Walk:</strong> you tend the ship's faith.</li><li><strong>The Greens:</strong> you grow the ship's food.</li><li><strong>The Bay Floor:</strong> you trade.</li><li><strong>The Sump:</strong> you get by.</li><li><strong>Navigators' Hall:</strong> you plot the jumps.</li><li><strong>The Registry:</strong> you keep the records.</li></ul>",
+    "Each Brief suggests a standard spread of skills (three at 2 and three at 1, which costs exactly the 15 starting Tenure), sample Traits and Hindrances, a Gift and Drawback if you are [[the-touched|Touched]], and a first Commendation to aim for at Grade II. See [[rules-creation|Character creation]]. In Foundry, Register With Gloss offers the Briefs when it asks for your role; on the website they have a page of their own."
+  ] },
+
 { id: "rules-compline", kind: "rules", name: "Advancement: Compline and Tenure", tag: "Rules (advancement)",
   aka: ["advancement", "experience", "xp", "level up", "end of session", "tenure", "spending tenure", "arc milestone"],
   summary: "Each yes at Compline earns Tenure. Spend it on skills and Traits.",
