@@ -1,0 +1,33 @@
+<div class="hum-body">
+  <div class="hum-head">
+    <span class="hum-value" title="{{localize 'CANTICA.Hum.Hint'}}">{{value}}<small> / {{max}}</small></span>
+    <span class="hum-band band-{{band}}">{{bandName}}</span>
+  </div>
+  <p class="hum-text">{{bandText}}</p>
+
+  <div class="hum-bands">
+    {{#each bands}}
+    <div class="hum-band-row band-{{key}}">
+      <span class="hum-band-name">{{name}} <small>{{range}}</small></span>
+      <span class="hum-pips">{{#each pips}}<i class="{{#if filled}}filled{{/if}}"></i>{{/each}}</span>
+    </div>
+    {{/each}}
+  </div>
+
+  {{#if refrain}}<p class="hum-rule">{{localize "CANTICA.Hum.RefrainRule"}}</p>{{/if}}
+
+  {{#if gives}}
+  <div class="hum-gives">
+    <strong>{{localize "CANTICA.Hum.Gives"}}</strong>
+    <span>{{localize "CANTICA.Hum.GivesBody"}}</span>
+    <button type="button" data-action="reset">{{localize "CANTICA.Hum.Reset"}}</button>
+  </div>
+  {{else}}
+  <div class="hum-controls">
+    <button type="button" data-action="adjust" data-delta="-1" aria-label="−">−</button>
+    <button type="button" data-action="adjust" data-delta="1" aria-label="+">+</button>
+    <button type="button" data-action="dissonance" title="{{localize 'CANTICA.Hum.DissonanceHint'}}">{{localize "CANTICA.Hum.Dissonance"}}</button>
+  </div>
+  {{/if}}
+  <p class="hum-private">{{localize "CANTICA.Hum.Private"}}</p>
+</div>

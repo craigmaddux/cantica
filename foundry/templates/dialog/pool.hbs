@@ -114,8 +114,12 @@
     <div class="steppers">
       <label>{{localize "CANTICA.Pool.Circumstances"}}<input type="number" name="circumstances" value="0" min="0" max="6"></label>
       <label>{{localize "CANTICA.Pool.Obstacles"}}<input type="number" name="obstacles" value="0" min="0" max="6"></label>
-      <label>{{localize "CANTICA.Pool.Bound"}}<input type="number" name="bound" value="0" min="0" max="6"></label>
     </div>
+    <label class="check bound-gear">
+      <input type="checkbox" name="bound">
+      <span class="check-label">{{localize "CANTICA.Pool.Bound"}}</span>
+      <span class="check-note">{{localize "CANTICA.Pool.BoundNote"}}</span>
+    </label>
     <p class="hint">{{localize "CANTICA.Pool.EnvironmentHint"}}</p>
   </fieldset>
 

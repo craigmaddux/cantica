@@ -12,7 +12,7 @@ import { reduceSuccesses } from "./rules.mjs";
  *   factors: string[], notes: string[], hindranceNote: string,
  *   dice: [{kind, value, success, flag}],
  *   outcome: object from evaluateRoll, upgradeConditions: boolean,
- *   resonanceLabel: string, stampNote: boolean,
+ *   dissonanceLabel: string, stampNote: boolean,
  *   complication: null | { trait: string, negated: boolean }
  * }
  */
@@ -48,7 +48,8 @@ export function cardView(state, t) {
     // "3 → 2" so everyone can see what the Complication took.
     wasSuccesses: reduced ? state.outcome.successes : null,
     tierLabel: t(`CANTICA.Tier.${shown.tier}`),
-    resonanceLabel: state.resonanceLabel || "",
+    // Cards saved before v0.8 call it Resonance.
+    dissonanceLabel: state.dissonanceLabel || state.resonanceLabel || "",
     stampNote: state.stampNote,
     complication: c
       ? {

@@ -197,7 +197,7 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
       commendations: checked("commendation").map(el => ({ id: el.value, name: el.dataset.name, ruleBreak: el.dataset.break })),
       circumstances: num("circumstances"),
       obstacles: num("obstacles"),
-      bound: num("bound"),
+      bound: form.elements.bound?.checked ? 1 : 0,
       sceneId,
       sceneName: sceneId ? form.elements.sceneCard.selectedOptions[0].textContent.trim() : "",
       sceneTrait,

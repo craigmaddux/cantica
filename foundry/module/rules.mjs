@@ -1,5 +1,5 @@
 /**
- * Cantica dice rules (spec v0.7). Pure functions with no Foundry dependency, so
+ * Cantica dice rules (spec v0.8). Pure functions with no Foundry dependency, so
  * the same logic is unit-tested in Node (see test/rules.test.mjs).
  *
  * Pool = Margin (1 amber) + Skill + one Trait (its rank, or 1 if stretched) + Circumstances - Obstacles, cap 7.
@@ -13,6 +13,12 @@ import { TRAIT_RANK_MAX } from "./progression.mjs";
 export const POOL_CAP = 7;
 export const WHITE_TARGET = 7;
 export const VIOLET_TARGET = 6;
+
+/**
+ * At most two dice are violet: one from the Gift and one from Bound gear. (Gear never adds a die;
+ * Bound gear turns an existing white die violet, as the Gift does.)
+ */
+export const BOUND_GEAR_MAX = 1;
 /**
  * Dice a chosen Trait adds: its rank (1-2), or 1 whatever its rank when stretched to fit the situation.
  * @param {{rank?: number, stretch?: boolean}} trait
@@ -47,7 +53,7 @@ export const RATINGS = {
  *                                         that is only the Margin; otherwise it turns one white die violet.
  * @param {number} [input.circumstances=0] Environmental advantages, +1 each (a scene Trait counts here).
  * @param {number} [input.obstacles=0]     Environmental penalties, -1 each.
- * @param {number} [input.bound=0]         Extra violet dice from other sources (Bound gear, a plea).
+ * @param {number} [input.bound=0]         Bound gear in play (0 or 1): it turns one white die violet. More than one is treated as one.
  * @param {boolean} [input.expedite=false] A Stamp spent for +1 die (one per roll).
  */
 export function buildPool({ skill = 0, traits = 0, gift = false, circumstances = 0, obstacles = 0, bound = 0, expedite = false } = {}) {
@@ -57,7 +63,7 @@ export function buildPool({ skill = 0, traits = 0, gift = false, circumstances =
 
   // The Margin is always amber; colored dice replace white dice, never add to the count.
   let colorable = total - 1;
-  let violet = Math.min(colorable, clean(bound));
+  let violet = Math.min(colorable, Math.min(BOUND_GEAR_MAX, clean(bound)));
 
   // The Gift: nothing extra, unless the pool is only the Margin (one violet die), or there is a white die to turn violet.
   let giftEffect = "";
@@ -96,14 +102,14 @@ export function tierFor(successes, difficulty) {
  * @param {object} opts
  * @param {number} opts.difficulty        Successes needed (already adjusted for any Commendation).
  * @param {boolean} [opts.encumbrance]    Any Encumbrance (or a Drawback) in play: Margin of Error widens to 1-2.
- * @param {boolean} [opts.greaterBound]   Greater Bound: Resonance on 1-2.
+ * @param {boolean} [opts.greaterBound]   Greater Bound (or the Hum at the Refrain): Dissonance on 1-2.
  * @param {number} [opts.marginTarget=7]  The Margin's success threshold, from Grade.
  * @param {boolean} [opts.upgradeConditions] A Commendation turns With Conditions into Approved.
- * @param {number} [opts.suppressResonance]  Violet 1s that don't Resonate (Commendation).
+ * @param {number} [opts.suppressDissonance]  Violet 1s that don't cause Dissonance (Commendation).
  */
 export function evaluateRoll({ margin, white = [], violet = [] }, {
   difficulty = 1, encumbrance = false, greaterBound = false,
-  marginTarget = WHITE_TARGET, upgradeConditions = false, suppressResonance = 0
+  marginTarget = WHITE_TARGET, upgradeConditions = false, suppressDissonance = 0
 } = {}) {
   const marginSuccess = margin >= marginTarget;
   const whiteSuccesses = white.filter(r => r >= WHITE_TARGET).length;
@@ -113,15 +119,15 @@ export function evaluateRoll({ margin, white = [], violet = [] }, {
   // The 1 is always an Error and the 10 always Grace, at every Grade.
   const grace = margin === 10;
   const error = margin <= (encumbrance ? 2 : 1);
-  const resonanceMax = greaterBound ? 2 : 1;
-  const resonance = Math.max(0, violet.filter(r => r <= resonanceMax).length - Math.max(0, suppressResonance));
+  const dissonanceMax = greaterBound ? 2 : 1;
+  const dissonance = Math.max(0, violet.filter(r => r <= dissonanceMax).length - Math.max(0, suppressDissonance));
 
   let tier = tierFor(successes, difficulty);
   if (upgradeConditions && tier === "conditions") tier = "approved";
 
   return {
     successes, difficulty, tier,
-    marginSuccess, marginTarget, grace, error, resonance,
+    marginSuccess, marginTarget, grace, error, dissonance,
     // Every Margin of Error gives the GM +1 Scrutiny, in addition to the twist.
     scrutiny: error ? 1 : 0,
     // Any Encumbrance in play: an Error is the flaw biting, and the player earns a Stamp.
@@ -132,7 +138,7 @@ export function evaluateRoll({ margin, white = [], violet = [] }, {
 /* ── Commendations ── */
 
 /** The six rule-breaks a Commendation can use. */
-export const RULE_BREAKS = ["trait2", "difficulty", "obstacle", "conditions", "impossible", "resonance"];
+export const RULE_BREAKS = ["trait2", "difficulty", "obstacle", "conditions", "impossible", "dissonance"];
 
 /**
  * What the ticked Commendations do to a roll.
@@ -145,7 +151,7 @@ export function commendationEffects(selected) {
     difficultyShift: -count("difficulty"),        // treat the Difficulty as one lower
     obstaclesIgnored: count("obstacle"),          // ignore one obstacle
     upgradeConditions: count("conditions") > 0,   // With Conditions becomes Approved
-    suppressResonance: count("resonance"),        // a violet 1 doesn't Resonate
+    suppressDissonance: count("dissonance"),      // a violet 1 doesn't cause Dissonance
     impossible: selected.filter(c => c.ruleBreak === "impossible") // narrative permission only
   };
 }

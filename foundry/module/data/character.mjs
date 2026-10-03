@@ -116,6 +116,8 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
     // v0.7: the Commendation rule-break "add 2 dice" became "a second Trait also applies".
     if (Array.isArray(source.commendations)) {
       for (const entry of source.commendations) if (entry?.ruleBreak === "dice2") entry.ruleBreak = "trait2";
+      // v0.8: Resonance is now called Dissonance.
+      for (const entry of source.commendations) if (entry?.ruleBreak === "resonance") entry.ruleBreak = "dissonance";
     }
 
     return super.migrateData(migrateOldNotices(source));

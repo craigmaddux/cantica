@@ -76,7 +76,7 @@ test("a Complication keeps a Commendation's With Conditions → Approved", () =>
 const baseState = () => ({
   actorName: "Ilse", skillLabel: "Hullcraft", difficulty: 1, difficultyText: "D1", sceneId: "engine", sceneName: "Engine Room",
   factors: [], notes: [], hindranceNote: "", dice: [], upgradeConditions: false,
-  outcome: evaluateRoll({ margin: 8, white: [9, 3] }, { difficulty: 1 }), resonanceLabel: "", stampNote: false, complication: null
+  outcome: evaluateRoll({ margin: 8, white: [9, 3] }, { difficulty: 1 }), dissonanceLabel: "", stampNote: false, complication: null
 });
 const t = (key, data) => `${key}${data ? JSON.stringify(data) : ""}`;
 

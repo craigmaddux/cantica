@@ -57,14 +57,14 @@ test("the Gift adds one violet die to a pool that is only the Margin", () => {
 });
 
 test("the Gift does nothing extra when every other die is already violet", () => {
-  const p = buildPool({ skill: 2, bound: 2, gift: true });
-  assert.equal(p.total, 3);
-  assert.equal(p.violet, 2);
+  const p = buildPool({ skill: 1, bound: 1, gift: true });
+  assert.equal(p.total, 2);
+  assert.equal(p.violet, 1);
   assert.equal(p.white, 0);
   assert.equal(p.giftEffect, "");
 });
 
-test("the Gift is separate from other Bound dice", () => {
+test("the Gift is separate from Bound gear", () => {
   const p = buildPool({ skill: 3, bound: 1, gift: true });
   assert.equal(p.total, 4);
   assert.equal(p.violet, 2);
@@ -77,10 +77,23 @@ test("Expedite adds one die, still subject to the cap", () => {
 });
 
 test("violet replaces white; it never adds to the count", () => {
-  const p = buildPool({ skill: 1, bound: 2 });
+  const p = buildPool({ skill: 1, bound: 1 });
   assert.equal(p.total, 2);
   assert.equal(p.violet, 1);
   assert.equal(p.white, 0);
+});
+
+test("Bound gear turns one white die violet, never more, and a pool of only the Margin has none to turn", () => {
+  assert.equal(buildPool({ skill: 2, bound: 1 }).violet, 1);
+  assert.equal(buildPool({ skill: 2, bound: 5 }).violet, 1);
+  assert.equal(buildPool({ bound: 1 }).violet, 0);
+});
+
+test("violet limit: one from the Gift and one from Bound gear, two in total", () => {
+  const p = buildPool({ skill: 2, traits: 2, gift: true, bound: 9 });
+  assert.equal(p.violet, 2);
+  assert.equal(p.white, 2);
+  assert.equal(p.total, 5);
 });
 
 test("the Margin can never be violet", () => {
@@ -146,10 +159,10 @@ test("every Margin of Error gives the GM Scrutiny; only Encumbrance earns a Stam
   assert.equal(fine.stampEarned, false);
 });
 
-test("Resonance: violet 1s, or 1-2 with Greater Bound", () => {
-  assert.equal(evaluateRoll({ margin: 5, violet: [1, 2, 6] }).resonance, 1);
-  assert.equal(evaluateRoll({ margin: 5, violet: [1, 2, 6] }, { greaterBound: true }).resonance, 2);
-  assert.equal(evaluateRoll({ margin: 5, white: [1, 2] }).resonance, 0);
+test("Dissonance: violet 1s, or 1-2 with Greater Bound", () => {
+  assert.equal(evaluateRoll({ margin: 5, violet: [1, 2, 6] }).dissonance, 1);
+  assert.equal(evaluateRoll({ margin: 5, violet: [1, 2, 6] }, { greaterBound: true }).dissonance, 2);
+  assert.equal(evaluateRoll({ margin: 5, white: [1, 2] }).dissonance, 0);
 });
 
 // ---- Odds reference table from the design doc (white dice, 7+ on d10) ----
@@ -218,23 +231,23 @@ test("Commendation: With Conditions becomes Approved, nothing else changes", () 
   assert.equal(evaluateRoll({ margin: 8, white: [9] }, { difficulty: 1, upgradeConditions: true }).tier, "approved");
 });
 
-test("Commendation: a violet 1 doesn't Resonate", () => {
+test("Commendation: a violet 1 doesn't cause Dissonance", () => {
   const dice = { margin: 5, violet: [1, 1, 8] };
-  assert.equal(evaluateRoll(dice).resonance, 2);
-  assert.equal(evaluateRoll(dice, { suppressResonance: 1 }).resonance, 1);
-  assert.equal(evaluateRoll(dice, { suppressResonance: 5 }).resonance, 0);
+  assert.equal(evaluateRoll(dice).dissonance, 2);
+  assert.equal(evaluateRoll(dice, { suppressDissonance: 1 }).dissonance, 1);
+  assert.equal(evaluateRoll(dice, { suppressDissonance: 5 }).dissonance, 0);
 });
 
 test("Commendation effects from the rule-break menu", () => {
   const fx = commendationEffects([
     { ruleBreak: "trait2" }, { ruleBreak: "difficulty" }, { ruleBreak: "obstacle" },
-    { ruleBreak: "conditions" }, { ruleBreak: "resonance" }, { ruleBreak: "impossible", name: "Walked Out" }
+    { ruleBreak: "conditions" }, { ruleBreak: "dissonance" }, { ruleBreak: "impossible", name: "Walked Out" }
   ]);
   assert.equal(fx.secondTrait, true);
   assert.equal(fx.difficultyShift, -1);
   assert.equal(fx.obstaclesIgnored, 1);
   assert.equal(fx.upgradeConditions, true);
-  assert.equal(fx.suppressResonance, 1);
+  assert.equal(fx.suppressDissonance, 1);
   assert.equal(fx.impossible.length, 1);
   assert.equal(commendationEffects([]).secondTrait, false);
 });

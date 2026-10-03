@@ -549,8 +549,16 @@ window.LEDGER = [
   summary: "Margin + Skill + Traits + Circumstances − Obstacles. Cap 7.",
   body: [
     "<strong>Pool = the Margin + Skill (0–2) + one Trait (its rank) + 1 per Circumstance − 1 per Obstacle. Cap: 7.</strong>",
-    "<ul><li><strong>The Margin:</strong> one amber die, always rolled. See [[rules-margin|the Margin]].</li><li><strong>Skill:</strong> 0–2 dice.</li><li><strong>One Trait:</strong> pick <strong>one</strong> of your Traits (Station or an open Trait) and it adds dice equal to its <strong>rank</strong>, 1 or 2. If it's a stretch, the table can call it a <strong>Stretch</strong>, and then it counts as 1 die whatever its rank. See [[rules-traits|Traits]].</li><li><strong>Commendations:</strong> one that says <em>a second Trait also applies</em> lets you pick a second Trait when its situation applies. See [[rules-commendations|Commendations]].</li><li><strong>The Gift:</strong> adds no die. It turns one white die violet, or, if you would roll only the Margin, adds one violet die. See [[rules-gift|Gift]].</li><li><strong>Circumstances:</strong> +1 each: gear, another PC assisting, a form filed in advance.</li><li><strong>A scene Trait:</strong> you may pick <strong>one</strong> Trait of the scene you're in for +1 die. See [[rules-scene-cards|Scene cards]].</li><li><strong>Obstacles:</strong> −1 each: wind, wet rock, darkness, a relevant NPC Tag, a relevant Notice on you.</li><li><strong>Expedite:</strong> spend a Stamp for +1 die, once per roll. See [[rules-stamps|Stamps]].</li></ul>",
+    "<ul><li><strong>The Margin:</strong> one amber die, always rolled. See [[rules-margin|the Margin]].</li><li><strong>Skill:</strong> 0–2 dice.</li><li><strong>One Trait:</strong> pick <strong>one</strong> of your Traits (Station or an open Trait) and it adds dice equal to its <strong>rank</strong>, 1 or 2. If it's a stretch, the table can call it a <strong>Stretch</strong>, and then it counts as 1 die whatever its rank. See [[rules-traits|Traits]].</li><li><strong>Commendations:</strong> one that says <em>a second Trait also applies</em> lets you pick a second Trait when its situation applies. See [[rules-commendations|Commendations]].</li><li><strong>The Gift:</strong> adds no die. It turns one white die violet, or, if you would roll only the Margin, adds one violet die. See [[rules-gift|Gift]].</li><li><strong>Circumstances:</strong> +1 each: another PC assisting, a form filed in advance. Gear is not one: see [[rules-gear|Gear]].</li><li><strong>A scene Trait:</strong> you may pick <strong>one</strong> Trait of the scene you're in for +1 die. See [[rules-scene-cards|Scene cards]].</li><li><strong>Obstacles:</strong> −1 each: wind, wet rock, darkness, missing the right tools, a relevant NPC Tag, a relevant Notice on you.</li><li><strong>Expedite:</strong> spend a Stamp for +1 die, once per roll. See [[rules-stamps|Stamps]].</li></ul>",
     "Typical pools are 3–5 dice. A full 7 takes everything at once, for example Margin + Skill 2 + a rank 2 Trait + an assist + the environment. [[rules-hindrances|Hindrances]] never add dice."
+  ] },
+
+{ id: "rules-gear", kind: "rules", name: "Gear", tag: "Rules",
+  aka: ["equipment", "tools", "kit", "bound gear", "items"],
+  summary: "Gear is permission, not a bonus: the right tools let you roll at all.",
+  body: [
+    "<strong>The right tools let you roll.</strong> Without them, the task is either impossible or the lack counts as an obstacle (−1 die). A lock can be picked with a hairpin; not with nothing.",
+    "<ul><li><strong>Gear never adds dice.</strong></li><li><strong>Bound gear</strong> (anything running on divine infrastructure) <strong>turns one existing white die violet</strong>, as a Gift does. See [[rules-violet|violet dice]].</li><li><strong>Exceptional gear is a Trait</strong> (<em>My Grandmother's Spanner</em>). It competes for your one Trait per roll rather than stacking with it. See [[rules-traits|Traits]].</li></ul>"
   ] },
 
 { id: "rules-difficulty", kind: "rules", name: "Difficulty and results", tag: "Rules",
@@ -572,12 +580,12 @@ window.LEDGER = [
   ] },
 
 { id: "rules-violet", kind: "rules", name: "Violet dice (the Bound)", tag: "Rules",
-  aka: ["resonance", "greater bound", "bound dice", "violet", "divine"],
-  summary: "Opt-in dice that succeed on 6+, but a 1 is Resonance: the Bound notice.",
+  aka: ["dissonance", "resonance", "greater bound", "bound dice", "violet", "divine"],
+  summary: "Opt-in dice that succeed on 6+, but a 1 is Dissonance: something has gone wrong with the Bound.",
   body: [
     "Opt in when you draw on divine infrastructure: a Gift, Bound-powered gear, a plea at [[compline|Compline]], anything borrowed from [[engineering|Engineering]].",
-    "<ul><li><strong>Succeed on 6+</strong> (50%).</li><li><strong>1 = Resonance:</strong> the Bound notice. Something sings back, a light flickers in the wrong district, a Liturgist dreams.</li><li><strong>Greater Bound</strong> (optional tier): Resonance on 1–2.</li><li><strong>Colored dice replace white dice; they never add to the count.</strong> Pool size comes from skill and reasons; color tells you the risk.</li></ul>",
-    "Only two special colors exist: amber (the Margin) and violet (the Bound). Risk: 10% per violet die for Resonance (20% for Greater Bound)."
+    "<ul><li><strong>Succeed on 6+</strong> (50%).</li><li><strong>1 = Dissonance:</strong> something has gone wrong with the Bound. A sour note in the ship's song, a light flickering in the wrong district, a Liturgist's bad dream.</li><li><strong>Greater Bound</strong> (optional tier): Dissonance on 1–2.</li><li><strong>Colored dice replace white dice; they never add to the count.</strong> Pool size comes from skill and reasons; color tells you the risk.</li><li><strong>Violet limit:</strong> at most one violet die from the Gift and one from Bound gear, two in total.</li></ul>",
+    "Only two special colors exist: amber (the Margin) and violet (the Bound). Risk: 10% per violet die for Dissonance (20% for Greater Bound)."
   ] },
 
 { id: "rules-traits", kind: "rules", name: "Traits", tag: "Rules",
@@ -622,7 +630,7 @@ window.LEDGER = [
   aka: ["gm currency", "complications", "the ship pushes back"],
   summary: "The GM gains 1 whenever any player rolls a Margin of Error. Visible to everyone.",
   body: [
-    "It gives the GM an earned, visible reason to escalate: the ship pushing back, not the GM picking on someone. The GM spends it to move a Docket's Deadline up a round, have a Minor NPC act as Major for one exchange, raise an NPC's Rating by 1 for one roll, trigger a Resonance, or bring in an offscreen complication (the Proctors arrive). Or <strong>complicate a roll</strong>: spend 1 on one of the scene's Traits after a roll, and it has one success fewer. The player can negate that by spending a Stamp.",
+    "It gives the GM an earned, visible reason to escalate: the ship pushing back, not the GM picking on someone. The GM spends it to move a Docket's Deadline up a round, have a Minor NPC act as Major for one exchange, raise an NPC's Rating by 1 for one roll, trigger a Dissonance, or bring in an offscreen complication (the Proctors arrive). Or <strong>complicate a roll</strong>: spend 1 on one of the scene's Traits after a roll, and it has one success fewer. The player can negate that by spending a Stamp.",
     "See [[rules-margin|the Margin]] and [[rules-dockets|Dockets]]."
   ] },
 
@@ -671,7 +679,7 @@ window.LEDGER = [
   body: [
     "For the crowd of angry critters, a chase through Stem-Side, a survey day. The GM gives the situation a Rating (<em>a swarm of hull-mites: Rating 1</em>). Each player describes an approach, picks a skill and rolls once against it.",
     "<table class=\"rules-table\"><thead><tr><th>Result</th><th>What happens</th></tr></thead><tbody><tr><th>Commended</th><td>you carry the moment, plus a bonus (find something, save someone)</td></tr><tr><th>Approved</th><td>you contribute cleanly</td></tr><tr><th>With Conditions</th><td>you contribute, but take a Minor Notice</td></tr><tr><th>Denied</th><td>you take a Major, or the thing you were protecting slips</td></tr></tbody></table>",
-    "If at least half the group reaches Approved, the scene is won, narrated as a montage built from everyone's rolls. Notices, Margins and Resonances all apply."
+    "If at least half the group reaches Approved, the scene is won, narrated as a montage built from everyone's rolls. Notices, Margins and Dissonance all apply."
   ] },
 
 { id: "rules-dockets", kind: "rules", name: "Dockets", tag: "Rules (scene type)",
@@ -693,7 +701,7 @@ window.LEDGER = [
 { id: "rules-hazards", kind: "rules", name: "Harm outside conflict", tag: "Rules", aka: ["hazard", "fall", "toxic", "environment"],
   summary: "Hazards work like resisting an NPC: the GM sets a Rating, you roll.",
   body: [
-    "A fall, a toxic atmosphere, a Resonance gone bad: the GM sets a Rating and you roll. With Conditions or Denied lands a Minor or Major Notice, as in [[rules-resisting|resisting an NPC]]."
+    "A fall, a toxic atmosphere, a Dissonance gone bad: the GM sets a Rating and you roll. With Conditions or Denied lands a Minor or Major Notice, as in [[rules-resisting|resisting an NPC]]."
   ] },
 
 { id: "rules-record", kind: "rules", name: "Requests for Record", tag: "Rules", aka: ["ask chorus", "questions to chorus", "answers"],
@@ -745,8 +753,8 @@ window.LEDGER = [
     "You gain a Commendation slot at Grades II, V and VIII. Always on in their narrow situation, with nothing to track. In the roll dialog you tick one when its situation applies.",
     "<strong>Template:</strong> <em>Because I [short phrase], when [specific situation], I [one rule-break].</em>",
     "<strong>Rule-break menu:</strong>",
-    "<ul><li><strong>a second Trait also applies</strong> (pick another Trait at its rank; Stretch rules apply)</li><li>treat the Difficulty as <strong>one lower</strong></li><li>ignore <strong>one obstacle</strong></li><li><strong>With Conditions</strong> becomes <strong>Approved</strong></li><li><strong>do the normally impossible</strong> (narrative permission)</li><li>a violet <strong>1 doesn't Resonate</strong></li></ul>",
-    "<strong>Examples:</strong> <em>Never Misses a Rivet:</em> when I Hullcraft against the clock, With Conditions becomes Approved. <em>Everyone's Cousin:</em> when I Persuade anyone born in Stem-Side, a second Trait also applies. <em>The Bound Know My Voice</em> (Touched): when I Attune with my Gift, one violet 1 doesn't Resonate.",
+    "<ul><li><strong>a second Trait also applies</strong> (pick another Trait at its rank; Stretch rules apply)</li><li>treat the Difficulty as <strong>one lower</strong></li><li>ignore <strong>one obstacle</strong></li><li><strong>With Conditions</strong> becomes <strong>Approved</strong></li><li><strong>do the normally impossible</strong> (narrative permission)</li><li>a violet <strong>1 doesn't cause Dissonance</strong></li></ul>",
+    "<strong>Examples:</strong> <em>Never Misses a Rivet:</em> when I Hullcraft against the clock, With Conditions becomes Approved. <em>Everyone's Cousin:</em> when I Persuade anyone born in Stem-Side, a second Trait also applies. <em>The Bound Know My Voice</em> (Touched): when I Attune with my Gift, one violet 1 doesn't cause Dissonance.",
     "See [[rules-grade|Grade]]."
   ] },
 

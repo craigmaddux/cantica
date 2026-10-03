@@ -201,14 +201,14 @@
       "Environment": "Environmental factors",
       "Circumstances": "Circumstances (+1 each)",
       "Obstacles": "Obstacles (−1 each)",
-      "Bound": "Other Bound dice",
-      "EnvironmentHint": "Circumstances: gear, a PC assisting, a form filed in advance. Obstacles: wind, wet rock, darkness, a relevant NPC Tag or a Notice on you. Bound dice replace white dice; they never add to the pool.",
+      "Bound": "Bound gear",
+      "EnvironmentHint": "Circumstances: another PC assisting, a form filed in advance. Obstacles: wind, wet rock, darkness, missing the right tools, a relevant NPC Tag or a Notice on you. Gear never adds dice: the right tools let you roll at all.",
       "Expedite": "Expedite",
       "ExpediteNote": "Spend a Stamp for +1 die. One per roll.",
       "Margin": "The Margin",
       "EncumbranceNote": "If any Hindrance is in play, the Margin of Error widens to 1–2 and an Error earns a Stamp. Hindrances never add dice.",
       "GreaterBound": "Greater Bound",
-      "GreaterBoundNote": "Resonance on 1–2.",
+      "GreaterBoundNote": "Dissonance on 1–2.",
       "Dice": "dice",
       "Breakdown": "{amber} amber · {white} white · {violet} violet",
       "Roll": "Roll",
@@ -229,14 +229,15 @@
       "Stretch": "Stretch",
       "StretchShort": "Counts as 1 die, whatever its rank (the GM's call).",
       "StretchNote": "A stretch to fit the situation (the GM's call): the Trait counts as 1 die whatever its rank.",
-      "SecondTrait": "Your Commendation lets a second Trait also apply."
+      "SecondTrait": "Your Commendation lets a second Trait also apply.",
+      "BoundNote": "Gear running on divine infrastructure turns one white die violet. At most one die from gear and one from the Gift."
     },
     "Roll": {
       "Margin": "Margin",
       "Gift": "Gift",
       "Circumstances": "circumstance",
       "Obstacles": "obstacle",
-      "BoundSource": "Bound",
+      "BoundSource": "Bound gear",
       "Expedite": "Expedite (Stamp)",
       "VsTarget": "vs {name} · Rating {rating}",
       "Capped": "Pool capped at 7.",
@@ -250,8 +251,8 @@
       "ErrorText": "A twist. The GM introduces a complication.",
       "ScrutinyGained": "Scrutiny +1",
       "StampEarned": "Hindrance bites: +1 Stamp.",
-      "ResonanceCount": "Resonance ×{n}",
-      "ResonanceText": "The Bound notice. Something sings back.",
+      "DissonanceCount": "Dissonance ×{n}",
+      "DissonanceText": "Something has gone wrong with the Bound. A sour note.",
       "InScene": "in",
       "InPlay": "In play: {text}",
       "MarginTarget": "The Margin succeeds on {n}+ at this Grade.",
@@ -389,15 +390,15 @@
       "obstacle": "Ignore one obstacle",
       "conditions": "With Conditions becomes Approved",
       "impossible": "Do the normally impossible (narrative)",
-      "resonance": "A violet 1 doesn't Resonate",
       "short": {
         "trait2": "a second Trait",
         "difficulty": "Difficulty −1",
         "obstacle": "ignore an obstacle",
         "conditions": "Conditions → Approved",
         "impossible": "the impossible",
-        "resonance": "no Resonance"
-      }
+        "dissonance": "no Dissonance"
+      },
+      "dissonance": "A violet 1 doesn't cause Dissonance"
     },
     "History": {
       "Heading": "History",
@@ -475,6 +476,40 @@
       "ButtonHint": "Walk through creating this character, one question at a time.",
       "AutoSetting": "Open Register With Gloss for new characters",
       "AutoHint": "When you create a character, Gloss walks you through it. You can always skip to the full sheet."
+    },
+    "Hum": {
+      "Label": "The Hum",
+      "Hint": "How much the Bound are stirring. Only you can see this.",
+      "Private": "Players never see this. They feel it only through the world.",
+      "Dissonance": "Dissonance",
+      "DissonanceHint": "A Dissonance you trigger (spend 1 Scrutiny): +1 Hum.",
+      "Reset": "The ship goes quiet (reset to 0)",
+      "RefrainRule": "From here, every violet die causes Dissonance on 1–2.",
+      "Crossed": "The Hum has reached the {band}.",
+      "Gives": "Something gives.",
+      "GivesBody": "Write the event and show it in the world. When it has played out, reset the Hum to 0.",
+      "Band": {
+        "still": {
+          "name": "Still",
+          "text": "The ship sings as it always has."
+        },
+        "murmur": {
+          "name": "Murmur",
+          "text": "Small wrongnesses: a light in the wrong color, a door that hesitates."
+        },
+        "refrain": {
+          "name": "Refrain",
+          "text": "Districts notice. Liturgists hold vigils; Engineering files reports. All violet dice cause Dissonance on 1–2."
+        },
+        "swell": {
+          "name": "Swell",
+          "text": "Ship-wide events. Chorus issues notices it won't explain."
+        },
+        "gives": {
+          "name": "Something gives",
+          "text": "A campaign event, written by you."
+        }
+      }
     }
   }
 }

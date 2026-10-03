@@ -375,7 +375,7 @@
 .cantica-card .die.hit { box-shadow: 0 0 9px var(--tier); opacity: 1; }
 .cantica-card .die.grace { outline: 2px solid var(--bound); outline-offset: 2px; opacity: 1; }
 .cantica-card .die.error { outline: 2px solid var(--warn); outline-offset: 2px; opacity: 1; }
-.cantica-card .die.resonance { outline: 2px solid var(--bound); outline-offset: 2px; opacity: 1; }
+.cantica-card .die.dissonance, .cantica-card .die.resonance { outline: 2px solid var(--bound); outline-offset: 2px; opacity: 1; }
 
 .cantica-card .tally { align-items: baseline; display: flex; gap: 0.5rem; }
 .cantica-card .successes { color: var(--ink-bright); font-family: var(--font-display); font-size: 1.5rem; }
@@ -389,7 +389,7 @@
 .cantica-card .margin span { color: var(--ink-soft); font-size: 0.85rem; }
 .cantica-card .margin.grace strong { color: var(--bound); }
 .cantica-card .margin.error strong { color: var(--warn); }
-.cantica-card .margin.resonance strong { color: var(--liturgy); }
+.cantica-card .margin.dissonance strong, .cantica-card .margin.resonance strong { color: var(--liturgy); }
 .cantica-card .margin .stamp { color: var(--warm-bright); font-style: italic; }
 .cantica-card .margin button { justify-self: start; margin-top: 0.2rem; padding: 0.2rem 0.6rem; }
 
@@ -836,3 +836,29 @@
 .pool-dialog .check.stretch { opacity: 0.85; }
 .pool-dialog input:disabled + .check-label, .pool-dialog input:disabled ~ .check-text { opacity: 0.4; }
 .pips.rank .pip.base:disabled { opacity: 1; }
+
+/* v0.8: the Hum, the GM's window. */
+.application.hum .window-content { display: block; }
+.hum-body { display: flex; flex-direction: column; gap: 0.5rem; padding: 0.6rem 0.8rem 0.8rem; }
+.hum-head { align-items: baseline; display: flex; justify-content: space-between; }
+.hum-value { color: var(--bound); font-family: var(--font-mono); font-size: 1.8rem; line-height: 1; }
+.hum-value small { color: var(--ink-dim); font-size: 0.7rem; }
+.hum-band { color: var(--liturgy); font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; }
+.hum-band.band-swell, .hum-band.band-gives { color: var(--warn); }
+.hum-text, .hum-rule, .hum-private { color: var(--ink-soft); font-size: 0.8rem; margin: 0; }
+.hum-rule { color: var(--warn); font-style: italic; }
+.hum-private { color: var(--ink-faint); font-size: 0.7rem; font-style: italic; }
+.hum-bands { display: grid; gap: 0.3rem; }
+.hum-band-row { align-items: center; display: flex; gap: 0.5rem; justify-content: space-between; }
+.hum-band-name { color: var(--ink-dim); font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; }
+.hum-band-name small { color: var(--ink-faint); }
+.hum-pips { display: flex; gap: 2px; }
+.hum-pips i { border: 1px solid var(--rule-bright); height: 9px; width: 9px; }
+.hum-pips i.filled { background: var(--bound); border-color: var(--bound); box-shadow: 0 0 5px var(--bound); }
+.hum-band-row.band-swell .hum-pips i.filled { background: var(--warn); border-color: var(--warn); box-shadow: 0 0 5px var(--warn); }
+.hum-controls { display: flex; gap: 0.35rem; }
+.hum-controls button, .hum-gives button { height: auto; line-height: 1.3; padding: 0.15rem 0.6rem; }
+.hum-gives { border: 1px solid var(--warn); display: grid; gap: 0.4rem; padding: 0.5rem; }
+.hum-gives strong { color: var(--warn); font-family: var(--font-mono); letter-spacing: 0.15em; text-transform: uppercase; }
+.hum-gives span { color: var(--ink-soft); font-size: 0.8rem; }
+.pool-dialog .check.bound-gear { margin-top: 0.3rem; }

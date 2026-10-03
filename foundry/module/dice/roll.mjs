@@ -2,6 +2,8 @@ import { SYSTEM_ID, OPEN_TRAITS } from "../config.mjs";
 import { buildPool, evaluateRoll, commendationEffects, effectiveDifficulty, traitDice, WHITE_TARGET, VIOLET_TARGET } from "../rules.mjs";
 import { marginTarget as marginTargetFor } from "../progression.mjs";
 import { gainScrutiny } from "../scrutiny.mjs";
+import { getHum, addHum } from "../hum-tracker.mjs";
+import { widensDissonance, humFromRoll } from "../hum.mjs";
 import { sceneTraitDice } from "../scene.mjs";
 import { cardView } from "../roll-card.mjs";
 
@@ -37,21 +39,24 @@ export async function renderRollCard(state) {
  * @param {{id: string, name: string, ruleBreak: string}[]} [input.commendations] Ticked Commendations.
  * @param {number} [input.circumstances]    Environmental advantages (+1 each).
  * @param {number} [input.obstacles]        Environmental penalties (-1 each).
- * @param {number} [input.bound]            Extra violet dice from other sources.
+ * @param {number} [input.bound]            Bound gear in play (0 or 1): turns one white die violet.
  * @param {string} [input.sceneId]          The Scene Card the roll happens in.
  * @param {string} [input.sceneName]
  * @param {{id: string, name: string}} [input.sceneTrait] The one scene Trait picked for +1 die.
  * @param {number} [input.difficulty]       Successes needed: D0-D3, or an NPC's Rating.
  * @param {string} [input.targetName]       Name of the NPC whose Rating is the Difficulty.
  * @param {boolean} [input.expedite]        Spend a Stamp for +1 die (one per roll).
- * @param {boolean} [input.greaterBound]    Resonance on 1-2.
+ * @param {boolean} [input.greaterBound]    Dissonance on 1-2 (each adds 2 to the Hum). From the Refrain, everyone's violet dice do this too.
  */
 export async function rollPool(actor, input) {
   const i18n = game.i18n;
   const skill = input.skill;
   const gift = Boolean(input.gift && actor.system.touched);
   const baseDifficulty = Number.isFinite(Number(input.difficulty)) ? Number(input.difficulty) : 1;
+  // Greater Bound is optional and doubles the Hum a Dissonance adds. From the Refrain on, the Hum itself
+  // widens Dissonance to 1-2 for every violet die (no one is told why).
   const greaterBound = Boolean(input.greaterBound);
+  const widened = greaterBound || widensDissonance(getHum());
   const expedite = Boolean(input.expedite) && actor.system.stamps > 0;
 
   // Hindrances never add dice. If any is in play, the Margin of Error widens to 1-2.
@@ -102,17 +107,17 @@ export async function rollPool(actor, input) {
   // The Margin's success threshold improves with Grade: 7+ at I-III, down to 4+ at X.
   const marginTarget = actor.system.marginTarget ?? marginTargetFor(1);
   const outcome = evaluateRoll({ margin, white, violet }, {
-    difficulty, encumbrance, greaterBound, marginTarget,
+    difficulty, encumbrance, greaterBound: widened, marginTarget,
     upgradeConditions: fx.upgradeConditions,
-    suppressResonance: fx.suppressResonance
+    suppressDissonance: fx.suppressDissonance
   });
 
   // Everything the card shows, worked out now and saved so the card can be redrawn later.
-  const resonanceMax = greaterBound ? 2 : 1;
+  const dissonanceMax = widened ? 2 : 1;
   const dice = [
     { kind: "margin", value: margin, success: margin >= marginTarget, flag: outcome.grace ? "grace" : outcome.error ? "error" : "" },
     ...white.map(value => ({ kind: "white", value, success: value >= WHITE_TARGET, flag: "" })),
-    ...violet.map(value => ({ kind: "violet", value, success: value >= VIOLET_TARGET, flag: value <= resonanceMax ? "resonance" : "" }))
+    ...violet.map(value => ({ kind: "violet", value, success: value >= VIOLET_TARGET, flag: value <= dissonanceMax ? "dissonance" : "" }))
   ];
 
   const skillLabel = i18n.localize(`CANTICA.Skill.${skill}.label`);
@@ -125,7 +130,7 @@ export async function rollPool(actor, input) {
   for (const c of commendations) factors.push(`★ ${c.name || i18n.localize("CANTICA.Commendation.Heading")} (${i18n.localize(`CANTICA.Commendation.short.${c.ruleBreak}`)})`);
   if (input.circumstances) factors.push(`+${input.circumstances} ${i18n.localize("CANTICA.Roll.Circumstances")}`);
   if (input.obstacles) factors.push(`−${input.obstacles} ${i18n.localize("CANTICA.Roll.Obstacles")}`);
-  if (input.bound) factors.push(`${input.bound} ${i18n.localize("CANTICA.Roll.BoundSource")}`);
+  if (input.bound) factors.push(i18n.localize("CANTICA.Roll.BoundSource"));
   if (sceneTrait) factors.push(`+1 ${sceneTrait.name}`);
   if (expedite) factors.push(i18n.localize("CANTICA.Roll.Expedite"));
 
@@ -159,7 +164,7 @@ export async function rollPool(actor, input) {
     dice,
     outcome,
     upgradeConditions: fx.upgradeConditions,
-    resonanceLabel: outcome.resonance ? i18n.format("CANTICA.Roll.ResonanceCount", { n: outcome.resonance }) : "",
+    dissonanceLabel: outcome.dissonance ? i18n.format("CANTICA.Roll.DissonanceCount", { n: outcome.dissonance }) : "",
     stampNote: outcome.stampEarned,
     complication: null
   };
@@ -181,6 +186,9 @@ export async function rollPool(actor, input) {
 
   // Every Margin of Error gives the GM +1 Scrutiny.
   if (outcome.scrutiny) await gainScrutiny();
+
+  // Every Dissonance feeds the Hum, which only the GM sees.
+  if (outcome.dissonance) await addHum(humFromRoll(outcome.dissonance, greaterBound));
 
   return { message, roll, pool, outcome };
 }

@@ -23,6 +23,7 @@ import { registerPanels, reconcilePanels, openPanel, setShown } from "./module/s
 import { initLore, importLore } from "./module/lore.mjs";
 import { registerCards, listenForCards, activeCard, detectCard, setActiveCard } from "./module/cards.mjs";
 import { registerScrutiny, listenForScrutiny, showScrutiny, getScrutiny, gainScrutiny } from "./module/scrutiny.mjs";
+import { registerHum, listenForHum, showHum, getHum } from "./module/hum-tracker.mjs";
 
 Hooks.once("init", () => {
   console.log(`${SYSTEM_ID} | Initializing the Cantica system`);
@@ -54,6 +55,7 @@ Hooks.once("init", () => {
   });
 
   registerScrutiny();
+  registerHum();
   registerCards();
   registerCardArt();
   registerPanels();
@@ -82,7 +84,7 @@ Hooks.once("init", () => {
   });
 
   // Handy for macros: game.cantica.rollPool(actor, { skill: "hullcraft" }) or new game.cantica.PoolDialog({ actor }).
-  game.cantica = { rules, notices, rollPool, PoolDialog, showScrutiny, getScrutiny, gainScrutiny, activeCard, detectCard, setActiveCard, openLedger, importLore, openPanel, setShown, repaintCards, register: openRegistration };
+  game.cantica = { rules, notices, rollPool, PoolDialog, showScrutiny, getScrutiny, gainScrutiny, showHum, getHum, activeCard, detectCard, setActiveCard, openLedger, importLore, openPanel, setShown, repaintCards, register: openRegistration };
 
   return foundry.applications.handlebars.loadTemplates([
     `systems/${SYSTEM_ID}/templates/actor/character.hbs`,
@@ -91,6 +93,7 @@ Hooks.once("init", () => {
     `systems/${SYSTEM_ID}/templates/parts/notices.hbs`,
     `systems/${SYSTEM_ID}/templates/dialog/pool.hbs`,
     `systems/${SYSTEM_ID}/templates/app/scrutiny.hbs`,
+    `systems/${SYSTEM_ID}/templates/app/hum.hbs`,
     `systems/${SYSTEM_ID}/templates/chat/roll.hbs`,
     `systems/${SYSTEM_ID}/templates/chat/clause.hbs`,
     `systems/${SYSTEM_ID}/templates/chat/notice.hbs`,
@@ -104,9 +107,11 @@ Hooks.once("init", () => {
 
 Hooks.once("ready", () => {
   listenForScrutiny();
+  listenForHum();
   listenForCards();
   reconcilePanels();
   if (game.settings.get(SYSTEM_ID, "showScrutiny")) showScrutiny();
+  showHum(); // does nothing unless you are the GM
 });
 
 // Dice So Nice is optional; its hook simply never fires without it.
@@ -125,6 +130,16 @@ Hooks.on("renderActorDirectory", (app, html) => {
   button.innerHTML = `<i class="fa-solid fa-book-open"></i> ${game.i18n.localize("CANTICA.Ledger.Title")}`;
   button.addEventListener("click", () => game.cantica.openLedger());
   actions.append(button);
+
+  // The Hum is the GM's alone: its button is never built for anyone else.
+  if (game.user.isGM && !actions.querySelector(".cantica-hum-button")) {
+    const hum = document.createElement("button");
+    hum.type = "button";
+    hum.className = "cantica-hum-button";
+    hum.innerHTML = `<i class="fa-solid fa-wave-square"></i> ${game.i18n.localize("CANTICA.Hum.Label")}`;
+    hum.addEventListener("click", () => game.cantica.showHum());
+    actions.append(hum);
+  }
 });
 
 // A new character, made by this player, starts in creation: Register With Gloss opens, and the sheet
