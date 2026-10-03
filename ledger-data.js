@@ -546,9 +546,9 @@ window.LEDGER = [
   ] },
 
 { id: "rules-pool", kind: "rules", name: "Building the pool", tag: "Rules", aka: ["pool", "dice pool", "cap", "how many dice"],
-  summary: "Margin + Skill + Traits + Circumstances − Obstacles. Cap 7.",
+  summary: "Margin + Skill + one Trait + a scene Trait + Circumstances − Obstacles. Cap 7.",
   body: [
-    "<strong>Pool = the Margin + Skill (0–2) + one Trait (its rank) + 1 per Circumstance − 1 per Obstacle. Cap: 7.</strong>",
+    "<strong>Pool = the Margin + Skill (0–2) + one Trait (its rank) + one scene Trait + 1 per Circumstance − 1 per Obstacle. Cap: 7.</strong>",
     "<ul><li><strong>The Margin:</strong> one amber die, always rolled. See [[rules-margin|the Margin]].</li><li><strong>Skill:</strong> 0–2 dice.</li><li><strong>One Trait:</strong> pick <strong>one</strong> of your Traits (Station or an open Trait) and it adds dice equal to its <strong>rank</strong>, 1 or 2. If it's a stretch, the table can call it a <strong>Stretch</strong>, and then it counts as 1 die whatever its rank. See [[rules-traits|Traits]].</li><li><strong>Commendations:</strong> one that says <em>a second Trait also applies</em> lets you pick a second Trait when its situation applies. See [[rules-commendations|Commendations]].</li><li><strong>The Gift:</strong> adds no die. It turns one white die violet, or, if you would roll only the Margin, adds one violet die. See [[rules-gift|Gift]].</li><li><strong>Circumstances:</strong> +1 each: another PC assisting, a form filed in advance. Gear is not one: see [[rules-gear|Gear]].</li><li><strong>A scene Trait:</strong> you may pick <strong>one</strong> Trait of the scene you're in for +1 die. See [[rules-scene-cards|Scene cards]].</li><li><strong>Obstacles:</strong> −1 each: wind, wet rock, darkness, missing the right tools, a relevant NPC Tag, a relevant Notice on you.</li><li><strong>Expedite:</strong> after you roll, spend a Stamp to roll one more die, once per roll. See [[rules-stamps|Stamps]].</li></ul>",
     "Typical pools are 3–5 dice. A full 7 takes everything at once, for example Margin + Skill 2 + a rank 2 Trait + an assist + the environment. [[rules-hindrances|Hindrances]] never add dice."
   ] },

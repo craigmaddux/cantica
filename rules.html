@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Rules of the Cantica</title>
+<meta name="description" content="How the Cantica is played: the ideas behind the rules, rolling the dice, your character, Stamps and Scrutiny, conflict, scenes and advancement.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Michroma&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="ledger.css">
+<link rel="stylesheet" href="rules.css">
+</head>
+<body class="ledger-page rules-page">
+
+<div class="terminal-header" id="terminal-header">
+  <div class="left">
+    <span class="blink"></span>
+    <span>THE RULES OF THE CANTICA<span class="hide-sm"> <span class="accent">//</span> PUBLIC TERMINAL</span></span>
+  </div>
+  <div class="right"><a class="hdr-link" href="ledger.html">Ledger</a> <span class="accent">//</span> <a class="hdr-link" href="index.html">◂ Concierge</a></div>
+</div>
+
+<main class="rules">
+  <div class="rules-hero">
+    <div class="consultation-tag">▾ THE RULES ▾</div>
+    <h1>How it is done aboard the ship.</h1>
+    <p class="lede"><em>Oh,</em> you would like to know how it is played. Of course. Here is all of it, from the ideas underneath to the dice on the table. If you only want one word explained, the <a href="ledger.html">Ledger</a> is quicker.</p>
+    <p class="rules-note rules-note-top">
+      <span>◆ NATIVE RULES, EXPERIMENTAL</span> These are the Cantica rules as currently drafted for the Foundry system. They may change.
+    </p>
+  </div>
+
+  <div class="rules-layout">
+
+    <nav class="rules-toc" id="toc" aria-label="Contents">
+      <details class="toc-box" id="toc-box" open>
+        <summary>Contents</summary>
+        <ol id="toc-list"></ol>
+      </details>
+    </nav>
+
+    <article class="rules-body" id="rules-body">
+
+      <!-- Part I: the ideas. Written by hand; the other parts are built from the Ledger's rules entries. -->
+      <section class="part" id="part-ideas" data-title="The ideas">
+        <header class="part-head">
+          <span class="part-no">Part I</span>
+          <h2>The ideas underneath</h2>
+          <p class="part-blurb">Cantica is a game about ordinary people aboard a generational ark ship, held together by paperwork, song and habit. The rules are small on purpose, and they are all built from a few ideas.</p>
+        </header>
+
+        <div class="ideas">
+          <div class="idea"><h3>The players always roll</h3><p>The GM never rolls dice. People and powers on the other side of a roll act through a <a href="#rules-npcs">Rating</a>, which is simply how many successes you need.</p></div>
+          <div class="idea"><h3>The target never moves</h3><p>A white die succeeds on a <strong>7 or better</strong>, always. A harder task asks for more successes; it never changes the number you are trying to roll.</p></div>
+          <div class="idea"><h3>Colour is risk</h3><p>Only two special dice exist. The <strong>amber Margin</strong> is always rolled, and may twist or bless the roll. <strong>Violet</strong> dice are the Bound: easier to succeed with, but dangerous. Everything else is white.</p></div>
+          <div class="idea"><h3>Your flaws are worth something</h3><p>When a <a href="#rules-hindrances">Hindrance</a> bites, you earn a <a href="#rules-stamps">Stamp</a>. Trouble is a resource, and the characters people remember are the ones with a habit they cannot help.</p></div>
+          <div class="idea"><h3>The ship pushes back</h3><p>Every Margin of Error gives the GM <a href="#rules-scrutiny">Scrutiny</a>, kept where the whole table can see it. Escalation is earned, not arbitrary: the ship is pushing back, the GM is not picking on anyone.</p></div>
+          <div class="idea"><h3>Seniority is the ship's wealth</h3><p>You grow by answering three questions at <a href="#rules-compline">Compline</a>, not by killing things. Tenure buys skills and Traits, and the Tenure you have earned sets your <a href="#rules-grade">Grade</a>.</p></div>
+          <div class="idea"><h3>Small numbers</h3><p>Skills run 0 to 2. Traits are rank 1 or 2. A typical pool is 3 to 5 dice and the most you can ever roll is 7, so every die counts and every Stamp matters.</p></div>
+        </div>
+
+        <h3 class="sub">A roll, at the table</h3>
+        <ol class="steps">
+          <li><strong>The GM describes the moment</strong> and says how hard it is: a Difficulty from D0 to D3, or the Rating of whoever is in the way.</li>
+          <li><strong>You choose how you try:</strong> the skill that matches your approach, and the one Trait that fits best.</li>
+          <li><strong>You roll the pool:</strong> the Margin, plus a white die for each reason you have.</li>
+          <li><strong>Count your successes</strong> against the Difficulty: Denied, With Conditions, Approved or Commended. Watch the Margin for an Error or a Grace.</li>
+          <li><strong>Afterwards,</strong> you may spend Stamps for another die, and the GM may spend Scrutiny to complicate the roll, which a Stamp can cancel.</li>
+        </ol>
+
+        <h3 class="sub">What you need</h3>
+        <p>A handful of ten-sided dice (white, one amber, and a few violet, if you have them), a character, and a table of people who are happy to be a little unfair to each other in the name of a good story. In the Foundry system, the dice, the pool and all of the Stamps and Scrutiny are handled for you on the roll's chat card.</p>
+      </section>
+
+      <!-- Parts II onward are built here from the Ledger's rules entries. -->
+      <div id="built"></div>
+
+    </article>
+  </div>
+</main>
+
+<div class="terminal-footer">
+  <div>THE RULES OF THE CANTICA <span style="color: var(--warm);">//</span> KEPT BY GLOSS <span style="color: var(--warm);">//</span> SHIP-LOCAL TERMINAL</div>
+  <div class="blessing">Be at peace. The ship holds.</div>
+</div>
+
+<script src="ledger-data.js"></script>
+<script src="rules.js"></script>
+</body>
+</html>

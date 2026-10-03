@@ -1,0 +1,200 @@
+/* The Rules of the Cantica. Loads after style.css and ledger.css, and reuses their palette,
+   terminal chrome, entry text and rules tables. */
+
+.rules {
+  background: var(--hull);
+  background-image: linear-gradient(180deg, var(--hull) 0%, var(--void) 100%);
+  min-height: 100vh;
+  padding: 3.5rem 1.25rem 5rem;
+}
+
+/* ═════════ Title ═════════ */
+
+.rules-hero { margin: 0 auto 2.5rem; max-width: 46rem; text-align: center; }
+.rules-hero h1 {
+  color: var(--ink-bright);
+  font-family: 'Spectral', serif;
+  font-size: 1.9rem;
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.25;
+  margin: 0.4rem 0 1rem;
+}
+.rules-hero .lede { color: var(--ink-soft); font-size: 0.95rem; margin: 0 auto 1rem; }
+.rules-hero .lede a { color: var(--bound); }
+.rules-note-top { text-align: left; }
+
+/* ═════════ Layout ═════════ */
+
+.rules-layout {
+  display: grid;
+  gap: 2.5rem;
+  grid-template-columns: 15.5rem minmax(0, 1fr);
+  margin: 0 auto;
+  max-width: 68rem;
+}
+
+.rules-toc { align-self: start; position: sticky; top: calc(var(--hdr) + 1rem); }
+
+.toc-box {
+  background: var(--void-deep);
+  border: 1px solid var(--rule);
+  max-height: calc(100vh - var(--hdr) - 3rem);
+  overflow-y: auto;
+  padding: 0.7rem 0.9rem 0.9rem;
+}
+.toc-box summary {
+  color: var(--warm);
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  list-style: none;
+  text-transform: uppercase;
+}
+.toc-box summary::-webkit-details-marker { display: none; }
+.toc-box ol { list-style: none; margin: 0.6rem 0 0; padding: 0; }
+.toc-box ol ol { margin: 0.15rem 0 0.5rem; }
+.toc-box li { margin: 0; }
+.toc-box a {
+  border-left: 2px solid transparent;
+  color: var(--ink-soft);
+  display: block;
+  font-size: 0.8rem;
+  line-height: 1.3;
+  padding: 0.18rem 0 0.18rem 0.6rem;
+  text-decoration: none;
+}
+.toc-box .toc-part > a {
+  color: var(--ink-bright);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  margin-top: 0.4rem;
+  text-transform: uppercase;
+}
+.toc-box ol ol a { padding-left: 1.1rem; }
+.toc-box a:hover { color: var(--warm-bright); }
+.toc-box a.current { border-left-color: var(--warm); color: var(--warm-bright); }
+
+.rules-body { max-width: 46rem; min-width: 0; }
+
+/* ═════════ Parts and sections ═════════ */
+
+.part { margin-bottom: 3.5rem; scroll-margin-top: calc(var(--hdr) + 1rem); }
+
+.part-head { border-bottom: 1px solid var(--rule-bright); margin-bottom: 1.5rem; padding-bottom: 1rem; }
+.part-no {
+  color: var(--warm);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+.part-head h2 {
+  color: var(--ink-bright);
+  font-family: 'Spectral', serif;
+  font-size: 1.6rem;
+  font-weight: 400;
+  margin: 0.2rem 0 0.5rem;
+}
+.part-blurb { color: var(--ink-soft); font-style: italic; margin: 0; }
+
+.rule { margin-bottom: 2.2rem; scroll-margin-top: calc(var(--hdr) + 1rem); }
+.rule h3 {
+  color: var(--ink-bright);
+  font-family: 'Spectral', serif;
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin: 0 0 0.25rem;
+  position: relative;
+}
+.rule .anchor {
+  color: var(--ink-faint);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  left: -1.1rem;
+  opacity: 0;
+  position: absolute;
+  text-decoration: none;
+  top: 0.2rem;
+}
+.rule h3:hover .anchor, .rule .anchor:focus { color: var(--warm); opacity: 1; }
+.rule-summary { color: var(--ink-dim); font-style: italic; margin: 0 0 0.8rem; }
+.rule-foot { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; margin: 0.4rem 0 0; text-transform: uppercase; }
+.rule-foot a { color: var(--ink-dim); text-decoration: none; }
+.rule-foot a:hover { color: var(--bound-bright); }
+
+/* The Ledger's entry text styles (.entry-text) apply here too; links out to the Ledger are dotted. */
+.rules a.xref.ledger-ref { border-bottom-style: dotted; }
+
+/* ═════════ Part I: the ideas ═════════ */
+
+.ideas { display: grid; gap: 0.8rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); margin-bottom: 2rem; }
+.idea { background: var(--void-deep); border: 1px solid var(--rule); border-top: 2px solid var(--warm-deep); padding: 0.8rem 0.9rem 0.9rem; }
+.idea h3 { color: var(--ink-bright); font-family: 'Spectral', serif; font-size: 1rem; font-weight: 500; margin: 0 0 0.35rem; }
+.idea p { color: var(--ink-soft); font-size: 0.88rem; margin: 0; }
+.idea strong { color: var(--ink-bright); font-weight: 500; }
+.idea a { color: var(--bound); text-decoration: none; border-bottom: 1px dotted var(--bound-deep); }
+
+.sub {
+  color: var(--warm);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.2em;
+  margin: 2rem 0 0.6rem;
+  text-transform: uppercase;
+}
+.steps { color: var(--ink); counter-reset: step; list-style: none; margin: 0 0 1rem; padding: 0; }
+.steps li { counter-increment: step; margin-bottom: 0.6rem; padding-left: 2.2rem; position: relative; }
+.steps li::before {
+  border: 1px solid var(--warm-deep);
+  color: var(--warm);
+  content: counter(step);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  height: 1.4rem;
+  left: 0;
+  line-height: 1.4rem;
+  position: absolute;
+  text-align: center;
+  top: 0.05rem;
+  width: 1.4rem;
+}
+.steps strong { color: var(--ink-bright); font-weight: 500; }
+
+/* ═════════ Part IV: the skills ═════════ */
+
+.skill-groups { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); }
+.skill-group h4 {
+  border-bottom: 1px solid var(--rule);
+  color: var(--bound);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  margin: 0 0 0.5rem;
+  padding-bottom: 0.3rem;
+  text-transform: uppercase;
+}
+.skill-group dl { margin: 0; }
+.skill { margin-bottom: 0.6rem; scroll-margin-top: calc(var(--hdr) + 1rem); }
+.skill dt { color: var(--ink-bright); font-family: 'Spectral', serif; font-weight: 500; }
+.skill dd { color: var(--ink-soft); font-size: 0.88rem; margin: 0; }
+
+/* ═════════ Small screens ═════════ */
+
+@media (max-width: 900px) {
+  .rules { padding-top: 2.5rem; }
+  .rules-layout { display: block; }
+  .rules-toc { margin-bottom: 1.5rem; position: static; }
+  .toc-box { max-height: 60vh; }
+  .rules-hero h1 { font-size: 1.5rem; }
+  .rule .anchor { display: none; }
+}
+
+@media print {
+  .terminal-header, .terminal-footer, .rules-toc, .rule-foot, .rule .anchor { display: none; }
+  .rules, .rules-hero .lede { background: none; color: #000; }
+  .rules-layout { display: block; }
+  .part { break-inside: avoid-page; }
+}
