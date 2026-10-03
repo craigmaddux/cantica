@@ -2,7 +2,7 @@
 
 A native system for **Cantica**, a generational ark ship run by a tired AI that is also an angel of Order. Experimental: the table plays Savage Worlds, and this is for prototyping the rules in Foundry.
 
-Implements spec **v0.6**, plus Scene Cards and the Ledger. Targets Foundry **v14** (minimum v13). Optional: the **Dice So Nice** module for amber, white and violet dice.
+Implements spec **v0.6**, plus Scene Cards, Register With Gloss and the Ledger. Targets Foundry **v14** (minimum v13). Optional: the **Dice So Nice** module for amber, white and violet dice.
 
 ## Install
 
@@ -21,7 +21,7 @@ New releases appear as in-app updates. On Molten, the same URL works; no CloudCo
 - **The Margin** succeeds on 7+ at Grades I–III, 6+ at IV–VI, 5+ at VII–IX, 4+ at X. Its 1 is always an Error and its 10 always Grace.
 - **Difficulty = successes needed to succeed at all.** Below it is *Denied*; meeting it is *Approved, With Conditions*; one more is *Approved*; two or more is *Commended*. D0 Easy never Denies.
 - **Traits:** Station plus three open Traits (buy up to six, 4 Tenure each). Each relevant Trait adds a die.
-- **Encumbrances:** two (Personal, Circumstantial), plus a Touched character's Drawback. Any one in play widens the Margin of Error to 1–2 and an Error earns a Stamp. They never add dice.
+- **Hindrances:** two (Personal, Circumstantial), plus a Touched character's Drawback. Any one in play widens the Margin of Error to 1–2 and an Error earns a Stamp. They never add dice.
 - **Gift** (Touched): adds its die and turns up to two dice violet.
 - **Every Margin of Error** gives the GM **+1 Scrutiny**.
 - **Stamps:** Expedite (a checkbox in the roll dialog) spends one for +1 die; Cite a Clause has a button on the sheet. You start each session with 2, +1 at Grades III, VI and IX.
@@ -34,21 +34,33 @@ Appeal and Precedent are deliberately not in the system.
 
 Four tabs:
 
-- **Record:** Grade, Stamps and Tenure up top; Station and open Traits; the two Encumbrances; Notices; Commendations; and skills. Click a skill's name to roll it; click its pips to set a rating. At first a character is in **creation**: a 12 Tenure budget, maximum rating 2. *Finish creation* when done; after that, skills are bought with Tenure.
+- **Record:** Grade, Stamps and Tenure up top; Station and open Traits; the two Hindrances; Notices; Commendations; and skills. Click a skill's name to roll it; click its pips to set a rating. At first a character is in **creation**: a 12 Tenure budget, maximum rating 2. *Finish creation* when done; after that, skills are bought with Tenure.
 - **Gift:** Gift, Drawback and Registered. Only when the character is **Touched**.
 - **Notes:** free text.
 - **History:** the Tenure log. Anyone who can edit the sheet can award Tenure, run **Compline** (three questions, 1 Tenure per yes) or award an **arc milestone** (+3). A Grade-up is highlighted in the log and announced in chat.
 
 ## Rolling
 
-The pool builder offers your Station and Traits, the Gift, one checkbox per Encumbrance (and the Drawback), your Commendations, the Scene you're in, extra Circumstances, Obstacles and Bound dice. Difficulty is D0–D3, or the Rating of an NPC you've targeted.
+The pool builder offers your Station and Traits, the Gift, one checkbox per Hindrance (and the Drawback), your Commendations, the Scene you're in, extra Circumstances, Obstacles and Bound dice. Difficulty is D0–D3, or the Rating of an NPC you've targeted.
+
+## Register With Gloss
+
+A new character is created by a short conversation with Gloss. Each step asks one thing (your role, three Traits, your skills, two Hindrances, whether you're Touched), says what the answer does in the game, and offers a few examples you can click. Every answer is saved as you give it, so **Skip to the full sheet** is always there and loses nothing. It opens by itself for a brand-new character (there's a setting to turn that off), and a **Register With Gloss** button on the sheet reopens it during creation.
+
+Gloss's words are all in `module/registration-steps.mjs`: edit the text between the quotes.
 
 ## Scene Cards
 
-1. Create an Actor of type **Scene Card**, set its art, and add Traits (name, a +1 Circumstance or −1 Obstacle, and whether it applies automatically or is opt-in). Mark a Trait **GM only** to hide it until you're ready.
-2. Drag the card onto the canvas. It becomes a large token that sits beneath the characters. Drag character tokens onto it.
-3. **The scene for a roll** is the card the roller's token stands on; otherwise the **active** card (*Make active* on a card); otherwise none. The roll dialog has a **Scene** dropdown showing its guess, which the player can change.
-4. **Players** can open a card and use **Add Trait · spend a Stamp** to declare a new +1 Circumstance. The request goes through the GM's client, so a GM has to be online.
+A Scene Card is a place. Its **Traits are just Traits**: short phrases (*Steam Everywhere*, *A Spare Coupling in the Locker*).
+
+- **For the roller:** the scene is the card your token is standing on, or else the **active** card (*Make active*). The roll dialog's **Scene** dropdown shows that guess and you can change it. You may pick **one** of the scene's Traits for +1 die.
+- **Against the roller:** after a roll in a scene, the GM can click **Complicate (1 Scrutiny)** on the roll's chat card and choose one of the scene's Traits: the roll has one success fewer. The player sees a **Negate (spend a Stamp)** button on the same card and can cancel it. The Scrutiny is spent either way.
+- **Amend the Scene:** players can **Add Trait · spend a Stamp**. The request goes through the GM's client, so a GM has to be online.
+
+Two ways to see a card at the table, and you can use both:
+
+- **On the map:** drag the card onto the canvas. The token is drawn like the card: its art, with an information plate over the lower part carrying the name, the place, and the Traits. It is sized to its art's proportions. Double-click opens the sheet.
+- **A panel on every screen:** the GM clicks **Show on everyone's screen** on the card. A panel with the banner, description and Traits opens for every player, updates live as the card changes, and can be moved and resized (each player's position is remembered). Open as many as you like; **Open panel** shows one on your own screen only, and **Hide from everyone's screen** takes it away.
 
 ## The Ledger and the lore
 

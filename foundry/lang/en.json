@@ -106,7 +106,7 @@
     },
     "Stamps": {
       "Label": "Stamps",
-      "Hint": "Earned when any Encumbrance bites, sometimes from a Margin of Grace, and for withdrawing from a scene. Spend: Expedite (+1 die), Countersign (give to an ally's roll), Reclassify (downgrade a Notice as it lands), Cite a Clause, Amend the Scene.",
+      "Hint": "Earned when any Hindrance bites, sometimes from a Margin of Grace, and for withdrawing from a scene. Spend: Expedite (+1 die), Countersign (give to an ally's roll), Reclassify (downgrade a Notice as it lands), Cite a Clause, Amend the Scene.",
       "Cite": "Cite a Clause",
       "CiteTitle": "Cite a Clause",
       "CitePrompt": "Which rule do you declare exists and applies here?",
@@ -204,11 +204,11 @@
       "Circumstances": "Circumstances (+1 each)",
       "Obstacles": "Obstacles (−1 each)",
       "Bound": "Other Bound dice",
-      "EnvironmentHint": "Circumstances: gear, a scene Trait, a PC assisting, a form filed in advance. Obstacles: wind, wet rock, darkness, a relevant NPC Tag or a Notice on you. Bound dice replace white dice; they never add to the pool.",
+      "EnvironmentHint": "Circumstances: gear, a PC assisting, a form filed in advance. Obstacles: wind, wet rock, darkness, a relevant NPC Tag or a Notice on you. Bound dice replace white dice; they never add to the pool.",
       "Expedite": "Expedite",
       "ExpediteNote": "Spend a Stamp for +1 die. One per roll.",
       "Margin": "The Margin",
-      "EncumbranceNote": "If any Encumbrance is in play, the Margin of Error widens to 1–2 and an Error earns a Stamp. Encumbrances never add dice.",
+      "EncumbranceNote": "If any Hindrance is in play, the Margin of Error widens to 1–2 and an Error earns a Stamp. Hindrances never add dice.",
       "GreaterBound": "Greater Bound",
       "GreaterBoundNote": "Resonance on 1–2.",
       "Dice": "dice",
@@ -224,7 +224,9 @@
       },
       "NoTraits": "Fill in Station and your Traits on the sheet to use them here.",
       "CommendationHint": "Tick a Commendation when its situation applies.",
-      "ErrorRange": "Margin of Error on {range}"
+      "ErrorRange": "Margin of Error on {range}",
+      "NoSceneTrait": "No scene Trait",
+      "SceneTraitHint": "You may pick one scene Trait for +1 die."
     },
     "Roll": {
       "Margin": "Margin",
@@ -244,7 +246,7 @@
       "Error": "Margin of Error",
       "ErrorText": "A twist. The GM introduces a complication.",
       "ScrutinyGained": "Scrutiny +1",
-      "StampEarned": "Encumbrance bites: +1 Stamp.",
+      "StampEarned": "Hindrance bites: +1 Stamp.",
       "ResonanceCount": "Resonance ×{n}",
       "ResonanceText": "The Bound notice. Something sings back.",
       "InScene": "in",
@@ -271,31 +273,29 @@
       "Description": "The place",
       "DescriptionPlaceholder": "What it looks, sounds and smells like.",
       "Traits": "Traits",
-      "TraitsHint": "Environmental dice for anyone here. Obstacles (−1) apply unless unticked; Circumstances (+1) are opt-in, for anyone who can plausibly use them.",
+      "TraitsHint": "Short phrases about the place. A roller can pick one of them for +1 die, and the GM can spend Scrutiny on one against a roll.",
       "AddTrait": "Add",
       "AmendButton": "Add Trait · spend a Stamp",
-      "AmendHint": "Amend the Scene: spend a Stamp to declare a new Trait (a steam pipe bursts, useful scrap turns up, a hatch was unlocked all along). Worth +1 die to anyone who can plausibly use it; the GM may add one small detail.",
+      "AmendHint": "Spend a Stamp to add a new Trait to this scene (a steam pipe bursts, useful scrap turns up, a hatch was unlocked all along). Anyone who can plausibly use it may pick it for +1 die; the GM may add one small detail.",
       "AmendTitle": "Amend the Scene: {card}",
       "AmendConfirm": "Amend (spend a Stamp)",
       "AmendSent": "Asking the GM to add “{name}”.",
-      "AmendNote": "Worth +1 die to anyone who can plausibly use it. The GM may add one small detail.",
+      "AmendNote": "Anyone who can plausibly use it may pick it for +1 die. The GM may add one small detail.",
       "Amends": "Amends the Scene",
       "NewTrait": "New Trait",
       "TraitName": "Trait",
       "TraitNote": "A note on how it works (optional)",
-      "circumstance": "Circumstance (+1 die)",
-      "obstacle": "Obstacle (−1 die)",
-      "Auto": "always",
-      "OptIn": "opt-in",
-      "AutoLabel": "Applies automatically",
-      "AutoHint": "Ticked by default in the roll dialog. Players can still untick it.",
-      "GMOnly": "GM only",
-      "HiddenHint": "Hidden from players until you untick this.",
       "Delete": "Remove this Trait",
       "NoNote": "No further detail.",
       "NoTraits": "No Traits yet.",
       "NoCharacter": "You need a character to spend a Stamp. Select your token first.",
-      "NoGM": "A GM has to be online to add a Trait."
+      "NoGM": "A GM has to be online to add a Trait.",
+      "ShowOnTable": "Show on everyone's screen",
+      "HideFromTable": "Hide from everyone's screen",
+      "TableHint": "Put this scene on every player's screen as a panel they can move and close.",
+      "PopOut": "Open panel",
+      "PopOutHint": "Open this scene as a panel on your screen only.",
+      "OpenSheet": "Open card"
     },
     "Tabs": {
       "Label": "Sheet sections",
@@ -329,10 +329,10 @@
       "Finish": "Finish creation",
       "Hint": "12 Tenure to buy skills, maximum rating 2. The standard spread is three skills at 2 and three at 1.",
       "FinishTitle": "Finish character creation?",
-      "FinishBody": "After this, skills are bought with Tenure you earn, and can't be lowered. Station, Traits and Encumbrances stay editable."
+      "FinishBody": "After this, skills are bought with Tenure you earn, and can't be lowered. Station, Traits and Hindrances stay editable."
     },
     "Encumbrance": {
-      "Heading": "Encumbrances",
+      "Heading": "Hindrances",
       "Hint": "Two troubles. If any is in play, the Margin of Error widens to 1–2 and an Error earns a Stamp. They never add dice.",
       "personal": "Personal",
       "personalHint": "A flaw.",
@@ -343,14 +343,14 @@
     },
     "Gift": {
       "Heading": "Gift and Drawback",
-      "Hint": "Touched gifts are small, specific and quiet: useful, inconvenient, and occasionally both. A Gift adds its die and turns up to two dice violet. Its Drawback works as a third Encumbrance.",
+      "Hint": "Touched gifts are small, specific and quiet: useful, inconvenient, and occasionally both. A Gift adds its die and turns up to two dice violet. Its Drawback works as a third Hindrance.",
       "GiftPrompt": "how (Machines Hum Her Name)",
       "Drawback": "Drawback",
       "DrawbackHint": "The inconvenient side of the same Gift.",
       "DrawbackPrompt": "the other side (Hears Them When They're Hurting)",
-      "DrawbackNote": "In play, the Drawback is an Encumbrance: it widens the Margin of Error and earns a Stamp.",
+      "DrawbackNote": "In play, the Drawback is an Hindrance: it widens the Margin of Error and earns a Stamp.",
       "Registered": "Registered (Form TH-14(C))",
-      "RegisteredHint": "Being unregistered makes a good circumstantial Encumbrance."
+      "RegisteredHint": "Being unregistered makes a good circumstantial Hindrance."
     },
     "Commendation": {
       "Heading": "Commendations",
@@ -420,6 +420,37 @@
       "Imported": "Imported {created} new, {existing} already in the world.",
       "People": "People",
       "Places": "Places"
+    },
+    "Complication": {
+      "Label": "Complication",
+      "Button": "Complicate (1 Scrutiny)",
+      "Hint": "Spend 1 Scrutiny on one of this scene's Traits: one success fewer. The player can negate it with a Stamp.",
+      "Title": "Complicate this roll",
+      "Prompt": "Which Trait of {scene} gets in the way? It costs 1 Scrutiny and takes away one success.",
+      "Which": "Trait",
+      "Confirm": "Spend 1 Scrutiny",
+      "NoScrutiny": "Not enough Scrutiny.",
+      "Text": "{trait} gets in the way: one success fewer (the GM spent 1 Scrutiny).",
+      "NegatedText": "{trait} got in the way, but a Stamp was spent to negate it.",
+      "Negate": "Negate (spend a Stamp)",
+      "NegateHint": "Spend a Stamp to cancel the Complication."
+    },
+    "Register": {
+      "Title": "Register With Gloss",
+      "FormId": "FORM PR-1 // PERSONNEL REGISTRATION",
+      "Step": "Step",
+      "Examples": "Some residents say:",
+      "Back": "Back",
+      "Next": "Next",
+      "Finish": "Finish registration",
+      "Skip": "Skip to the full sheet",
+      "Left": "left",
+      "Name": "Name",
+      "TouchedYes": "Yes, I think I might be.",
+      "Button": "Register With Gloss",
+      "ButtonHint": "Walk through creating this character, one question at a time.",
+      "AutoSetting": "Open Register With Gloss for new characters",
+      "AutoHint": "When you create a character, Gloss walks you through it. You can always skip to the full sheet."
     }
   }
 }

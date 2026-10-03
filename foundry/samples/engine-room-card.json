@@ -1,43 +1,15 @@
 {
   "name": "Engine Room",
   "type": "card",
-  "img": "systems/cantica/assets/emblem.svg",
+  "img": "systems/cantica/lore/assets/engineering-primary-floor.jpg",
   "system": {
     "description": "Recyclers shudder on their mounts and the air tastes of warm metal. Third shift is mid-handover.",
     "active": false,
     "traits": [
-      {
-        "id": "steamEverywh1",
-        "name": "Steam everywhere",
-        "note": "Hard to see, harder to breathe.",
-        "effect": "obstacle",
-        "auto": true,
-        "hidden": false
-      },
-      {
-        "id": "crewInTheWay1",
-        "name": "Third-shift crew in the way",
-        "note": "",
-        "effect": "obstacle",
-        "auto": true,
-        "hidden": false
-      },
-      {
-        "id": "spareCoupling",
-        "name": "Spare coupling in the locker",
-        "note": "Anyone who can reach the locker.",
-        "effect": "circumstance",
-        "auto": false,
-        "hidden": false
-      },
-      {
-        "id": "loosePanel001",
-        "name": "A panel that was never bolted down",
-        "note": "The GM will mention it when it matters.",
-        "effect": "circumstance",
-        "auto": false,
-        "hidden": true
-      }
+      { "id": "steamEverywh1", "name": "Steam Everywhere", "note": "Hard to see, harder to breathe." },
+      { "id": "crewInTheWay1", "name": "Third-Shift Crew in the Way", "note": "" },
+      { "id": "spareCoupling", "name": "A Spare Coupling in the Locker", "note": "Anyone who can reach the locker." },
+      { "id": "loudEnough001", "name": "Loud Enough to Hide a Conversation", "note": "" }
     ]
   }
 }

@@ -131,3 +131,20 @@ export function commendationEffects(selected) {
 
 /** Difficulty after Commendations; never below 0. */
 export const effectiveDifficulty = (difficulty, shift) => Math.max(0, difficulty + shift);
+
+/* ── The GM's Complication ── */
+
+/**
+ * The GM spends Scrutiny on a scene Trait after a roll: one success fewer. The tier is worked out
+ * again from the lower count (a Commendation that turns With Conditions into Approved still applies).
+ * The player can negate it by spending a Stamp, which simply restores the original outcome.
+ * @param {object} outcome  From {@link evaluateRoll}.
+ * @param {number} [by=1]
+ * @param {{upgradeConditions?: boolean}} [opts]
+ */
+export function reduceSuccesses(outcome, by = 1, { upgradeConditions = false } = {}) {
+  const successes = Math.max(0, outcome.successes - by);
+  let tier = tierFor(successes, outcome.difficulty);
+  if (upgradeConditions && tier === "conditions") tier = "approved";
+  return { ...outcome, successes, tier, reducedBy: outcome.successes - successes };
+}

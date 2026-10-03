@@ -1,6 +1,6 @@
 import { SYSTEM_ID, SKILL_GROUPS } from "../config.mjs";
 import { buildPool, DIFFICULTIES, commendationEffects } from "../rules.mjs";
-import { tally, visibleTraits } from "../scene.mjs";
+import { sceneTraitDice } from "../scene.mjs";
 import { sceneChoices } from "../cards.mjs";
 import { rollPool } from "../dice/roll.mjs";
 
@@ -95,13 +95,12 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
         id: card.id,
         name: card.name,
         selected: card.id === scene.selectedId,
-        traits: visibleTraits(card.system.traits, game.user.isGM).map(trait => ({
+        traits: card.system.traits.filter(trait => trait.name).map(trait => ({
           value: `${card.id}:${trait.id}`,
+          id: trait.id,
+          cardId: card.id,
           name: trait.name,
-          note: trait.note,
-          effect: trait.effect,
-          sign: trait.effect === "circumstance" ? "+1" : "−1",
-          checked: trait.auto
+          note: trait.note
         }))
       })),
 
@@ -150,11 +149,12 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
     const checked = name => [...form.querySelectorAll(`input[name="${name}"]:checked`)];
     const chosen = form.elements.difficulty.selectedOptions[0];
 
+    // Only one scene Trait can be added to a roll: a radio group, with "none" first.
     const sceneId = form.elements.sceneCard?.value ?? "";
-    const sceneTraits = sceneId
-      ? [...form.querySelectorAll(`.scene-traits[data-card="${sceneId}"] input[name="sceneTrait"]:checked`)]
-        .map(el => ({ name: el.dataset.name, effect: el.dataset.effect }))
-      : [];
+    const picked = sceneId
+      ? form.querySelector(`input[name="sceneTrait-${sceneId}"]:checked`)
+      : null;
+    const sceneTrait = picked?.value ? { id: picked.dataset.id, cardId: sceneId, name: picked.dataset.name } : null;
 
     return {
       skill: form.elements.skill.value,
@@ -165,8 +165,9 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
       circumstances: num("circumstances"),
       obstacles: num("obstacles"),
       bound: num("bound"),
+      sceneId,
       sceneName: sceneId ? form.elements.sceneCard.selectedOptions[0].textContent.trim() : "",
-      sceneTraits,
+      sceneTrait,
       difficulty: Number(chosen.dataset.difficulty),
       targetName: chosen.dataset.name ?? "",
       expedite: Boolean(form.elements.expedite?.checked),
@@ -177,14 +178,13 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
   #updatePreview() {
     this.#syncSceneGroups();
     const input = this.#readInput();
-    const scene = tally(input.sceneTraits);
     const fx = commendationEffects(input.commendations);
     const pool = buildPool({
       skill: this.actor.skillRating(input.skill),
       traits: input.traitKeys.length,
       gift: input.gift,
-      circumstances: input.circumstances + scene.circumstances,
-      obstacles: Math.max(0, input.obstacles + scene.obstacles - fx.obstaclesIgnored),
+      circumstances: input.circumstances + sceneTraitDice(input.sceneTrait),
+      obstacles: Math.max(0, input.obstacles - fx.obstaclesIgnored),
       bound: input.bound,
       expedite: input.expedite,
       bonus: fx.bonusDice

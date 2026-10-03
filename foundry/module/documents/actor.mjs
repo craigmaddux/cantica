@@ -19,12 +19,12 @@ export default class CanticaActor extends foundry.documents.Actor {
         prototypeToken: {
           actorLink: true,
           width: 4,
-          height: 3,
+          height: 4,
           lockRotation: true,
-          displayName: TOKEN_DISPLAY_MODES.HOVER,
+          displayName: TOKEN_DISPLAY_MODES.NONE,
           disposition: TOKEN_DISPOSITIONS.NEUTRAL,
           sight: { enabled: false },
-          texture: { fit: "cover" }
+          texture: { fit: "fill" }
         }
       });
     }

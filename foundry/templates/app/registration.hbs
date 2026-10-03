@@ -1,0 +1,109 @@
+<div class="register">
+  <div class="reg-head">
+    <span class="form-id">{{localize "CANTICA.Register.FormId"}}</span>
+    <span class="reg-step">{{localize "CANTICA.Register.Step"}} {{number}} / {{total}}</span>
+  </div>
+  <div class="reg-progress"><span style="width: {{percent}}%"></span></div>
+
+  <div class="reg-body">
+    <div class="reg-title">◆ {{step.title}}</div>
+    <p class="gloss">{{step.gloss}}</p>
+
+    {{!-- Welcome: the name --}}
+    {{#if isWelcome}}
+    <p class="gloss ask">{{step.ask}}</p>
+    <input class="answer" type="text" data-field="{{step.field}}" value="{{value}}" placeholder="{{step.placeholder}}">
+    {{/if}}
+
+    {{!-- A question with a typed answer and examples --}}
+    {{#if isText}}
+    <input class="answer" type="text" data-field="{{step.field}}" value="{{value}}" placeholder="{{step.placeholder}}">
+    <div class="examples">
+      <span class="examples-label">{{localize "CANTICA.Register.Examples"}}</span>
+      {{#each step.examples}}
+      <button type="button" class="example" data-action="pick" data-field="{{../step.field}}" data-value="{{this}}">{{this}}</button>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    {{!-- Skills: the 12 Tenure budget --}}
+    {{#if isSkills}}
+    <div class="reg-budget {{#if budget.over}}over{{/if}}">
+      {{localize "CANTICA.Creation.Label"}}: <strong>{{budget.spent}} / {{budget.total}}</strong> {{localize "CANTICA.Creation.Tenure"}}
+      · <span>{{budget.remaining}} {{localize "CANTICA.Register.Left"}}</span>
+    </div>
+    <div class="reg-skills">
+      {{#each skillGroups}}
+      <div class="skill-group">
+        <h3>{{label}}</h3>
+        {{#each skills}}
+        <div class="skill" title="{{hint}}">
+          <span class="skill-name">{{label}}</span>
+          <span class="pips">
+            {{#each pips}}
+            <button type="button" class="pip {{#if filled}}filled{{/if}} {{#if locked}}locked{{/if}}" data-action="setSkill" data-skill="{{../key}}" data-value="{{n}}" aria-label="{{../label}} {{n}}"></button>
+            {{/each}}
+          </span>
+          <span class="rating">{{rating}}</span>
+        </div>
+        {{/each}}
+      </div>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    {{!-- Touched, and if so the Gift and Drawback --}}
+    {{#if isTouched}}
+    <label class="touched-choice">
+      <input type="checkbox" data-field="system.touched" {{checked touched}}>
+      <span>{{localize "CANTICA.Register.TouchedYes"}}</span>
+    </label>
+    {{#if touched}}
+    <p class="gloss ask">{{step.gift.gloss}}</p>
+    <input class="answer" type="text" data-field="{{step.gift.field}}" value="{{gift}}" placeholder="{{step.gift.placeholder}}">
+    <p class="gloss ask">{{step.gift.drawbackGloss}}</p>
+    <input class="answer" type="text" data-field="{{step.gift.drawbackField}}" value="{{drawback}}" placeholder="{{step.gift.drawbackPlaceholder}}">
+    <div class="examples">
+      <span class="examples-label">{{localize "CANTICA.Register.Examples"}}</span>
+      {{#each step.pairs}}
+      <button type="button" class="example pair" data-action="pickPair" data-gift="{{gift}}" data-drawback="{{drawback}}">{{gift}} <em>/</em> {{drawback}}</button>
+      {{/each}}
+    </div>
+    <label class="touched-choice registered">
+      <input type="checkbox" data-field="{{step.gift.registeredField}}" {{checked registered}}>
+      <span>{{step.gift.registeredGloss}}</span>
+    </label>
+    {{/if}}
+    {{/if}}
+
+    {{!-- Review --}}
+    {{#if isReview}}
+    <dl class="reg-summary">
+      <dt>{{localize "CANTICA.Register.Name"}}</dt><dd>{{summary.name}}</dd>
+      <dt>{{localize "CANTICA.Sheet.Traits"}}</dt>
+      <dd>{{#each summary.traits}}<span class="tag">{{this}}</span>{{else}}—{{/each}}</dd>
+      <dt>{{localize "CANTICA.Encumbrance.Heading"}}</dt>
+      <dd>{{#each summary.hindrances}}<span class="tag hindrance">{{this}}</span>{{else}}—{{/each}}</dd>
+      <dt>{{localize "CANTICA.Sheet.Skills"}}</dt>
+      <dd>{{#each summary.skills}}<span class="tag">{{this}}</span>{{else}}—{{/each}}</dd>
+      {{#if summary.touched}}
+      <dt>{{localize "CANTICA.Gift.Heading"}}</dt>
+      <dd><span class="tag gift">{{summary.gift}}</span> <span class="tag hindrance">{{summary.drawback}}</span></dd>
+      {{/if}}
+    </dl>
+    {{/if}}
+
+    {{#if step.explain}}<p class="explain">{{step.explain}}</p>{{/if}}
+  </div>
+
+  <footer class="reg-foot">
+    <button type="button" class="skip" data-action="skip">{{localize "CANTICA.Register.Skip"}}</button>
+    <span class="spacer"></span>
+    {{#unless isFirst}}<button type="button" data-action="back">{{localize "CANTICA.Register.Back"}}</button>{{/unless}}
+    {{#if isLast}}
+    <button type="button" class="primary" data-action="finish">{{localize "CANTICA.Register.Finish"}}</button>
+    {{else}}
+    <button type="button" class="primary" data-action="next">{{localize "CANTICA.Register.Next"}}</button>
+    {{/if}}
+  </footer>
+</div>

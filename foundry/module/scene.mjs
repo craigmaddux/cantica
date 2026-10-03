@@ -1,12 +1,16 @@
 /**
  * Scene Cards: pure helpers with no Foundry dependency, unit-tested in Node.
  *
- * A Scene Card is an actor dragged onto the tabletop as a large token. It carries
- * a list of Traits: each is a +1 Circumstance or a −1 Obstacle. A character is "in"
- * a card when their token sits on it; the roll dialog uses that card's Traits.
+ * A Scene Card is a place on the tabletop. Its Traits are just Traits: short phrases about the
+ * place (Steam Everywhere, A Spare Coupling in the Locker). They do two things:
+ *   1. A roller may pick ONE of them in the roll dialog, for +1 die.
+ *   2. The GM may spend Scrutiny on one after a roll: one success fewer, which the player can
+ *      negate by spending a Stamp.
+ * A character is "in" a card when their token sits on it.
  */
 
-export const EFFECTS = ["circumstance", "obstacle"];
+/** A scene Trait picked in the roll dialog adds this many dice. Only one may be picked. */
+export const SCENE_TRAIT_DICE = 1;
 
 /** Is the point inside the rectangle (edges included)? */
 export function containsPoint(rect, point) {
@@ -28,31 +32,16 @@ export function pickCard(point, cards) {
   return hits[0].id;
 }
 
-/** Players never see GM-only (hidden) Traits. */
-export function visibleTraits(traits, isGM) {
-  return isGM ? traits : traits.filter(trait => !trait.hidden);
+/** A new scene Trait: a phrase, and an optional note on how it plays. */
+export function newTrait({ id, name = "", note = "" } = {}) {
+  return { id, name: String(name).trim(), note: String(note).trim() };
 }
 
-/** Dice a set of ticked Traits contributes: +1 per Circumstance, −1 per Obstacle. */
-export function tally(traits) {
-  return {
-    circumstances: traits.filter(t => t.effect === "circumstance").length,
-    obstacles: traits.filter(t => t.effect === "obstacle").length
-  };
-}
+/** Dice a chosen scene Trait contributes (none if nothing is chosen). */
+export const sceneTraitDice = chosen => (chosen ? SCENE_TRAIT_DICE : 0);
 
 /**
- * A new Trait. Obstacles apply automatically by default (darkness hits everyone);
- * Circumstances are opt-in, since they help "anyone who can plausibly use them".
+ * Of the scene Traits ticked in the dialog, only the first counts: only one scene Trait
+ * can be added to a roll.
  */
-export function newTrait({ id, name = "", note = "", effect = "obstacle", auto, hidden = false } = {}) {
-  const kind = EFFECTS.includes(effect) ? effect : "obstacle";
-  return {
-    id,
-    name: String(name).trim(),
-    note: String(note).trim(),
-    effect: kind,
-    auto: auto ?? kind === "obstacle",
-    hidden: Boolean(hidden)
-  };
-}
+export const firstScene = picks => (Array.isArray(picks) ? picks[0] ?? null : picks ?? null);

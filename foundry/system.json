@@ -2,7 +2,7 @@
   "id": "cantica",
   "title": "Cantica",
   "description": "A native system for Cantica, a generational ark ship run by a tired AI that is also an angel of Order. d10 pools, the amber Margin, violet Bound dice, Scrutiny, and harm that arrives as bureaucratic Notices.",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "compatibility": {
     "minimum": "13",
     "verified": "14"
@@ -47,7 +47,7 @@
   },
   "url": "https://github.com/craigmaddux/cantica",
   "manifest": "https://github.com/craigmaddux/cantica/releases/latest/download/system.json",
-  "download": "https://github.com/craigmaddux/cantica/releases/download/v0.5.1/system.zip",
+  "download": "https://github.com/craigmaddux/cantica/releases/download/v0.6.0/system.zip",
   "socket": true,
   "scripts": [
     "lore/ledger-data.js"

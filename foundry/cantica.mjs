@@ -17,6 +17,9 @@ import { rollPool } from "./module/dice/roll.mjs";
 import { registerDiceColors } from "./module/dice/dsn.mjs";
 import { onRenderChatMessage } from "./module/chat.mjs";
 import Ledger from "./module/apps/ledger.mjs";
+import { registerCardFaces } from "./module/card-face.mjs";
+import Registration from "./module/apps/registration.mjs";
+import { registerPanels, reconcilePanels, openPanel, setShown } from "./module/scene-panel.mjs";
 import { initLore, importLore } from "./module/lore.mjs";
 import { registerCards, listenForCards, activeCard, detectCard, setActiveCard } from "./module/cards.mjs";
 import { registerScrutiny, listenForScrutiny, showScrutiny, getScrutiny, gainScrutiny } from "./module/scrutiny.mjs";
@@ -52,6 +55,18 @@ Hooks.once("init", () => {
 
   registerScrutiny();
   registerCards();
+  registerCardFaces();
+  registerPanels();
+
+  // Register With Gloss opens by itself for a brand-new character, unless the player turns that off.
+  game.settings.register(SYSTEM_ID, "autoRegister", {
+    name: "CANTICA.Register.AutoSetting",
+    hint: "CANTICA.Register.AutoHint",
+    scope: "client",
+    config: true,
+    type: Boolean,
+    default: true
+  });
   initLore();
 
   // The Ledger: Gloss's entries, inside Foundry.
@@ -67,7 +82,7 @@ Hooks.once("init", () => {
   });
 
   // Handy for macros: game.cantica.rollPool(actor, { skill: "hullcraft" }) or new game.cantica.PoolDialog({ actor }).
-  game.cantica = { rules, notices, rollPool, PoolDialog, showScrutiny, getScrutiny, gainScrutiny, activeCard, detectCard, setActiveCard, openLedger, importLore };
+  game.cantica = { rules, notices, rollPool, PoolDialog, showScrutiny, getScrutiny, gainScrutiny, activeCard, detectCard, setActiveCard, openLedger, importLore, openPanel, setShown, register: actor => new Registration(actor).render({ force: true }) };
 
   return foundry.applications.handlebars.loadTemplates([
     `systems/${SYSTEM_ID}/templates/actor/character.hbs`,
@@ -82,13 +97,15 @@ Hooks.once("init", () => {
     `systems/${SYSTEM_ID}/templates/chat/amend.hbs`,
     `systems/${SYSTEM_ID}/templates/chat/grade.hbs`,
     `systems/${SYSTEM_ID}/templates/chat/lore.hbs`,
-    `systems/${SYSTEM_ID}/templates/app/ledger.hbs`
+    `systems/${SYSTEM_ID}/templates/app/ledger.hbs`,
+    `systems/${SYSTEM_ID}/templates/app/panel.hbs`
   ]);
 });
 
 Hooks.once("ready", () => {
   listenForScrutiny();
   listenForCards();
+  reconcilePanels();
   if (game.settings.get(SYSTEM_ID, "showScrutiny")) showScrutiny();
 });
 
@@ -108,4 +125,11 @@ Hooks.on("renderActorDirectory", (app, html) => {
   button.innerHTML = `<i class="fa-solid fa-book-open"></i> ${game.i18n.localize("CANTICA.Ledger.Title")}`;
   button.addEventListener("click", () => game.cantica.openLedger());
   actions.append(button);
+});
+
+// A new character, made by this player, starts in creation: open the walkthrough.
+Hooks.on("createActor", (actor, options, userId) => {
+  if (userId !== game.user.id || actor.type !== "character" || !actor.system.creation) return;
+  if (!game.settings.get(SYSTEM_ID, "autoRegister")) return;
+  new Registration(actor).render({ force: true });
 });

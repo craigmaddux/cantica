@@ -1,17 +1,29 @@
 import { SYSTEM_ID } from "./config.mjs";
+import { getScrutiny, spendScrutiny } from "./scrutiny.mjs";
+import { renderRollCard } from "./dice/roll.mjs";
+import { escapeHtml } from "./lore-text.mjs";
+
+const { DialogV2 } = foundry.applications.api;
 
 /**
- * Wire up buttons on Cantica roll cards. Cards are static HTML saved with the
- * message, so the button's state is read from the message flags on every render.
+ * Wire up the buttons on Cantica roll cards. Cards are saved HTML plus a saved roll state, so each
+ * button's visibility is worked out from the message flags and who is looking, on every render.
  */
 export function onRenderChatMessage(message, html) {
   const flags = message.flags?.[SYSTEM_ID];
   if (!flags) return;
+  const actor = game.actors.get(flags.actorId);
 
+  claimStamp(message, html, flags, actor);
+  complicate(message, html, flags);
+  negate(message, html, flags, actor);
+}
+
+/** Margin of Grace: take a Stamp. */
+function claimStamp(message, html, flags, actor) {
   const button = html.querySelector('[data-action="claim-stamp"]');
   if (!button) return;
 
-  const actor = game.actors.get(flags.actorId);
   if (flags.stampClaimed) {
     button.disabled = true;
     button.textContent = game.i18n.localize("CANTICA.Roll.StampClaimed");
@@ -26,5 +38,70 @@ export function onRenderChatMessage(message, html) {
     // Mark the card first so a double click can't award two Stamps.
     await message.update({ [`flags.${SYSTEM_ID}.stampClaimed`]: true });
     await actor.adjustStamps(1);
+  });
+}
+
+/**
+ * GM: spend 1 Scrutiny on one of the scene's Traits to take a success off this roll.
+ * The player can negate it with a Stamp; the Scrutiny is spent either way.
+ */
+function complicate(message, html, flags) {
+  const button = html.querySelector('[data-action="complicate"]');
+  if (!button) return;
+  const state = flags.state;
+  const card = game.actors.get(state?.sceneId);
+
+  // Only the GM sees it, only once, and only while there is Scrutiny to spend and a Trait to use.
+  if (!game.user.isGM || state?.complication || !card?.system.traits.some(trait => trait.name) || getScrutiny() < 1) {
+    button.hidden = true;
+    return;
+  }
+
+  button.addEventListener("click", async event => {
+    event.preventDefault();
+    const i18n = game.i18n;
+    const traits = card.system.traits.filter(trait => trait.name);
+    const chosen = await DialogV2.prompt({
+      window: { title: i18n.localize("CANTICA.Complication.Title") },
+      content: `<p class="hint">${i18n.format("CANTICA.Complication.Prompt", { scene: card.name })}</p>
+        <div class="form-group"><label>${i18n.localize("CANTICA.Complication.Which")}</label>
+          <select name="trait">${traits.map(trait => `<option value="${escapeHtml(trait.name)}">${escapeHtml(trait.name)}</option>`).join("")}</select></div>`,
+      ok: {
+        label: i18n.localize("CANTICA.Complication.Confirm"),
+        callback: (ev, btn) => btn.form.elements.trait.value
+      },
+      rejectClose: false
+    });
+    if (!chosen) return;
+
+    if (!(await spendScrutiny(1))) return ui.notifications.warn(i18n.localize("CANTICA.Complication.NoScrutiny"));
+    await redraw(message, { ...state, complication: { trait: chosen, negated: false } });
+  });
+}
+
+/** The roller (or anyone who owns the character): spend a Stamp to negate the GM's Complication. */
+function negate(message, html, flags, actor) {
+  const button = html.querySelector('[data-action="negate"]');
+  if (!button) return;
+  const state = flags.state;
+
+  if (!actor?.isOwner || !state?.complication || state.complication.negated || actor.system.stamps < 1) {
+    button.hidden = true;
+    return;
+  }
+
+  button.addEventListener("click", async event => {
+    event.preventDefault();
+    if (actor.system.stamps < 1) return;
+    await actor.adjustStamps(-1);
+    await redraw(message, { ...state, complication: { ...state.complication, negated: true } });
+  });
+}
+
+/** Save a new roll state on the message and redraw its card. */
+async function redraw(message, state) {
+  await message.update({
+    content: await renderRollCard(state),
+    [`flags.${SYSTEM_ID}.state`]: state
   });
 }

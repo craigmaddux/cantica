@@ -1,0 +1,36 @@
+<div class="scene-panel-body">
+  <header class="card-banner">
+    <img class="banner-art" src="{{img}}" alt="{{name}}">
+    <div class="banner-overlay">
+      <div class="eyebrow">{{localize "CANTICA.Card.Eyebrow"}}</div>
+      <div class="name name-static">{{name}}</div>
+      {{#if active}}<div class="active-row"><span class="badge">{{localize "CANTICA.Card.Active"}}</span></div>{{/if}}
+    </div>
+  </header>
+
+  <div class="panel-body">
+    {{#if description}}<p class="card-text">{{description}}</p>{{/if}}
+
+    <section class="panel scene-traits-panel">
+      <h2>{{localize "CANTICA.Card.Traits"}}</h2>
+      <ul class="trait-list">
+        {{#each traits}}
+        <li class="scene-trait">
+          <details>
+            <summary><span class="chip">◆</span><span class="tname">{{name}}</span></summary>
+            {{#if hasNote}}<p class="note">{{note}}</p>{{/if}}
+          </details>
+        </li>
+        {{else}}
+        <li class="empty">{{localize "CANTICA.Card.NoTraits"}}</li>
+        {{/each}}
+      </ul>
+    </section>
+
+    <div class="panel-actions">
+      <button type="button" data-action="amend" title="{{localize 'CANTICA.Card.AmendHint'}}">{{localize "CANTICA.Card.AmendButton"}}</button>
+      <button type="button" data-action="openSheet">{{localize "CANTICA.Card.OpenSheet"}}</button>
+      {{#if shown}}{{#if isGM}}<button type="button" data-action="hideFromTable">{{localize "CANTICA.Card.HideFromTable"}}</button>{{/if}}{{/if}}
+    </div>
+  </div>
+</div>

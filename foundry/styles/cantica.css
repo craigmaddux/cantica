@@ -740,3 +740,86 @@
 .ledger-results .entry-head { height: auto; line-height: 1.35; min-height: 0; overflow: visible; white-space: normal; }
 .ledger-results .entry-head > * { line-height: 1.35; }
 .ledger-chips .chip { height: auto; line-height: 1.3; }
+
+/* ═══════════════ v0.6: plain scene Traits, the scene panel, Register With Gloss, Complication ═══════════════ */
+
+/* Scene Traits are just Traits: one neutral marker, no +/− colouring. */
+.scene-trait { border-left-color: var(--warm-deep); }
+.scene-trait .chip { color: var(--warm); font-family: var(--font-body); font-size: 0.7rem; min-width: 1rem; }
+.scene-check .sign { color: var(--bound); font-size: 0.8rem; }
+.pool-dialog .scene-traits { display: grid; gap: 0.3rem; }
+
+/* creation buttons beside the skill budget */
+.creation-buttons { display: inline-flex; flex-wrap: wrap; gap: 0.35rem; }
+
+/* ── the scene panel: the card, on everyone's screen ── */
+.scene-panel .window-content { background: var(--hull); display: flex; flex-direction: column; padding: 0; }
+.scene-panel-body { display: flex; flex: 1; flex-direction: column; min-height: 0; }
+.scene-panel .card-banner { background: var(--void-deep); border-bottom: 1px solid var(--rule-bright); flex: none; height: 170px; overflow: hidden; position: relative; }
+.scene-panel .banner-art { display: block; height: 100%; object-fit: cover; object-position: center 40%; width: 100%; }
+.scene-panel .banner-overlay {
+  background: linear-gradient(to top, rgba(2, 4, 10, 0.94) 0%, rgba(2, 4, 10, 0.7) 50%, rgba(2, 4, 10, 0) 100%);
+  bottom: 0; left: 0; padding: 2rem 1rem 0.6rem; position: absolute; right: 0;
+}
+.scene-panel .banner-overlay .eyebrow { color: var(--ink-soft); font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.3em; text-transform: uppercase; }
+.scene-panel .banner-overlay .eyebrow::before { color: var(--warm); content: "◆ "; }
+.scene-panel .banner-overlay .name-static { color: var(--ink-bright); font-size: 1.6rem; line-height: 1.2; text-shadow: 0 1px 8px #000; }
+.scene-panel .panel-body { display: flex; flex: 1; flex-direction: column; gap: 0.7rem; overflow-y: auto; padding: 0.8rem 1rem 1rem; }
+.scene-panel .card-text { color: var(--ink); font-style: italic; margin: 0; }
+.scene-panel .panel-actions { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: auto; }
+.scene-panel .panel-actions button { padding: 0.2rem 0.6rem; }
+
+/* ── the roll card: a Complication and the Negate that answers it ── */
+.cantica-card .tally .was { color: var(--ink-dim); font-family: var(--font-display); font-size: 1.1rem; text-decoration: line-through; }
+.cantica-card .tally .arrow { color: var(--warn); font-family: var(--font-mono); }
+.cantica-card .margin.complication { border-top-color: var(--warn); }
+.cantica-card .margin.complication strong { color: var(--warn); }
+.cantica-card .margin.complication.negated strong { color: var(--ink-dim); text-decoration: line-through; }
+.cantica-card .margin.complication.negated span { color: var(--ink-dim); }
+.cantica-card .card-actions { display: flex; gap: 0.4rem; }
+.cantica-card .card-actions button { padding: 0.25rem 0.7rem; }
+
+/* ── Register With Gloss ── */
+.registration .window-content { background: var(--hull); padding: 0; }
+.register { display: flex; flex-direction: column; min-height: 100%; }
+.reg-head { align-items: center; background: var(--void-deep); border-bottom: 1px solid var(--rule); color: var(--ink-dim); display: flex; font-family: var(--font-mono); font-size: 0.58rem; justify-content: space-between; letter-spacing: 0.22em; padding: 0.55rem 1rem; text-transform: uppercase; }
+.reg-head .form-id { color: var(--warm); }
+.reg-progress { background: var(--rule); height: 2px; }
+.reg-progress span { background: var(--warm); display: block; height: 100%; transition: width 0.25s; }
+.reg-body { display: flex; flex: 1; flex-direction: column; gap: 0.7rem; padding: 1.1rem 1.4rem 0.8rem; }
+.reg-title { color: var(--warm); font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; }
+.reg-body .gloss { color: var(--ink-bright); font-size: 1.15rem; line-height: 1.5; margin: 0; }
+.reg-body .gloss.ask { color: var(--ink-soft); font-size: 1rem; font-style: italic; }
+.reg-body .answer { background: var(--void-deep); border: 1px solid var(--rule-bright); border-radius: 0; color: var(--ink-bright); font-family: var(--font-body); font-size: 1.1rem; padding: 0.55rem 0.8rem; width: 100%; }
+.reg-body .answer:focus { border-color: var(--warm); box-shadow: 0 0 0 1px var(--warm-glow), 0 0 14px var(--warm-glow); outline: none; }
+.reg-body .answer::placeholder { color: var(--ink-faint); font-style: italic; }
+.reg-body .explain { border-left: 2px solid var(--warm-deep); color: var(--ink-soft); font-size: 0.85rem; margin: 0.2rem 0 0; padding: 0.15rem 0 0.15rem 0.7rem; }
+.reg-body .examples { align-items: center; display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.reg-body .examples-label { color: var(--ink-dim); font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.2em; margin-right: 0.2rem; text-transform: uppercase; }
+.reg-body .example { background: transparent; border: 1px solid var(--rule-bright); color: var(--ink-soft); font-family: var(--font-body); font-size: 0.8rem; height: auto; letter-spacing: 0; line-height: 1.3; padding: 0.25rem 0.6rem; text-transform: none; white-space: normal; }
+.reg-body .example:hover { border-color: var(--warm); color: var(--warm-bright); }
+.reg-body .example em { color: var(--ink-faint); }
+.reg-budget { background: var(--void-deep); border: 1px solid var(--rule-bright); color: var(--ink-soft); font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.08em; padding: 0.4rem 0.7rem; }
+.reg-budget strong { color: var(--warm-bright); font-weight: 500; }
+.reg-budget.over strong { color: var(--warn); }
+.reg-skills { display: grid; gap: 0.5rem 1.2rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.reg-skills .skill-group h3 { color: var(--ink-dim); font-family: var(--font-mono); font-size: 0.54rem; letter-spacing: 0.28em; margin: 0 0 0.1rem; text-transform: uppercase; }
+.reg-skills .skill { align-items: center; border-bottom: 1px solid var(--rule); display: flex; gap: 0.5rem; padding: 0.15rem 0; }
+.reg-skills .skill-name { color: var(--ink); flex: 1; font-size: 0.9rem; }
+.touched-choice { align-items: center; color: var(--ink); display: flex; font-size: 1rem; gap: 0.6rem; }
+.touched-choice.registered { color: var(--ink-soft); font-size: 0.88rem; }
+.reg-summary { display: grid; gap: 0.35rem 0.9rem; grid-template-columns: 6rem minmax(0, 1fr); margin: 0; }
+.reg-summary dt { color: var(--ink-dim); font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.2em; padding-top: 0.25rem; text-transform: uppercase; }
+.reg-summary dd { margin: 0; }
+.reg-summary .tag { background: var(--void-deep); border: 1px solid var(--rule-bright); display: inline-block; font-size: 0.85rem; margin: 0 0.3rem 0.3rem 0; padding: 0.1rem 0.5rem; }
+.reg-summary .tag.hindrance { border-color: var(--warn); }
+.reg-summary .tag.gift { border-color: var(--liturgy); }
+.reg-foot { align-items: center; border-top: 1px solid var(--rule); display: flex; gap: 0.5rem; padding: 0.7rem 1.2rem; }
+.reg-foot .spacer { flex: 1; }
+.reg-foot .skip { background: transparent; border-color: transparent; color: var(--ink-dim); }
+.reg-foot .primary { background: var(--warm-deep); border-color: var(--warm); color: var(--void); font-weight: 700; padding: 0.4rem 1.2rem; }
+.reg-foot .primary:hover { background: var(--warm); color: var(--void); }
+
+/* Foundry gives buttons a fixed height; these ones hold padded text. */
+.reg-body .answer { box-sizing: border-box; }
+.reg-foot button, .scene-panel .panel-actions button, .cantica-card .card-actions button, .creation-buttons button { height: auto; line-height: 1.3; }

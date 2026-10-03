@@ -68,14 +68,19 @@
         <option value="" {{#if sceneNone}}selected{{/if}}>{{localize "CANTICA.Pool.NoScene"}}</option>
         {{#each sceneCards}}<option value="{{id}}" {{#if selected}}selected{{/if}}>{{name}}</option>{{/each}}
       </select>
-      <p class="hint">{{sceneHint}}</p>
+      <p class="hint">{{sceneHint}} {{localize "CANTICA.Pool.SceneTraitHint"}}</p>
     </div>
     {{#each sceneCards}}
     <div class="scene-traits" data-card="{{id}}" {{#unless selected}}hidden{{/unless}}>
+      <label class="check scene-check">
+        <input type="radio" name="sceneTrait-{{id}}" value="" checked>
+        <span class="check-label sign">—</span>
+        <span class="check-text">{{localize "CANTICA.Pool.NoSceneTrait"}}</span>
+      </label>
       {{#each traits}}
-      <label class="check scene-check {{effect}}" title="{{note}}">
-        <input type="checkbox" name="sceneTrait" value="{{value}}" data-name="{{name}}" data-effect="{{effect}}" {{#if checked}}checked{{/if}}>
-        <span class="check-label sign">{{sign}}</span>
+      <label class="check scene-check" title="{{note}}">
+        <input type="radio" name="sceneTrait-{{../id}}" value="{{value}}" data-id="{{id}}" data-name="{{name}}">
+        <span class="check-label sign">+1</span>
         <span class="check-text">{{name}}</span>
         {{#if note}}<span class="check-note">{{note}}</span>{{/if}}
       </label>

@@ -144,8 +144,8 @@ async function onAddTraitRequest(data) {
   if (!actor.testUserPermission(user, "OWNER") || actor.system.stamps < 1) return;
 
   await actor.adjustStamps(-1);
-  // Amending the room gives a Circumstance, opt-in: it helps anyone who can plausibly use it.
-  await addTrait(card, { name, note: String(data.note ?? "").slice(0, 200), effect: "circumstance" });
+  // Amending the room adds a Trait: anyone who can plausibly use it may pick it for +1 die.
+  await addTrait(card, { name, note: String(data.note ?? "").slice(0, 200) });
 
   const ChatMessage = CONFIG.ChatMessage.documentClass;
   await ChatMessage.create({
@@ -164,13 +164,6 @@ async function onAddTraitRequest(data) {
 /* -------------------------------------------- */
 
 export function registerCards() {
-  // A card token wears the card's art and sits beneath the character tokens on top of it.
-  Hooks.on("preCreateToken", token => {
-    const actor = token.actor;
-    if (actor?.type !== "card") return;
-    token.updateSource({ "texture.src": actor.img, sort: -1000 });
-  });
-
   // New art for a card: carry it to the tokens already on the tabletop. One GM client does it.
   Hooks.on("updateActor", async (actor, changes, options, userId) => {
     if (actor.type !== "card") return;

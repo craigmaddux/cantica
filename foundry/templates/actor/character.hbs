@@ -102,7 +102,10 @@
         {{#if creation.on}}
         <div class="skill-budget {{#if creation.over}}over{{/if}}" title="{{localize 'CANTICA.Creation.Hint'}}">
           <span>{{localize "CANTICA.Creation.Label"}}: <strong>{{creation.spent}} / {{creation.budget}}</strong> {{localize "CANTICA.Creation.Tenure"}} · {{localize "CANTICA.Creation.Max"}} {{creation.max}}</span>
-          <button type="button" data-action="finishCreation" {{#unless editable}}disabled{{/unless}}>{{localize "CANTICA.Creation.Finish"}}</button>
+          <span class="creation-buttons">
+            <button type="button" data-action="register" title="{{localize 'CANTICA.Register.ButtonHint'}}" {{#unless editable}}disabled{{/unless}}>{{localize "CANTICA.Register.Button"}}</button>
+            <button type="button" data-action="finishCreation" {{#unless editable}}disabled{{/unless}}>{{localize "CANTICA.Creation.Finish"}}</button>
+          </span>
         </div>
         {{else}}
         <div class="skill-budget" title="{{localize 'CANTICA.Skill.CostHint'}}">

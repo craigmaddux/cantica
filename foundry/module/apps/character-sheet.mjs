@@ -2,6 +2,7 @@ import { SYSTEM_ID, SKILL_GROUPS, SKILL_MAX, OPEN_TRAITS } from "../config.mjs";
 import { RULE_BREAKS } from "../rules.mjs";
 import { CREATION_BUDGET, CREATION_MAX, TRAIT_MAX, TRAIT_COST } from "../progression.mjs";
 import PoolDialog from "./pool-dialog.mjs";
+import Registration from "./registration.mjs";
 import { trackContext, takeNotice, clearNotice, treatNotice, clearMinors } from "./notice-track.mjs";
 
 const { HandlebarsApplicationMixin, DialogV2 } = foundry.applications.api;
@@ -24,6 +25,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       rollSkill: CharacterSheet.#onRollSkill,
       setSkill: CharacterSheet.#onSetSkill,
       finishCreation: CharacterSheet.#onFinishCreation,
+      register: CharacterSheet.#onRegister,
       buyTraitSlot: CharacterSheet.#onBuyTraitSlot,
       adjustStamps: CharacterSheet.#onAdjustStamps,
       startSession: CharacterSheet.#onStartSession,
@@ -160,6 +162,11 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     const value = Number(target.dataset.value);
     const current = this.actor.system.skills[skill];
     await this.actor.setSkill(skill, value === current ? value - 1 : value);
+  }
+
+  /** Open Register With Gloss, the guided character creator. */
+  static #onRegister() {
+    new Registration(this.actor).render({ force: true });
   }
 
   /** Close character creation: from here on, skills are bought with Tenure. */

@@ -18,11 +18,19 @@
   </div>
 
   <div class="tally">
-    <span class="successes">{{outcome.successes}}</span>
+    {{#if wasSuccesses}}<span class="was">{{wasSuccesses}}</span><span class="arrow">→</span>{{/if}}
+    <span class="successes">{{successes}}</span>
     <span class="vs">{{localize "CANTICA.Roll.SuccessesVs"}} {{difficulty}}</span>
   </div>
 
   <div class="verdict">{{tierLabel}}</div>
+
+  {{#if complication}}
+  <div class="margin complication {{#if complication.negated}}negated{{/if}}">
+    <strong>{{localize "CANTICA.Complication.Label"}}</strong>
+    <span>{{complication.text}}</span>
+  </div>
+  {{/if}}
 
   {{#if outcome.grace}}
   <div class="margin grace">
@@ -46,5 +54,14 @@
     <strong>{{resonanceLabel}}</strong>
     <span>{{localize "CANTICA.Roll.ResonanceText"}}</span>
   </div>
+  {{/if}}
+
+  {{!-- The GM can complicate a roll made in a scene (one Scrutiny); the player can negate it (one Stamp).
+        The chat hook shows each button only to the people it is for. --}}
+  {{#if canComplicate}}
+  <div class="card-actions"><button type="button" data-action="complicate" title="{{localize 'CANTICA.Complication.Hint'}}">{{localize "CANTICA.Complication.Button"}}</button></div>
+  {{/if}}
+  {{#if canNegate}}
+  <div class="card-actions"><button type="button" data-action="negate" title="{{localize 'CANTICA.Complication.NegateHint'}}">{{localize "CANTICA.Complication.Negate"}}</button></div>
   {{/if}}
 </div>

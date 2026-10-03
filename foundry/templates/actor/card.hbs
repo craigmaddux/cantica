@@ -10,7 +10,11 @@
       {{/if}}
       <div class="active-row">
         {{#if system.active}}<span class="badge">{{localize "CANTICA.Card.Active"}}</span>{{/if}}
-        {{#if isGM}}<button type="button" data-action="setActive" {{#if system.active}}disabled{{/if}}>{{localize "CANTICA.Card.MakeActive"}}</button>{{/if}}
+        {{#if isGM}}
+        <button type="button" data-action="setActive" {{#if system.active}}disabled{{/if}}>{{localize "CANTICA.Card.MakeActive"}}</button>
+        <button type="button" data-action="toggleTable" title="{{localize 'CANTICA.Card.TableHint'}}">{{#if shown}}{{localize "CANTICA.Card.HideFromTable"}}{{else}}{{localize "CANTICA.Card.ShowOnTable"}}{{/if}}</button>
+        {{/if}}
+        <button type="button" data-action="popOut" title="{{localize 'CANTICA.Card.PopOutHint'}}">{{localize "CANTICA.Card.PopOut"}}</button>
       </div>
     </div>
   </header>
@@ -38,24 +42,17 @@
 
       <ul class="trait-list">
         {{#each traits}}
-        <li class="scene-trait {{effect}} {{#if hidden}}secret{{/if}}">
+        <li class="scene-trait">
           <details data-trait="{{id}}" {{#if open}}open{{/if}}>
             <summary>
-              <span class="chip">{{sign}}</span>
+              <span class="chip">◆</span>
               <span class="tname">{{#if name}}{{name}}{{else}}—{{/if}}</span>
-              <span class="mode">{{mode}}</span>
-              {{#if hidden}}<span class="mode secret-tag">{{localize "CANTICA.Card.GMOnly"}}</span>{{/if}}
             </summary>
             {{#if @root.isGM}}
             <div class="trait-edit">
               <input type="text" name="system.traits.{{index}}.name" value="{{name}}" placeholder="{{localize 'CANTICA.Card.TraitName'}}">
               <input type="text" name="system.traits.{{index}}.note" value="{{note}}" placeholder="{{localize 'CANTICA.Card.TraitNote'}}">
               <div class="trait-controls">
-                <select name="system.traits.{{index}}.effect">
-                  {{#each effects}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
-                </select>
-                <label title="{{localize 'CANTICA.Card.AutoHint'}}"><input type="checkbox" name="system.traits.{{index}}.auto" {{checked auto}}> {{localize "CANTICA.Card.AutoLabel"}}</label>
-                <label title="{{localize 'CANTICA.Card.HiddenHint'}}"><input type="checkbox" name="system.traits.{{index}}.hidden" {{checked hidden}}> {{localize "CANTICA.Card.GMOnly"}}</label>
                 <button type="button" data-action="deleteTrait" data-trait="{{id}}" title="{{localize 'CANTICA.Card.Delete'}}"><i class="fa-solid fa-trash"></i></button>
               </div>
             </div>

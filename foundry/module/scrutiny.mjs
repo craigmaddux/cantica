@@ -17,6 +17,13 @@ async function setScrutiny(value) {
   await game.settings.set(SYSTEM_ID, "scrutiny", Math.max(0, Math.trunc(value)));
 }
 
+/** GM: spend Scrutiny. Returns false (and spends nothing) if there is not enough. */
+export async function spendScrutiny(n = 1) {
+  if (!game.user.isGM || getScrutiny() < n) return false;
+  await setScrutiny(getScrutiny() - n);
+  return true;
+}
+
 export function registerScrutiny() {
   game.settings.register(SYSTEM_ID, "scrutiny", {
     scope: "world",

@@ -2,7 +2,8 @@ import { SYSTEM_ID, OPEN_TRAITS } from "../config.mjs";
 import { buildPool, evaluateRoll, commendationEffects, effectiveDifficulty, WHITE_TARGET, VIOLET_TARGET } from "../rules.mjs";
 import { marginTarget as marginTargetFor } from "../progression.mjs";
 import { gainScrutiny } from "../scrutiny.mjs";
-import { tally } from "../scene.mjs";
+import { sceneTraitDice } from "../scene.mjs";
+import { cardView } from "../roll-card.mjs";
 
 /** Dice So Nice colorset names (flavors), registered in dsn.mjs. */
 export const COLORSETS = {
@@ -13,6 +14,17 @@ export const COLORSETS = {
 
 const ROLL_TRAITS = ["station", ...OPEN_TRAITS];
 
+/** The localizer the card view uses. */
+const t = (key, data) => (data ? game.i18n.format(key, data) : game.i18n.localize(key));
+
+/**
+ * Draw the chat card for a saved roll state. Used when the roll is made, and again whenever the GM
+ * complicates it or the player negates the complication.
+ */
+export async function renderRollCard(state) {
+  return foundry.applications.handlebars.renderTemplate(`systems/${SYSTEM_ID}/templates/chat/roll.hbs`, cardView(state, t));
+}
+
 /**
  * Build the pool, roll it, post the chat card, and settle Stamps and Scrutiny.
  * @param {Actor} actor
@@ -20,13 +32,14 @@ const ROLL_TRAITS = ["station", ...OPEN_TRAITS];
  * @param {string} input.skill              Skill key.
  * @param {string[]} [input.traitKeys]      Ticked Traits: station and the open Traits.
  * @param {boolean} [input.gift]            The Gift is in play.
- * @param {string[]} [input.encumbranceKeys] Encumbrances in play: personal, circumstantial, drawback.
+ * @param {string[]} [input.encumbranceKeys] Hindrances in play: personal, circumstantial, drawback.
  * @param {{id: string, name: string, ruleBreak: string}[]} [input.commendations] Ticked Commendations.
  * @param {number} [input.circumstances]    Environmental advantages (+1 each).
  * @param {number} [input.obstacles]        Environmental penalties (-1 each).
  * @param {number} [input.bound]            Extra violet dice from other sources.
- * @param {string} [input.sceneName]        The Scene Card the roll happens in.
- * @param {{name: string, effect: string}[]} [input.sceneTraits] Ticked Traits of that card.
+ * @param {string} [input.sceneId]          The Scene Card the roll happens in.
+ * @param {string} [input.sceneName]
+ * @param {{id: string, name: string}} [input.sceneTrait] The one scene Trait picked for +1 die.
  * @param {number} [input.difficulty]       Successes needed: D0-D3, or an NPC's Rating.
  * @param {string} [input.targetName]       Name of the NPC whose Rating is the Difficulty.
  * @param {boolean} [input.expedite]        Spend a Stamp for +1 die (one per roll).
@@ -41,7 +54,7 @@ export async function rollPool(actor, input) {
   const greaterBound = Boolean(input.greaterBound);
   const expedite = Boolean(input.expedite) && actor.system.stamps > 0;
 
-  // Encumbrances never add dice. If any is in play, the Margin of Error widens to 1-2.
+  // Hindrances never add dice. If any is in play, the Margin of Error widens to 1-2.
   const encumbranceKeys = input.encumbranceKeys ?? [];
   const encumbrance = encumbranceKeys.length > 0 || Boolean(input.encumbrance);
 
@@ -51,16 +64,15 @@ export async function rollPool(actor, input) {
   const fx = commendationEffects(commendations);
   const difficulty = effectiveDifficulty(baseDifficulty, fx.difficultyShift);
 
-  // Ticked Traits of the scene the character is in: +1 per Circumstance, -1 per Obstacle.
-  const sceneTraits = input.sceneTraits ?? [];
-  const scene = tally(sceneTraits);
-  const obstacles = Math.max(0, (input.obstacles || 0) + scene.obstacles - fx.obstaclesIgnored);
+  // One scene Trait may be picked, for +1 die.
+  const sceneTrait = input.sceneTrait ?? null;
+  const obstacles = Math.max(0, (input.obstacles || 0) - fx.obstaclesIgnored);
 
   const pool = buildPool({
     skill: actor.skillRating(skill),
     traits: traitKeys.length,
     gift,
-    circumstances: (input.circumstances || 0) + scene.circumstances,
+    circumstances: (input.circumstances || 0) + sceneTraitDice(sceneTrait),
     obstacles,
     bound: input.bound,
     expedite,
@@ -89,7 +101,7 @@ export async function rollPool(actor, input) {
     suppressResonance: fx.suppressResonance
   });
 
-  // Everything the card shows, localized here so the template stays dumb.
+  // Everything the card shows, worked out now and saved so the card can be redrawn later.
   const resonanceMax = greaterBound ? 2 : 1;
   const dice = [
     { kind: "margin", value: margin, success: margin >= marginTarget, flag: outcome.grace ? "grace" : outcome.error ? "error" : "" },
@@ -105,7 +117,7 @@ export async function rollPool(actor, input) {
   if (input.circumstances) factors.push(`+${input.circumstances} ${i18n.localize("CANTICA.Roll.Circumstances")}`);
   if (input.obstacles) factors.push(`−${input.obstacles} ${i18n.localize("CANTICA.Roll.Obstacles")}`);
   if (input.bound) factors.push(`${input.bound} ${i18n.localize("CANTICA.Roll.BoundSource")}`);
-  for (const trait of sceneTraits) factors.push(`${trait.effect === "circumstance" ? "+1" : "−1"} ${trait.name}`);
+  if (sceneTrait) factors.push(`+1 ${sceneTrait.name}`);
   if (expedite) factors.push(i18n.localize("CANTICA.Roll.Expedite"));
 
   const ladder = i18n.has(`CANTICA.Difficulty.${difficulty}`) ? i18n.localize(`CANTICA.Difficulty.${difficulty}`) : "";
@@ -114,17 +126,17 @@ export async function rollPool(actor, input) {
     : `D${baseDifficulty}${i18n.has(`CANTICA.Difficulty.${baseDifficulty}`) ? ` · ${i18n.localize(`CANTICA.Difficulty.${baseDifficulty}`)}` : ""}`;
   if (difficulty !== baseDifficulty) difficultyText += ` → D${difficulty}${ladder ? ` · ${ladder}` : ""}`;
 
-  const encumbranceTexts = encumbranceKeys
+  const hindranceTexts = encumbranceKeys
     .map(key => (key === "drawback" ? actor.system.drawback : actor.system.encumbrances[key]))
     .filter(Boolean);
 
-  const context = {
+  const state = {
     actorName: actor.name,
     skillLabel,
     difficulty,
     difficultyText,
+    sceneId: input.sceneId || "",
     sceneName: input.sceneName || "",
-    pool,
     factors,
     notes: [
       pool.capped && i18n.localize("CANTICA.Roll.Capped"),
@@ -133,27 +145,27 @@ export async function rollPool(actor, input) {
       fx.upgradeConditions && i18n.localize("CANTICA.Roll.UpgradeNote"),
       ...fx.impossible.map(c => i18n.format("CANTICA.Roll.ImpossibleNote", { name: c.name || i18n.localize("CANTICA.Commendation.Heading") }))
     ].filter(Boolean),
-    encumbranceNote: encumbranceTexts.length ? i18n.format("CANTICA.Roll.InPlay", { text: encumbranceTexts.join(" · ") }) : "",
+    hindranceNote: hindranceTexts.length ? i18n.format("CANTICA.Roll.InPlay", { text: hindranceTexts.join(" · ") }) : "",
     dice,
     outcome,
-    tierLabel: i18n.localize(`CANTICA.Tier.${outcome.tier}`),
+    upgradeConditions: fx.upgradeConditions,
     resonanceLabel: outcome.resonance ? i18n.format("CANTICA.Roll.ResonanceCount", { n: outcome.resonance }) : "",
-    stampNote: outcome.stampEarned
+    stampNote: outcome.stampEarned,
+    complication: null
   };
 
   const ChatMessage = CONFIG.ChatMessage.documentClass;
-  const content = await foundry.applications.handlebars.renderTemplate(`systems/${SYSTEM_ID}/templates/chat/roll.hbs`, context);
   const data = {
     speaker: ChatMessage.getSpeaker({ actor }),
     rolls: [roll],
-    content,
+    content: await renderRollCard(state),
     sound: CONFIG.sounds.dice,
-    flags: { [SYSTEM_ID]: { actorId: actor.id, grace: outcome.grace, stampClaimed: false } }
+    flags: { [SYSTEM_ID]: { actorId: actor.id, grace: outcome.grace, stampClaimed: false, state } }
   };
   ChatMessage.applyRollMode(data, game.settings.get("core", "rollMode"));
   const message = await ChatMessage.create(data);
 
-  // Stamps: Expedite spends one; an Encumbrance biting earns one. Settle them in a single update.
+  // Stamps: Expedite spends one; a Hindrance biting earns one. Settle them in a single update.
   const stampDelta = (outcome.stampEarned ? 1 : 0) - (expedite ? 1 : 0);
   if (stampDelta) await actor.adjustStamps(stampDelta);
 
