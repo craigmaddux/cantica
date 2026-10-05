@@ -3,6 +3,8 @@ import { getScrutiny, spendScrutiny } from "./scrutiny.mjs";
 import { renderRollCard, rollExtraDie } from "./dice/roll.mjs";
 import { escapeHtml } from "./lore-text.mjs";
 import { canRefile, canRaise, refile, raiseRating } from "./card-actions.mjs";
+import { shownOutcome } from "./roll-card.mjs";
+import { countRoll } from "./docket.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -25,6 +27,7 @@ export function onRenderChatMessage(message, html) {
   negate(message, html, flags, actor);
   complicate(message, html, flags);
   raise(message, html, flags);
+  docketCount(message, html, flags);
 
   // Hide the whole row if none of its buttons is for this person.
   const bar = html.querySelector(".card-actions");
@@ -132,6 +135,46 @@ function negate(message, html, flags, actor) {
     await actor.adjustStamps(-1);
     const current = message.flags[SYSTEM_ID]?.state ?? state;
     await redraw(message, { ...current, complication: { ...current.complication, negated: true } });
+  });
+}
+
+/**
+ * GM only: when the scene this roll was made in has an open Docket, count the roll into it. Every success fills
+ * a box; a Margin of Error moves the Deadline up. A card is counted by what it shows now, so if it changes after
+ * (a Refile, a Complication) the button offers to update the Docket by the difference.
+ */
+function docketCount(message, html, flags) {
+  const button = html.querySelector('[data-action="docket"]');
+  if (!button) return;
+  const state = flags.state;
+  const card = game.actors.get(state?.sceneId);
+  const docket = card?.system?.docket;
+  if (!game.user.isGM || !state || !docket?.open) return;
+
+  const shown = shownOutcome(state).successes;
+  const counted = flags.docket?.counted;
+  if (counted === shown) return;
+
+  const i18n = game.i18n;
+  button.textContent = counted === undefined
+    ? i18n.format("CANTICA.Docket.Count", { n: shown })
+    : i18n.format("CANTICA.Docket.Update", { n: shown - counted > 0 ? `+${shown - counted}` : shown - counted });
+  button.title = i18n.localize("CANTICA.Docket.CountTitle");
+  button.hidden = false;
+
+  button.addEventListener("click", async event => {
+    event.preventDefault();
+    button.disabled = true;
+    const live = game.actors.get(state.sceneId);
+    const current = message.flags[SYSTEM_ID]?.state ?? state;
+    const previous = message.flags[SYSTEM_ID]?.docket ?? {};
+    const result = countRoll(live.toObject().system.docket, {
+      shown: shownOutcome(current).successes, counted: previous.counted ?? 0,
+      error: Boolean(current.outcome?.error), errorCounted: Boolean(previous.errorCounted)
+    });
+    await live.update({ "system.docket": result.docket });
+    await message.update({ [`flags.${SYSTEM_ID}.docket`]: { counted: result.counted, errorCounted: result.errorCounted } });
+    if (result.pushed) ui.notifications.info(i18n.localize("CANTICA.Docket.Pushed"));
   });
 }
 

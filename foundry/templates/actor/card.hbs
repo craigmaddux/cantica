@@ -29,6 +29,56 @@
       {{/if}}
     </section>
 
+    {{#if isGM}}
+    <section class="panel docket-panel">
+      <h2>
+        {{localize "CANTICA.Docket.Heading"}}
+        {{#if docket.open}}
+        <button type="button" class="add" data-action="closeDocket">{{localize "CANTICA.Docket.Close"}}</button>
+        {{else}}
+        <button type="button" class="add" data-action="openDocket">{{localize "CANTICA.Docket.Open"}}</button>
+        {{/if}}
+      </h2>
+      <p class="hint">{{localize "CANTICA.Docket.Hint"}}</p>
+
+      <div class="docket-fields">
+        <label>{{localize "CANTICA.Docket.Job"}}<input type="text" name="system.docket.name" value="{{docket.name}}" placeholder="{{localize 'CANTICA.Docket.JobPlaceholder'}}"></label>
+        <label>{{localize "CANTICA.Docket.Boxes"}}<input type="number" name="system.docket.boxes" value="{{docket.boxes}}" min="0"></label>
+        <label>{{localize "CANTICA.Docket.Deadline"}}<input type="number" name="system.docket.deadline" value="{{docket.deadline}}" min="0"></label>
+        <label>{{localize "CANTICA.Docket.Round"}}<input type="number" name="system.docket.round" value="{{docket.round}}" min="1"></label>
+        <label>{{localize "CANTICA.Docket.Successes"}}<input type="number" name="system.docket.successes" value="{{docket.successes}}" min="0"></label>
+      </div>
+
+      <div class="docket-size">
+        <span class="docket-size-label">{{localize "CANTICA.Docket.SizeFor"}}</span>
+        <input type="number" id="docket-players" value="{{docket.players}}" min="1" max="8" aria-label="{{localize 'CANTICA.Docket.Players'}}">
+        <span>{{localize "CANTICA.Docket.Players"}}</span>
+        <button type="button" data-action="docketSize" data-level="routine">{{localize "CANTICA.Docket.Routine"}}</button>
+        <button type="button" data-action="docketSize" data-level="standard">{{localize "CANTICA.Docket.Standard"}}</button>
+        <button type="button" data-action="docketSize" data-level="hard">{{localize "CANTICA.Docket.Hard"}}</button>
+      </div>
+
+      {{#if docket.open}}
+      <div class="docket-board docket-{{docket.status}}">
+        <div class="docket-pips">{{#each docket.pips}}<i class="{{#if filled}}filled{{/if}}"></i>{{/each}}</div>
+        <div class="docket-line">
+          <strong>{{docket.filled}} / {{docket.boxes}}</strong> {{localize "CANTICA.Docket.Boxes"}}
+          · {{localize "CANTICA.Docket.Round"}} {{docket.round}} / {{docket.deadline}}
+          · <span class="docket-status">{{docket.statusLabel}}</span>
+        </div>
+        {{#if docket.outcomeLabel}}<p class="docket-outcome">{{docket.outcomeLabel}}</p>{{/if}}
+        <div class="docket-controls">
+          <button type="button" data-action="docketAdjust" data-delta="1">+1 {{localize "CANTICA.Docket.Success"}}</button>
+          <button type="button" data-action="docketAdjust" data-delta="-1">−1</button>
+          <button type="button" data-action="docketRound">{{localize "CANTICA.Docket.NextRound"}}</button>
+          <button type="button" data-action="docketPush" title="{{localize 'CANTICA.Docket.PushHint'}}">{{localize "CANTICA.Docket.Push"}}</button>
+        </div>
+        <p class="hint">{{localize "CANTICA.Docket.CountHint"}}</p>
+      </div>
+      {{/if}}
+    </section>
+    {{/if}}
+
     <section class="panel scene-traits-panel">
       <h2>
         {{localize "CANTICA.Card.Traits"}}

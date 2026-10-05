@@ -10,6 +10,7 @@
 
   <div class="panel-body">
     {{#if description}}<p class="card-text">{{description}}</p>{{/if}}
+    {{#if hasTally}}<p class="scene-tally"><span>{{localize "CANTICA.Docket.Tally"}}</span> <strong>{{tally}}</strong></p>{{/if}}
 
     <section class="panel scene-traits-panel">
       <h2>{{localize "CANTICA.Card.Traits"}}</h2>

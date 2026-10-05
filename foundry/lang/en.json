@@ -188,7 +188,6 @@
       "Tier": "Tier",
       "Major": "Major",
       "ActionTag": "Action Tag",
-      "ActionTagShort": "action",
       "ActionTagHint": "What they do when they act (Crack Shot, Silver Tongue). The others cover everything else. Make a dangerous NPC tougher with a higher Rating, not more Tags."
     },
     "NpcTier": {
@@ -242,14 +241,11 @@
       "Gear": "Gear",
       "GearHint": "Gear never adds dice: the right tools let you roll at all.",
       "ErrorAndDissonanceRange": "Margin of Error and Dissonance on {range}",
-      "Tags": "Their Tags",
-      "TagsHint": "Pick the Tag that applies to what they are doing (a Sharpshooter when you defend against their shot). Only one Tag applies to any roll: you lose a die, down to the Margin alone.",
       "Expedite": "Expedite",
       "ExpediteNote": "Spend a Stamp for +1 die before you roll. Once per roll. (After the roll, Refile rerolls a failed die.)",
       "Penalty": "Penalty",
       "NoPenalty": "None",
-      "PenaltyHint": "Anything in the way, say −1, −2 or −3: darkness, wind, a Notice on you, missing tools. Each point costs a die, down to the Margin alone.",
-      "NoTag": "No Tag applies",
+      "PenaltyHint": "Anything in the way, say −1, −2 or −3: darkness, wind, missing tools, a Notice on you, or an NPC's Tag that applies (only one Tag ever applies to a roll). Each point costs a die, down to the Margin alone.",
       "HelpLegend": "Help and advantage",
       "Help": "Help",
       "HelpNote": "Others are assisting: +1 die in total, however many help.",
@@ -290,7 +286,6 @@
         "convert": "The Gift turns one die violet.",
         "none": "The Gift has no white die to turn violet."
       },
-      "TagPenalty": "−1 {tag} (Tag)",
       "Expedite": "Expedite (Stamp)",
       "Help": "+1 Help",
       "NoticeOnTarget": "+1 Notice on the target",
@@ -586,6 +581,49 @@
       "StartedWith": "Started with the Station Brief:",
       "Suggests": "Your Brief suggests a Commendation",
       "Take": "Take it"
+    },
+    "Docket": {
+      "Heading": "Docket",
+      "Hint": "A job that builds up over several rounds, against a Deadline. Only you see this. The table sees just the running count of successes, on the card's token and panel.",
+      "Open": "Open a Docket",
+      "Close": "Close",
+      "Job": "The job",
+      "JobPlaceholder": "Vent the compartment before the jump",
+      "Boxes": "boxes",
+      "Deadline": "Deadline (rounds)",
+      "Round": "Round",
+      "Successes": "Successes",
+      "Success": "success",
+      "SizeFor": "Size for",
+      "Players": "players",
+      "Routine": "Routine (3 each)",
+      "Standard": "Standard (4)",
+      "Hard": "Hard (5)",
+      "NextRound": "Next round",
+      "Push": "Push the Deadline",
+      "PushHint": "A Margin of Error, or spend Scrutiny: the Deadline moves up one round.",
+      "CountHint": "Every success fills a box, whatever the result tier. On a roll's chat card, use Count to add its successes (a Margin of Error on it moves the Deadline up).",
+      "Status": {
+        "open": "open",
+        "full": "full",
+        "expired": "Deadline passed"
+      },
+      "Result": {
+        "works": "It works, cleanly.",
+        "half": "It half works: something is saved, something is lost, or it works at a real cost.",
+        "fails": "It fails. The story goes on from there."
+      },
+      "Count": "Count {n} to the Docket",
+      "Update": "Update the Docket ({n})",
+      "CountTitle": "Add this roll's successes to the scene's Docket. Only you see this button.",
+      "Pushed": "A Margin of Error: the Docket's Deadline moves up a round.",
+      "Tally": "Successes so far"
+    },
+    "Scenario": {
+      "Button": "Hurting on Deck 22",
+      "Hint": "Import the one-shot from the GM Primer: its people (hidden from players), its places as Scene Cards, and a GM-only journal. Safe to run again.",
+      "GMOnly": "Only a GM can import a scenario.",
+      "Imported": "{name}: {npcs} NPCs and {places} places added, {filled} existing NPCs given stat blocks, {journal} journal."
     }
   }
 }

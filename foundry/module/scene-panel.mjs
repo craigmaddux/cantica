@@ -104,7 +104,10 @@ class ScenePanel extends HandlebarsApplicationMixin(ApplicationV2) {
       active: card.system.active,
       isGM: game.user.isGM,
       shown: isShown(card.id),
-      traits: card.system.traits.filter(t => t.name).map(t => ({ ...t, hasNote: Boolean(t.note) }))
+      traits: card.system.traits.filter(t => t.name).map(t => ({ ...t, hasNote: Boolean(t.note) })),
+      // A Docket is the GM's alone; the table sees only how many successes the scene has had.
+      hasTally: card.system.docket.open,
+      tally: card.system.docket.successes
     };
   }
 

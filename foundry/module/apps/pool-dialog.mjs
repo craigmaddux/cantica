@@ -113,10 +113,8 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
       })),
 
       // A targeted NPC's Rating is used directly as the Difficulty. Preselect the first target.
-      targets: targets.map(({ id, name, rating, tags }, i) => ({
+      targets: targets.map(({ id, name, rating }, i) => ({
         value: `target:${id}`,
-        index: i,
-        tags: tags.map(tag => ({ name: tag.name, action: tag.action })),
         name,
         rating,
         label: i18n.format("CANTICA.Pool.TargetOption", { name, rating, kind: i18n.localize(`CANTICA.Rating.${rating}`) }),
@@ -137,11 +135,7 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
       .map(token => ({
         id: token.id,
         name: token.actor.name,
-        rating: token.actor.system.rating,
-        // Only one Tag ever applies to a roll. The Action Tag is what they do when they act.
-        tags: [1, 2, 3]
-          .map(n => ({ name: token.actor.system[`tag${n}`], action: token.actor.system.actionTag === n }))
-          .filter(tag => tag.name)
+        rating: token.actor.system.rating
       }));
   }
 
@@ -152,21 +146,6 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
       el.addEventListener("change", () => this.#updatePreview());
     });
     this.#updatePreview();
-  }
-
-  /** Show only the Tags of the NPC chosen as the target (a Rating on the ladder has none). */
-  #syncTargetTags() {
-    const chosen = this.element.elements.difficulty?.value ?? "";
-    this.element.querySelectorAll(".target-tags").forEach(group => { group.hidden = group.dataset.target !== chosen; });
-  }
-
-  /** The Tag picked for the chosen target (at most one applies to a roll): a die lost. */
-  #pickedTags() {
-    const chosen = this.element.elements.difficulty?.value ?? "";
-    return [...this.element.querySelectorAll('input[type="radio"].tag-pick:checked')]
-      .filter(el => el.dataset.target === chosen && el.value)
-      .map(el => el.value)
-      .slice(0, 1);
   }
 
   /** Show only the Trait list of the chosen scene. */
@@ -230,15 +209,13 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
       sceneTrait,
       difficulty: Number(chosen.dataset.difficulty),
       targetName: chosen.dataset.name ?? "",
-      obstacles: Math.max(0, Math.trunc(Number(form.querySelector('input[name="obstacles"]:checked')?.value) || 0)),
-      tags: this.#pickedTags()
+      obstacles: Math.max(0, Math.trunc(Number(form.querySelector('input[name="obstacles"]:checked')?.value) || 0))
     };
   }
 
   #updatePreview() {
     this.#syncSceneGroups();
     this.#syncTraitSlots();
-    this.#syncTargetTags();
     const input = this.#readInput();
     const fx = commendationEffects(input.commendations);
     const traits = input.traits.slice(0, fx.secondTrait ? 2 : 1);
@@ -248,8 +225,8 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
       gift: input.gift,
       // The scene Trait, Help (+1 in total, however many help), and a Notice on the target (+1).
       circumstances: sceneTraitDice(input.sceneTrait) + (input.help ? 1 : 0) + (input.noticeOnTarget ? 1 : 0),
-      // A penalty you name, and each of the target's Tags that applies, cost a die each.
-      obstacles: Math.max(0, input.obstacles + input.tags.length - fx.obstaclesIgnored),
+      // A penalty you name (an NPC's Tag, darkness, a Notice on you): a die each.
+      obstacles: Math.max(0, input.obstacles - fx.obstaclesIgnored),
       bound: input.bound,
       expedite: input.expedite
     });

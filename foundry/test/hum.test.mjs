@@ -13,10 +13,10 @@ test("from the Refrain, every violet die causes Dissonance on 1-2", () => {
   assert.equal(widensDissonance(19), true);
 });
 
-test("each Dissonance adds 1 to the Hum; a greater Bound Dissonance adds 2", () => {
+test("each Dissonance adds 1 to the Hum, always", () => {
   assert.equal(humFromRoll(0), 0);
   assert.equal(humFromRoll(3), 3);
-  assert.equal(humFromRoll(2, true), 4);
+  assert.equal(humFromRoll(2), 2);
   assert.equal(humFromRoll(-1), 0);
 });
 

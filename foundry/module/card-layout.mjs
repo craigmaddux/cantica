@@ -43,11 +43,12 @@ export function clampLines(lines, max, font, maxWidth, measure) {
 }
 
 /**
- * @param {{name: string, description: string, traits: string[], width: number, height: number}} card
+ * @param {{name: string, description: string, traits: string[], tally?: number|null, width: number, height: number}} card
+ *   `tally` is the successes a Docket in this scene has had (the table sees that, and nothing else of the Docket).
  * @param {(text: string, font: string) => number} measure  Width of text in the given CSS font.
  * @returns {{ops: object[], plateTop: number, shown: number, more: number}}
  */
-export function layoutCard({ name, description, traits, width: w, height: h }, measure) {
+export function layoutCard({ name, description, traits, tally = null, width: w, height: h }, measure) {
   const ops = [];
   // Type scales with the card's smaller dimension, so a low, wide card doesn't get oversized text.
   const u = Math.min(w, h * 1.25);
@@ -112,6 +113,18 @@ export function layoutCard({ name, description, traits, width: w, height: h }, m
       const morePx = Math.round(px * 0.85);
       text(`+ ${traits.length - shown} more`, pad, Math.min(y, bottom - morePx), `italic ${morePx}px ${SERIF}`, COLOR.dim);
     }
+  }
+
+  // The tally: a small tag in the top right corner, over the art.
+  if (tally !== null && tally !== undefined) {
+    const px = Math.max(10, Math.round(u * 0.04));
+    const label = `SUCCESSES ${tally}`;
+    const font = `${px}px ${MONO}`;
+    const bw = Math.ceil(measure(label, font) + px * 1.8);
+    const bh = Math.round(px * 2.1);
+    ops.push({ t: "rect", x: w - pad - bw, y: pad, w: bw, h: bh, fill: "rgba(5, 8, 16, 0.88)" });
+    ops.push({ t: "rect", x: w - pad - bw, y: pad, w: bw, h: 2, fill: COLOR.warm, alpha: 0.9 });
+    text(label, w - pad - bw + Math.round(px * 0.9), pad + Math.round((bh - px) / 2) + 1, font, COLOR.warm);
   }
 
   // Frame.

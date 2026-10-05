@@ -40,7 +40,7 @@ async function loadImage(src) {
 }
 
 /** Paint the card onto a new canvas. */
-export async function renderCardImage({ name, description, traits, art }, width, height) {
+export async function renderCardImage({ name, description, traits, tally, art }, width, height) {
   const canvas = document.createElement("canvas");
   canvas.width = width;
   canvas.height = height;
@@ -61,7 +61,7 @@ export async function renderCardImage({ name, description, traits, art }, width,
   }
 
   const measure = (text, font) => { ctx.font = font; return ctx.measureText(text).width; };
-  const { ops } = layoutCard({ name, description, traits, width, height }, measure);
+  const { ops } = layoutCard({ name, description, traits, tally, width, height }, measure);
 
   ctx.textBaseline = "top";
   for (const op of ops) {
@@ -111,6 +111,8 @@ export async function paintToken(token, { force = false } = {}) {
       name: actor.name,
       description: actor.system.description,
       traits: actor.system.traits.map(trait => trait.name).filter(Boolean),
+      // Only the running tally of a Docket's successes is shown on the table, never its boxes or Deadline.
+      tally: actor.system.docket.open ? actor.system.docket.successes : null,
       art: hasArt(actor.img) ? actor.img : null
     };
     const hash = cardHash([data, width, height]);
@@ -197,7 +199,7 @@ export function registerCardArt() {
   Hooks.on("updateActor", (actor, changes) => {
     if (actor.type !== "card") return;
     const system = changes.system ?? {};
-    if (!("name" in changes || "img" in changes || "description" in system || "traits" in system)) return;
+    if (!("name" in changes || "img" in changes || "description" in system || "traits" in system || "docket" in system)) return;
     for (const token of tokensOf(actor)) queue(token);
   });
 

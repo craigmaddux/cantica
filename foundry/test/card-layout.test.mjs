@@ -111,6 +111,20 @@ test("the image is 200px per grid square, within limits", () => {
   assert.deepEqual(imageSize(0.5, 0.5), { width: 200, height: 200 });
 });
 
+test("a Docket's tally is drawn in the corner and fits the card", () => {
+  for (const [sw, sh] of [[4, 3], [12, 9], [3, 2]]) {
+    const { width, height } = imageSize(sw, sh);
+    const layout = layoutCard({ ...card({ width, height }), tally: 12 }, measure);
+    const tag = layout.ops.find(op => op.t === "text" && op.text === "SUCCESSES 12");
+    assert.ok(tag, `${sw}x${sh} shows the tally`);
+    assert.ok(tag.x >= 0 && tag.x + measure(tag.text, tag.font) <= width, `${sw}x${sh} tally fits across`);
+    assert.ok(tag.y + 10 <= layout.plateTop || tag.y < height / 2, `${sw}x${sh} tally sits near the top`);
+  }
+  // no Docket, no tally
+  assert.ok(!layoutCard(card({ width: 800, height: 600 }), measure).ops.some(op => op.text?.startsWith("SUCCESSES")));
+  assert.equal(layoutCard({ ...card({ width: 800, height: 600 }), tally: 0 }, measure).ops.filter(op => op.text === "SUCCESSES 0").length, 1);
+});
+
 test("the art is cropped to cover the card, never stretched or left short", () => {
   // square art into a wide card: full width, a band of the height
   const wide = coverCrop(1000, 1000, 800, 600);

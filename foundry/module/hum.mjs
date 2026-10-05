@@ -3,7 +3,7 @@
  * players, who feel it only through the world. Pure functions with no Foundry dependency, so the
  * same logic is unit-tested in Node (see test/hum.test.mjs).
  *
- * Each Dissonance adds 1 (a greater Bound Dissonance adds 2). It only builds; story can lower it,
+ * Each Dissonance adds 1, always. It only builds; story can lower it,
  * but seldom. At 20 something gives: a campaign event, after which the Hum resets to 0.
  */
 
@@ -30,12 +30,11 @@ export function bandFor(value) {
 export const widensDissonance = value => clamp(value) >= 10;
 
 /**
- * The Hum a roll adds: 1 per Dissonance, 2 per Dissonance when the roll was made under greater Bound.
+ * The Hum a roll adds: 1 per Dissonance (a Dissonance on a 2, under a Hindrance or at the Refrain, is still 1).
  * @param {number} dissonance  Dissonance on the roll (after any Commendation).
- * @param {boolean} [greaterBound]
  */
-export function humFromRoll(dissonance, greaterBound = false) {
-  return Math.max(0, Math.trunc(Number(dissonance) || 0)) * (greaterBound ? 2 : 1);
+export function humFromRoll(dissonance) {
+  return Math.max(0, Math.trunc(Number(dissonance) || 0));
 }
 
 /**

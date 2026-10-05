@@ -52,7 +52,6 @@ export async function rollExtraDie() {
  * @param {{id: string, name: string, ruleBreak: string}[]} [input.commendations] Ticked Commendations.
  * @param {number} [input.circumstances]    Environmental advantages (+1 each).
  * @param {number} [input.obstacles]        A penalty to this roll (-1 die each): "I have a -2". The pool builder offers 0 to 3.
- * @param {string[]} [input.tags]           The target NPC's Tag that applies to what they are doing: -1 die (at most one applies; it counts as an obstacle).
  * @param {boolean} [input.help]            Another character is helping: +1 die in total, however many help.
  * @param {boolean} [input.noticeOnTarget]  A Notice on the target NPC, used against them: +1 die.
  * @param {boolean} [input.initiative]      A turn-order roll: the Margin's Grace and Error don't count.
@@ -96,8 +95,7 @@ export async function rollPool(actor, input) {
 
   // One scene Trait may be picked, for +1 die.
   const sceneTrait = input.sceneTrait ?? null;
-  const tags = (Array.isArray(input.tags) ? input.tags : []).filter(Boolean).slice(0, 1);
-  const obstacles = Math.max(0, (input.obstacles || 0) + tags.length - fx.obstaclesIgnored);
+  const obstacles = Math.max(0, (input.obstacles || 0) - fx.obstaclesIgnored);
 
   // Expedite adds a die, so it is only spent if the pool has room for one (the cap is 7).
   const poolInput = {
@@ -154,7 +152,6 @@ export async function rollPool(actor, input) {
   if (expedite) factors.push(i18n.localize("CANTICA.Roll.Expedite"));
   if (input.help) factors.push(i18n.localize("CANTICA.Roll.Help"));
   if (input.noticeOnTarget) factors.push(i18n.localize("CANTICA.Roll.NoticeOnTarget"));
-  for (const tag of tags) factors.push(i18n.format("CANTICA.Roll.TagPenalty", { tag }));
   if (input.obstacles) factors.push(`−${input.obstacles} ${i18n.localize("CANTICA.Roll.Obstacles")}`);
   if (input.bound) factors.push(i18n.localize("CANTICA.Roll.BoundSource"));
   if (sceneTrait) factors.push(`+1 ${sceneTrait.name}`);
@@ -221,7 +218,7 @@ export async function rollPool(actor, input) {
   if (outcome.scrutiny) await gainScrutiny();
 
   // Every Dissonance feeds the Hum, which only the GM sees.
-  if (outcome.dissonance) await addHum(humFromRoll(outcome.dissonance, greaterBound));
+  if (outcome.dissonance) await addHum(humFromRoll(outcome.dissonance));
 
   return { message, roll, pool, outcome };
 }

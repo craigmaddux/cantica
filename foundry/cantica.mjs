@@ -21,6 +21,7 @@ import { registerCardArt, repaintCards, resizeCards } from "./module/card-art.mj
 import { openRegistration, hold, release, holds } from "./module/apps/registration.mjs";
 import { registerPanels, reconcilePanels, openPanel, setShown } from "./module/scene-panel.mjs";
 import { initLore, importLore } from "./module/lore.mjs";
+import { importScenario } from "./module/scenario.mjs";
 import { registerCards, listenForCards, activeCard, detectCard, setActiveCard } from "./module/cards.mjs";
 import { registerScrutiny, listenForScrutiny, showScrutiny, getScrutiny, gainScrutiny } from "./module/scrutiny.mjs";
 import { registerHum, listenForHum, showHum, getHum } from "./module/hum-tracker.mjs";
@@ -84,7 +85,7 @@ Hooks.once("init", () => {
   });
 
   // Handy for macros: game.cantica.rollPool(actor, { skill: "hullcraft" }) or new game.cantica.PoolDialog({ actor }).
-  game.cantica = { rules, notices, rollPool, PoolDialog, showScrutiny, getScrutiny, gainScrutiny, showHum, getHum, activeCard, detectCard, setActiveCard, openLedger, importLore, openPanel, setShown, repaintCards, resizeCards, register: openRegistration };
+  game.cantica = { rules, notices, rollPool, PoolDialog, showScrutiny, getScrutiny, gainScrutiny, showHum, getHum, activeCard, detectCard, setActiveCard, openLedger, importLore, importScenario, openPanel, setShown, repaintCards, resizeCards, register: openRegistration };
 
   return foundry.applications.handlebars.loadTemplates([
     `systems/${SYSTEM_ID}/templates/actor/character.hbs`,
@@ -140,6 +141,17 @@ Hooks.on("renderActorDirectory", (app, html) => {
     hum.innerHTML = `<i class="fa-solid fa-wave-square"></i> ${game.i18n.localize("CANTICA.Hum.Label")}`;
     hum.addEventListener("click", () => game.cantica.showHum());
     actions.append(hum);
+  }
+
+  // The one-shot's people, places and notes, in one click (GM only).
+  if (game.user.isGM && !actions.querySelector(".cantica-scenario-button")) {
+    const scenario = document.createElement("button");
+    scenario.type = "button";
+    scenario.className = "cantica-scenario-button";
+    scenario.innerHTML = `<i class="fa-solid fa-file-import"></i> ${game.i18n.localize("CANTICA.Scenario.Button")}`;
+    scenario.title = game.i18n.localize("CANTICA.Scenario.Hint");
+    scenario.addEventListener("click", () => game.cantica.importScenario());
+    actions.append(scenario);
   }
 });
 
