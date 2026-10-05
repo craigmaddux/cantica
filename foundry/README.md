@@ -43,7 +43,7 @@ Four tabs:
 
 ## Rolling
 
-The pool builder asks you to pick one Trait (Station or an open Trait, with a Stretch checkbox), and offers the Gift, one checkbox per Hindrance (and the Drawback), your Commendations, the Scene you're in (and one scene Trait), and Bound gear. There are no boxes for Circumstances or Obstacles: anything else that helps or hinders is the table's call, or a scene Trait. Difficulty is D0–D3, or the Rating of an NPC you've targeted. When you target an NPC, its **Tags** appear as checkboxes: tick one when it applies to what they are doing (a *Sharpshooter* when you defend against their shot) and you lose a die for each, never below the Margin alone. A Commendation that ignores one obstacle can ignore one Tag.
+The pool builder asks you to pick one Trait (Station or an open Trait, with a Stretch checkbox), and offers the Gift, one checkbox per Hindrance (and the Drawback), your Commendations, the Scene you're in (and one scene Trait), and Bound gear. A **Penalty** row (None, −1, −2, −3) says "I have a −2 to this roll": each point costs a die, down to the Margin alone. There is no box for bonuses: anything that helps is a scene Trait, or the table's call. Difficulty is D0–D3, or the Rating of an NPC you've targeted. When you target an NPC, its **Tags** appear as checkboxes: tick one when it applies to what they are doing (a *Sharpshooter* when you defend against their shot) and you lose a die for each, never below the Margin alone. A Commendation that ignores one obstacle can ignore one Tag.
 
 ## Register With Gloss
 

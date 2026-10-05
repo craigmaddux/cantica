@@ -842,6 +842,10 @@
 .pool-dialog .check.stretch { opacity: 0.85; }
 .pool-dialog input:disabled + .check-label, .pool-dialog input:disabled ~ .check-text { opacity: 0.4; }
 .pips.rank .pip.base:disabled { opacity: 1; }
+.penalty-options { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; }
+.penalty-option { align-items: center; cursor: pointer; display: flex; gap: 0.35rem; }
+.penalty-option span { color: var(--ink-soft); font-family: var(--font-mono); font-size: 0.8rem; }
+.penalty-option input:checked + span { color: var(--warn); }
 
 /* v0.8: the Hum, the GM's window. */
 .application.hum .window-content { display: block; }

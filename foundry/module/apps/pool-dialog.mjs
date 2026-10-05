@@ -70,6 +70,7 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
         }))
       })),
       hasTraits: this.actor.rollTraits.length > 0,
+      penalties: [0, 1, 2, 3].map(n => ({ value: n, label: n ? `−${n}` : i18n.localize("CANTICA.Pool.NoPenalty"), checked: n === 0 })),
       stamps: this.actor.system.stamps,
       canExpedite: this.actor.system.stamps > 0,
       touched,
@@ -221,6 +222,7 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
       sceneTrait,
       difficulty: Number(chosen.dataset.difficulty),
       targetName: chosen.dataset.name ?? "",
+      obstacles: Math.max(0, Math.trunc(Number(form.querySelector('input[name="obstacles"]:checked')?.value) || 0)),
       tags: this.#pickedTags()
     };
   }
@@ -237,8 +239,8 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
       traits: traits.reduce((sum, t) => sum + traitDice({ rank: this.actor.traitRank(t.key), stretch: t.stretch }), 0),
       gift: input.gift,
       circumstances: sceneTraitDice(input.sceneTrait),
-      // Each of the target's Tags that applies costs a die.
-      obstacles: Math.max(0, input.tags.length - fx.obstaclesIgnored),
+      // A penalty you name, and each of the target's Tags that applies, cost a die each.
+      obstacles: Math.max(0, input.obstacles + input.tags.length - fx.obstaclesIgnored),
       bound: input.bound,
       expedite: input.expedite
     });

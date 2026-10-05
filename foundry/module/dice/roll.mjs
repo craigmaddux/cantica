@@ -51,7 +51,7 @@ export async function rollExtraDie() {
  * @param {string[]} [input.encumbranceKeys] Hindrances in play: personal, circumstantial, drawback.
  * @param {{id: string, name: string, ruleBreak: string}[]} [input.commendations] Ticked Commendations.
  * @param {number} [input.circumstances]    Environmental advantages (+1 each).
- * @param {number} [input.obstacles]        Other penalties (-1 each); macros can set these.
+ * @param {number} [input.obstacles]        A penalty to this roll (-1 die each): "I have a -2". The pool builder offers 0 to 3.
  * @param {string[]} [input.tags]           The target NPC's Tags that apply to what they are doing: -1 die each (they count as obstacles).
  * @param {boolean} [input.expedite]        Spend a Stamp before the roll for +1 die (one per roll).
  * @param {number} [input.bound]            Bound gear in play (0 or 1): turns one white die violet.

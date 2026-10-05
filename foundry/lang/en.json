@@ -229,13 +229,16 @@
       "Tags": "Their Tags",
       "TagsHint": "Tick a Tag when it applies to what they are doing: you lose a die for each, down to the Margin alone.",
       "Expedite": "Expedite",
-      "ExpediteNote": "Spend a Stamp for +1 die before you roll. Once per roll. (After the roll, Refile rerolls a failed die.)"
+      "ExpediteNote": "Spend a Stamp for +1 die before you roll. Once per roll. (After the roll, Refile rerolls a failed die.)",
+      "Penalty": "Penalty",
+      "NoPenalty": "None",
+      "PenaltyHint": "Anything in the way, say −1, −2 or −3: darkness, wind, a Notice on you, missing tools. Each point costs a die, down to the Margin alone."
     },
     "Roll": {
       "Margin": "Margin",
       "Gift": "Gift",
       "Circumstances": "circumstance",
-      "Obstacles": "obstacle",
+      "Obstacles": "penalty",
       "BoundSource": "Bound gear",
       "VsTarget": "vs {name} · Rating {rating}",
       "Capped": "Pool capped at 7.",
