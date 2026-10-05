@@ -104,7 +104,7 @@
     },
     "Stamps": {
       "Label": "Stamps",
-      "Hint": "Earned when any Hindrance bites, sometimes from a Margin of Grace, and for withdrawing from a scene. Spend: Expedite (+1 die before a roll), Refile (reroll one failed die after it, from its chat card), Countersign (+1 die on an ally's roll), Reclassify (downgrade a Notice as it lands), Cite a Clause, Amend the Scene.",
+      "Hint": "Earned when any Hindrance bites, sometimes from a Margin of Grace, and for withdrawing from a scene. Spend: Expedite (+1 die before a roll), Refile (reroll one failed die after it, from its chat card), Countersign (give a Stamp to an ally, to use as their Expedite or Refile), Reclassify (downgrade a Notice as it lands), Cite a Clause, Amend the Scene.",
       "Cite": "Cite a Clause",
       "CiteTitle": "Cite a Clause",
       "CitePrompt": "Which rule do you declare exists and applies here?",
@@ -113,7 +113,13 @@
       "None": "No Stamps to spend.",
       "Session": "Start session",
       "SessionHint": "Stamps up to what your Grade begins each session with: 2, and one more at Grades III, VI and IX.",
-      "SessionStarted": "Stamps set to at least {n}."
+      "SessionStarted": "Stamps set to at least {n}.",
+      "Countersign": "Countersign",
+      "CountersignTitle": "Countersign",
+      "CountersignHint": "Give one of your Stamps to another character, to use as their Expedite or Refile. You don't need to be there.",
+      "CountersignWho": "Give it to",
+      "Countersigned": "{from} countersigns: a Stamp goes to {to}.",
+      "NoAllies": "There is no other character to give a Stamp to."
     },
     "Tenure": {
       "Label": "Tenure",
@@ -123,10 +129,16 @@
     },
     "Scrutiny": {
       "Label": "Scrutiny",
-      "Hint": "The ship pushes back. The GM gains 1 whenever a Margin comes up as an Error, and spends it on complications.",
+      "Hint": "The ship pushes back. The GM starts each session with one per player, and gains 1 whenever a Margin comes up as an Error, and spends it on complications.",
       "Reset": "Reset",
       "ShowSetting": "Show the Scrutiny tracker",
-      "ShowHint": "A small window showing the GM's Scrutiny to everyone at the table."
+      "ShowHint": "A small window showing the GM's Scrutiny to everyone at the table.",
+      "Start": "Start session",
+      "StartTitle": "Start a session",
+      "StartHint": "Scrutiny starts each session at one per player. You can also top every player's Stamps up to what their Grade begins a session with.",
+      "StartPlayers": "Scrutiny to start with (one per player)",
+      "StartStamps": "Top up the Stamps of the {n} player characters",
+      "Started": "A new session: Scrutiny is {n}."
     },
     "Track": {
       "Heading": "Notices",
@@ -171,9 +183,13 @@
       "Rating": "Rating",
       "RatingHint": "Used directly as the Difficulty of any roll against this NPC, or to resist them. 1 ordinary, 2 tough, 3 nemesis, 4 reserved.",
       "Tags": "Tags",
-      "TagsHint": "What they are good at. When a Tag applies, the player loses a die.",
+      "TagsHint": "What they are good at. A Background or Minor has two Tags; a Major has three. When a Tag applies, the player loses a die. Only one Tag applies to any roll.",
       "Tag": "Tag",
-      "Tier": "Tier"
+      "Tier": "Tier",
+      "Major": "Major",
+      "ActionTag": "Action Tag",
+      "ActionTagShort": "action",
+      "ActionTagHint": "What they do when they act (Crack Shot, Silver Tongue). The others cover everything else. Make a dangerous NPC tougher with a higher Rating, not more Tags."
     },
     "NpcTier": {
       "background": "Background",
@@ -224,15 +240,24 @@
       "SecondTrait": "Your Commendation lets a second Trait also apply.",
       "BoundNote": "Gear running on divine infrastructure turns one white die violet. At most one die from gear and one from the Gift.",
       "Gear": "Gear",
-      "GearHint": "Gear never adds dice: the right tools let you roll at all. Anything else that helps or hinders is the table's call, or a scene Trait.",
+      "GearHint": "Gear never adds dice: the right tools let you roll at all.",
       "ErrorAndDissonanceRange": "Margin of Error and Dissonance on {range}",
       "Tags": "Their Tags",
-      "TagsHint": "Tick a Tag when it applies to what they are doing: you lose a die for each, down to the Margin alone.",
+      "TagsHint": "Pick the Tag that applies to what they are doing (a Sharpshooter when you defend against their shot). Only one Tag applies to any roll: you lose a die, down to the Margin alone.",
       "Expedite": "Expedite",
       "ExpediteNote": "Spend a Stamp for +1 die before you roll. Once per roll. (After the roll, Refile rerolls a failed die.)",
       "Penalty": "Penalty",
       "NoPenalty": "None",
-      "PenaltyHint": "Anything in the way, say −1, −2 or −3: darkness, wind, a Notice on you, missing tools. Each point costs a die, down to the Margin alone."
+      "PenaltyHint": "Anything in the way, say −1, −2 or −3: darkness, wind, a Notice on you, missing tools. Each point costs a die, down to the Margin alone.",
+      "NoTag": "No Tag applies",
+      "HelpLegend": "Help and advantage",
+      "Help": "Help",
+      "HelpNote": "Others are assisting: +1 die in total, however many help.",
+      "NoticeOnTarget": "A Notice on the target",
+      "NoticeOnTargetNote": "You are using a Notice an NPC carries against them: +1 die.",
+      "TurnOrder": "Turn order roll",
+      "TurnOrderHint": "Everyone rolls Notice; the most successes goes first. The Margin's Grace and Error don't count.",
+      "TurnOrderNote": "Turn order: the Margin's Grace and Error don't count."
     },
     "Roll": {
       "Margin": "Margin",
@@ -266,7 +291,10 @@
         "none": "The Gift has no white die to turn violet."
       },
       "TagPenalty": "−1 {tag} (Tag)",
-      "Expedite": "Expedite (Stamp)"
+      "Expedite": "Expedite (Stamp)",
+      "Help": "+1 Help",
+      "NoticeOnTarget": "+1 Notice on the target",
+      "TurnOrderNote": "Turn order roll: the Margin's Grace and Error don't count."
     },
     "Tier": {
       "denied": "Denied",
@@ -485,7 +513,7 @@
       "Hint": "How much the Bound are stirring. Only you can see this.",
       "Private": "Players never see this. They feel it only through the world.",
       "Dissonance": "Dissonance",
-      "DissonanceHint": "A Dissonance you trigger (spend 1 Scrutiny): +1 Hum.",
+      "DissonanceHint": "A Dissonance you trigger, as though a violet die had shown a 1: costs 1 Scrutiny, and adds 1 to the Hum.",
       "Reset": "The ship goes quiet (reset to 0)",
       "RefrainRule": "From here, every violet die causes Dissonance on 1–2.",
       "Crossed": "The Hum has reached the {band}.",

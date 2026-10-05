@@ -28,6 +28,17 @@
         <input id="npc-tag2" type="text" name="system.tag2" value="{{system.tag2}}" {{#unless editable}}disabled{{/unless}}>
       </div>
       <div class="trait">
+        <label for="npc-tag3">{{localize "CANTICA.Npc.Tag"}} 3 <small>({{localize "CANTICA.Npc.Major"}})</small></label>
+        <input id="npc-tag3" type="text" name="system.tag3" value="{{system.tag3}}" {{#unless editable}}disabled{{/unless}}>
+      </div>
+      <div class="trait">
+        <label for="npc-action">{{localize "CANTICA.Npc.ActionTag"}}</label>
+        <select id="npc-action" name="system.actionTag" {{#unless editable}}disabled{{/unless}}>
+          {{#each actionTags}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+        </select>
+        <p class="hint">{{localize "CANTICA.Npc.ActionTagHint"}}</p>
+      </div>
+      <div class="trait">
         <label for="npc-tier">{{localize "CANTICA.Npc.Tier"}}</label>
         <select id="npc-tier" name="system.tier" {{#unless editable}}disabled{{/unless}}>
           {{#each tiers}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}

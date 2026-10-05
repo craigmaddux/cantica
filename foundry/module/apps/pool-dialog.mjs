@@ -115,7 +115,8 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
       // A targeted NPC's Rating is used directly as the Difficulty. Preselect the first target.
       targets: targets.map(({ id, name, rating, tags }, i) => ({
         value: `target:${id}`,
-        tags: tags.map(tag => ({ name: tag })),
+        index: i,
+        tags: tags.map(tag => ({ name: tag.name, action: tag.action })),
         name,
         rating,
         label: i18n.format("CANTICA.Pool.TargetOption", { name, rating, kind: i18n.localize(`CANTICA.Rating.${rating}`) }),
@@ -137,7 +138,10 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
         id: token.id,
         name: token.actor.name,
         rating: token.actor.system.rating,
-        tags: [token.actor.system.tag1, token.actor.system.tag2].filter(Boolean)
+        // Only one Tag ever applies to a roll. The Action Tag is what they do when they act.
+        tags: [1, 2, 3]
+          .map(n => ({ name: token.actor.system[`tag${n}`], action: token.actor.system.actionTag === n }))
+          .filter(tag => tag.name)
       }));
   }
 
@@ -156,12 +160,13 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
     this.element.querySelectorAll(".target-tags").forEach(group => { group.hidden = group.dataset.target !== chosen; });
   }
 
-  /** Tags ticked for the chosen target: each is a die lost. */
+  /** The Tag picked for the chosen target (at most one applies to a roll): a die lost. */
   #pickedTags() {
     const chosen = this.element.elements.difficulty?.value ?? "";
-    return [...this.element.querySelectorAll('input[name="tag"]:checked')]
-      .filter(el => el.dataset.target === chosen)
-      .map(el => el.value);
+    return [...this.element.querySelectorAll('input[type="radio"].tag-pick:checked')]
+      .filter(el => el.dataset.target === chosen && el.value)
+      .map(el => el.value)
+      .slice(0, 1);
   }
 
   /** Show only the Trait list of the chosen scene. */
@@ -217,6 +222,9 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
       commendations: checked("commendation").map(el => ({ id: el.value, name: el.dataset.name, ruleBreak: el.dataset.break })),
       bound: form.elements.bound?.checked ? 1 : 0,
       expedite: Boolean(form.elements.expedite?.checked),
+      help: Boolean(form.elements.help?.checked),
+      noticeOnTarget: Boolean(form.elements.noticeOnTarget?.checked),
+      initiative: Boolean(form.elements.initiative?.checked),
       sceneId,
       sceneName: sceneId ? form.elements.sceneCard.selectedOptions[0].textContent.trim() : "",
       sceneTrait,
@@ -238,7 +246,8 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
       skill: this.actor.skillRating(input.skill),
       traits: traits.reduce((sum, t) => sum + traitDice({ rank: this.actor.traitRank(t.key), stretch: t.stretch }), 0),
       gift: input.gift,
-      circumstances: sceneTraitDice(input.sceneTrait),
+      // The scene Trait, Help (+1 in total, however many help), and a Notice on the target (+1).
+      circumstances: sceneTraitDice(input.sceneTrait) + (input.help ? 1 : 0) + (input.noticeOnTarget ? 1 : 0),
       // A penalty you name, and each of the target's Tags that applies, cost a die each.
       obstacles: Math.max(0, input.obstacles + input.tags.length - fx.obstaclesIgnored),
       bound: input.bound,
@@ -255,13 +264,19 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
         : pool.floored ? i18n.localize("CANTICA.Roll.Floored")
           : input.gift ? i18n.localize(`CANTICA.Roll.GiftEffect.${pool.giftEffect || "none"}`) : "";
 
+    // A turn-order roll: the Margin's Grace and Error don't count.
+    const turn = input.initiative;
+    if (turn) el.querySelector("[data-error-range]").textContent = i18n.localize("CANTICA.Pool.TurnOrderNote");
+
     // Any Hindrance (or the Drawback) in play is Greater Bound: the Margin of Error widens to 1-2,
     // and so does Dissonance on any violet dice.
     const widened = input.encumbranceKeys.length > 0;
     const range = widened ? "1–2" : "1";
-    el.querySelector("[data-error-range]").textContent = pool.violet > 0
-      ? i18n.format("CANTICA.Pool.ErrorAndDissonanceRange", { range })
-      : i18n.format("CANTICA.Pool.ErrorRange", { range });
+    if (!turn) {
+      el.querySelector("[data-error-range]").textContent = pool.violet > 0
+        ? i18n.format("CANTICA.Pool.ErrorAndDissonanceRange", { range })
+        : i18n.format("CANTICA.Pool.ErrorRange", { range });
+    }
   }
 
   static async #onSubmit(event, form, formData) {

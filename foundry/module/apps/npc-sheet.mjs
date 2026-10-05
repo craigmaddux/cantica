@@ -5,7 +5,7 @@ import { trackContext, takeNotice, clearNotice, treatNotice, clearMinors } from 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
 
-/** NPC stat block: Name, Rating, two Tags, Tier, and the Notice track their tier allows. About 30 seconds each. */
+/** NPC stat block: Name, Rating, Tags, Tier, and the Notice track their tier allows. About 30 seconds each. */
 export default class NpcSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   static DEFAULT_OPTIONS = {
     classes: ["cantica", "sheet", "npc"],
@@ -37,6 +37,11 @@ export default class NpcSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       value,
       label: i18n.localize(`CANTICA.NpcTier.${value}`),
       selected: system.tier === value
+    }));
+    context.actionTags = [1, 2, 3].map(n => ({
+      value: n,
+      label: `${i18n.localize("CANTICA.Npc.Tag")} ${n}${system[`tag${n}`] ? `: ${system[`tag${n}`]}` : ""}`,
+      selected: system.actionTag === n
     }));
     context.tierHint = i18n.localize(`CANTICA.NpcTier.${system.tier}Hint`);
     context.track = trackContext(this.actor);

@@ -2,7 +2,7 @@ import { SYSTEM_ID } from "./config.mjs";
 import { getScrutiny, spendScrutiny } from "./scrutiny.mjs";
 import { renderRollCard, rollExtraDie } from "./dice/roll.mjs";
 import { escapeHtml } from "./lore-text.mjs";
-import { canRefile, canCountersign, canRaise, addDie, refile, raiseRating } from "./card-actions.mjs";
+import { canRefile, canRaise, refile, raiseRating } from "./card-actions.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -12,7 +12,7 @@ const SOCKET = `system.${SYSTEM_ID}`;
  * Wire up the buttons on Cantica roll cards. Cards are saved HTML plus a saved roll state, so each
  * button's visibility is worked out from the message flags and who is looking, on every render.
  *
- * After the roll, players spend Stamps (Refile, Countersign, Negate) and the GM spends Scrutiny
+ * After the roll, players spend Stamps (Refile, Negate) and the GM spends Scrutiny
  * (Complicate, Raise the Rating). See card-actions.mjs for the rules.
  */
 export function onRenderChatMessage(message, html) {
@@ -22,7 +22,6 @@ export function onRenderChatMessage(message, html) {
 
   claimStamp(message, html, flags, actor);
   refileDie(message, html, flags, actor);
-  countersign(message, html, flags);
   negate(message, html, flags, actor);
   complicate(message, html, flags);
   raise(message, html, flags);
@@ -73,48 +72,6 @@ function refileDie(message, html, flags, actor) {
     await actor.adjustStamps(-1);
     const value = await rollExtraDie();
     await redraw(message, refile(current, { value, who: actor.name }));
-  });
-}
-
-/** An ally: spend one of your own Stamps for one more die on someone else's roll. Players only. */
-function countersign(message, html, flags) {
-  const button = html.querySelector('[data-action="countersign"]');
-  if (!button) return;
-  const state = flags.state;
-  const allies = () => game.actors.filter(a =>
-    a.type === "character" && a.isOwner && a.system.stamps > 0 && canCountersign(message.flags[SYSTEM_ID]?.state ?? state, a.id));
-
-  if (game.user.isGM || !state || !allies().length) {
-    button.hidden = true;
-    return;
-  }
-
-  button.addEventListener("click", async event => {
-    event.preventDefault();
-    const i18n = game.i18n;
-    const choices = allies();
-    if (!choices.length) return ui.notifications.warn(i18n.localize("CANTICA.CardAction.None"));
-
-    // One character: they spend it. Several: ask which.
-    let who = choices[0];
-    if (choices.length > 1) {
-      const id = await DialogV2.prompt({
-        window: { title: i18n.localize("CANTICA.CardAction.PickTitle") },
-        content: `<div class="form-group"><label>${i18n.localize("CANTICA.CardAction.Pick")}</label>
-          <select name="who">${choices.map(a => `<option value="${a.id}">${escapeHtml(a.name)}</option>`).join("")}</select></div>`,
-        ok: { label: i18n.localize("CANTICA.CardAction.countersign.title"), callback: (ev, btn) => btn.form.elements.who.value },
-        rejectClose: false
-      });
-      who = choices.find(a => a.id === id);
-      if (!who) return;
-    }
-
-    button.disabled = true;
-    const current = message.flags[SYSTEM_ID]?.state;
-    if (!current || !canCountersign(current, who.id) || who.system.stamps < 1) return;
-    await who.adjustStamps(-1);
-    const value = await rollExtraDie();
-    await redraw(message, addDie(current, { value, who: who.name, whoId: who.id }));
   });
 }
 
@@ -216,9 +173,15 @@ async function write(message, state) {
   });
 }
 
-/** The active GM redraws a card on a player's behalf. */
+/** The active GM redraws a card on a player's behalf, and hands a Countersign's Stamp to its new owner. */
 export function listenForRollChanges() {
   game.socket.on(SOCKET, data => {
+    // A Countersign: one Stamp, given to another character. The giver has already spent theirs.
+    if (data?.action === "give-stamp" && game.user.isActiveGM) {
+      const to = game.actors.get(data.toId);
+      if (to?.type === "character") to.adjustStamps(1);
+      return;
+    }
     if (data?.action !== "redraw-roll" || !game.user.isActiveGM) return;
     const message = game.messages.get(data.messageId);
     if (!message?.flags?.[SYSTEM_ID]?.state || !data.state || typeof data.state !== "object") return;

@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { buildPool, evaluateRoll, tierFor, commendationEffects, effectiveDifficulty, traitDice } from "../module/rules.mjs";
+import { buildPool, evaluateRoll, tierFor, commendationEffects, effectiveDifficulty, traitDice, withoutMarginEffects } from "../module/rules.mjs";
 import { marginTarget } from "../module/progression.mjs";
 
 test("Margin alone: Skill 0 still rolls one die", () => {
@@ -69,6 +69,15 @@ test("the Gift is separate from Bound gear", () => {
   assert.equal(p.total, 4);
   assert.equal(p.violet, 2);
   assert.equal(p.white, 1);
+});
+
+test("a turn-order roll ignores the Margin's Grace and Error but keeps its success", () => {
+  const grace = withoutMarginEffects(evaluateRoll({ margin: 10, white: [8] }, { difficulty: 1 }));
+  assert.deepEqual([grace.grace, grace.successes], [false, 2]);
+  const error = withoutMarginEffects(evaluateRoll({ margin: 1, white: [8] }, { difficulty: 1, encumbrance: true }));
+  assert.deepEqual([error.error, error.scrutiny, error.stampEarned], [false, 0, false]);
+  assert.equal(error.successes, 1);
+  assert.equal(evaluateRoll({ margin: 1, white: [8] }).error, true);
 });
 
 test("Expedite adds one die before the roll, still subject to the cap", () => {

@@ -1,5 +1,5 @@
 import { reduceSuccesses, tierFor } from "./rules.mjs";
-import { canRefile, canAddDie, canRaise } from "./card-actions.mjs";
+import { canRefile, canRaise } from "./card-actions.mjs";
 
 /**
  * The chat card for a roll, as a function of its saved state. Pure, no Foundry dependency (the
@@ -16,10 +16,10 @@ import { canRefile, canAddDie, canRaise } from "./card-actions.mjs";
  *   dissonanceLabel: string, stampNote: boolean,
  *   complication: null | { trait: string, negated: boolean },
  *   actorId, targetName,                         // the roller, and the NPC whose Rating is the Difficulty
- *   extra: [{kind, value, success, extra, by}],  // white dice added after the roll (Countersign)
+ *   extra: [{kind, value, success, extra, by}],  // white dice added after the roll (cards made in v0.8.1 only)
  *   refiled: boolean, refileGain: number,        // a failed die rerolled (once); +1 success if it was a rolled die and now hits
  *   countersigned: string[], ratingRaise: number,
- *   log: [{kind: "refile"|"countersign"|"raise", who, value, was, success}]
+ *   log: [{kind: "refile"|"raise"|"countersign", who, value, was, success}]  // "countersign" only on v0.8.1 cards
  * }
  */
 
@@ -94,7 +94,6 @@ export function cardView(state, t) {
     canNegate: reduced,
     // Whether each action is still open on this roll. The chat hook shows each button only to the people it is for.
     canRefile: canRefile(state),
-    canCountersign: canAddDie(state),
     canRaise: canRaise(state)
   };
 }

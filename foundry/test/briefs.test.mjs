@@ -66,7 +66,8 @@ test("finding a Brief, and what it suggests", () => {
   assert.equal(findBrief("", BRIEFS), null);
   assert.equal(findBrief("nope", BRIEFS), null);
   assert.deepEqual(suggestionsFor("traits", eng), eng.traits);
-  assert.deepEqual(suggestionsFor("hindrances", eng), eng.hindrances);
+  assert.deepEqual(suggestionsFor("personal", eng), [eng.hindrances[0]]);
+  assert.deepEqual(suggestionsFor("circumstantial", eng), [eng.hindrances[1]]);
   assert.deepEqual(suggestionsFor("traits", null), []);
   assert.deepEqual(giftFor(eng), { gift: "Machines Hum My Name", drawback: "Hears Them When They're Hurting" });
   assert.equal(giftFor(null), null);

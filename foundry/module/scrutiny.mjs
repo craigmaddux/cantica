@@ -1,9 +1,9 @@
 import { SYSTEM_ID } from "./config.mjs";
 
-const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+const { ApplicationV2, HandlebarsApplicationMixin, DialogV2 } = foundry.applications.api;
 
 /**
- * Scrutiny: the GM's currency. It rises by 1 whenever any player's Margin comes
+ * Scrutiny: the GM's currency. It starts each session at one per player, and rises by 1 whenever any player's Margin comes
  * up as an Error, and is spent narratively. This module only keeps the counter:
  * a world setting visible to everyone on a small tracker.
  */
@@ -77,6 +77,7 @@ class ScrutinyTracker extends HandlebarsApplicationMixin(ApplicationV2) {
     actions: {
       adjust: ScrutinyTracker.#onAdjust,
       reset: ScrutinyTracker.#onReset,
+      startSession: ScrutinyTracker.#onStartSession,
       openLedger: () => game.cantica?.openLedger()
     }
   };
@@ -96,5 +97,32 @@ class ScrutinyTracker extends HandlebarsApplicationMixin(ApplicationV2) {
 
   static async #onReset() {
     if (game.user.isGM) await setScrutiny(0);
+  }
+
+  /**
+   * Start a session: Scrutiny becomes one per player (the GM can change the number), and every player's
+   * character is topped up to the Stamps its Grade begins a session with.
+   */
+  static async #onStartSession() {
+    if (!game.user.isGM) return;
+    const i18n = game.i18n;
+    const players = game.users.filter(user => !user.isGM && user.active).length || game.users.filter(user => !user.isGM).length || 1;
+    const characters = game.actors.filter(actor => actor.type === "character" && actor.hasPlayerOwner);
+    const answer = await DialogV2.prompt({
+      window: { title: i18n.localize("CANTICA.Scrutiny.StartTitle") },
+      content: `<p class="hint">${i18n.localize("CANTICA.Scrutiny.StartHint")}</p>
+        <div class="form-group"><label>${i18n.localize("CANTICA.Scrutiny.StartPlayers")}</label>
+          <input type="number" name="scrutiny" value="${players}" min="0" autofocus></div>
+        <label class="check"><input type="checkbox" name="stamps" checked> <span>${i18n.format("CANTICA.Scrutiny.StartStamps", { n: characters.length })}</span></label>`,
+      ok: {
+        label: i18n.localize("CANTICA.Scrutiny.Start"),
+        callback: (event, button) => ({ scrutiny: Number(button.form.elements.scrutiny.value), stamps: button.form.elements.stamps.checked })
+      },
+      rejectClose: false
+    });
+    if (!answer) return;
+    await setScrutiny(answer.scrutiny);
+    if (answer.stamps) for (const actor of characters) await actor.startSession();
+    ui.notifications.info(i18n.format("CANTICA.Scrutiny.Started", { n: Math.max(0, Math.trunc(answer.scrutiny) || 0) }));
   }
 }

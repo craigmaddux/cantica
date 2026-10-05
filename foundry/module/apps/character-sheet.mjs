@@ -3,6 +3,7 @@ import { RULE_BREAKS } from "../rules.mjs";
 import { CREATION_BUDGET, CREATION_MAX, TRAIT_MAX, TRAIT_COST, TRAIT_RANK_COST, TRAIT_RANK_GRADE } from "../progression.mjs";
 import PoolDialog from "./pool-dialog.mjs";
 import { findBrief, commendationSuggestion } from "../briefs.mjs";
+import { escapeHtml } from "../lore-text.mjs";
 import { openRegistration, holds, focusRegistration } from "./registration.mjs";
 import { trackContext, takeNotice, clearNotice, treatNotice, clearMinors } from "./notice-track.mjs";
 
@@ -32,6 +33,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       adjustStamps: CharacterSheet.#onAdjustStamps,
       startSession: CharacterSheet.#onStartSession,
       citeClause: CharacterSheet.#onCiteClause,
+      countersign: CharacterSheet.#onCountersign,
       addCommendation: CharacterSheet.#onAddCommendation,
       takeBriefCommendation: CharacterSheet.#onTakeBriefCommendation,
       deleteCommendation: CharacterSheet.#onDeleteCommendation,
@@ -254,6 +256,24 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   static async #onStartSession() {
     const perSession = await this.actor.startSession();
     ui.notifications.info(game.i18n.format("CANTICA.Stamps.SessionStarted", { n: perSession }));
+  }
+
+  /** Countersign: give one of your Stamps to another character, to use as their Expedite or Refile. */
+  static async #onCountersign() {
+    const i18n = game.i18n;
+    if (this.actor.system.stamps < 1) return ui.notifications.warn(i18n.localize("CANTICA.Stamps.None"));
+    const allies = game.actors.filter(a => a.type === "character" && a.id !== this.actor.id);
+    if (!allies.length) return ui.notifications.warn(i18n.localize("CANTICA.Stamps.NoAllies"));
+
+    const id = await DialogV2.prompt({
+      window: { title: i18n.localize("CANTICA.Stamps.CountersignTitle") },
+      content: `<p class="hint">${i18n.localize("CANTICA.Stamps.CountersignHint")}</p>
+        <div class="form-group"><label>${i18n.localize("CANTICA.Stamps.CountersignWho")}</label>
+          <select name="who">${allies.map(a => `<option value="${a.id}">${escapeHtml(a.name)}</option>`).join("")}</select></div>`,
+      ok: { label: i18n.localize("CANTICA.Stamps.Countersign"), callback: (event, button) => button.form.elements.who.value },
+      rejectClose: false
+    });
+    if (id) await this.actor.giveStamp(game.actors.get(id));
   }
 
   /** Spend a Stamp to declare that a rule in the Checklist exists and applies here. */

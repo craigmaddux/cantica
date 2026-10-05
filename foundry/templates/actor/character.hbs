@@ -23,6 +23,7 @@
           <button type="button" data-action="adjustStamps" data-delta="1" {{#unless editable}}disabled{{/unless}}>+</button>
         </div>
         <button type="button" class="cite" data-action="citeClause" {{#unless editable}}disabled{{/unless}}>{{localize "CANTICA.Stamps.Cite"}}</button>
+        <button type="button" class="cite" data-action="countersign" title="{{localize 'CANTICA.Stamps.CountersignHint'}}" {{#unless editable}}disabled{{/unless}}>{{localize "CANTICA.Stamps.Countersign"}}</button>
         <button type="button" class="cite" data-action="startSession" title="{{localize 'CANTICA.Stamps.SessionHint'}}" {{#unless editable}}disabled{{/unless}}>{{localize "CANTICA.Stamps.Session"}} ({{system.stampsPerSession}})</button>
       </div>
       <div class="counter" title="{{localize 'CANTICA.Tenure.Hint'}}">

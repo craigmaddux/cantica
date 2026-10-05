@@ -9,7 +9,7 @@
  *   field    which part of the character sheet the answer fills in
  *   examples a few things other residents say; clicking one fills the answer in
  *   briefs   offer the Station Briefs on this step (see briefs.mjs)
- *   suggests "traits" or "hindrances": a chosen Brief's own examples are offered first
+ *   suggests "traits", "personal" or "circumstantial": a chosen Brief's own examples are offered first
  *
  * Gloss's tone: warm, courteous, delighted to help, a little too eager. Never pushy.
  */
@@ -110,7 +110,7 @@ export const STEPS = [
   {
     id: "hindrance-personal",
     kind: "text",
-    suggests: "hindrances",
+    suggests: "personal",
     title: "A Hindrance",
     gloss: "Thank you. Now, everyone has something that gets in their own way. How would the people around you describe the habit you can least help?",
     explain: "This is a Hindrance. It never adds dice. When one is in play, the Margin of Error widens, so things go sideways more often, and each time they do you earn a Stamp. It is how your troubles pay you back.",
@@ -128,7 +128,7 @@ export const STEPS = [
   {
     id: "hindrance-circumstantial",
     kind: "text",
-    suggests: "hindrances",
+    suggests: "circumstantial",
     title: "A Hindrance",
     gloss: "And is there anything in your life that tends to complicate things? Something that follows you about, whether you would like it to or not.",
     explain: "Your second Hindrance. It works just like the first.",

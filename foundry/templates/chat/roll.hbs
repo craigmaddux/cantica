@@ -63,11 +63,10 @@
   </div>
   {{/if}}
 
-  {{!-- After the roll. Players spend Stamps (Refile, Countersign, Negate); the GM spends Scrutiny
+  {{!-- After the roll. Players spend Stamps (Refile, Negate); the GM spends Scrutiny
         (Complicate, Raise the Rating). The chat hook shows each button only to the people it is for. --}}
   <div class="card-actions">
     {{#if canRefile}}<button type="button" data-action="refile" title="{{localize 'CANTICA.CardAction.refile.hint'}}">{{localize "CANTICA.CardAction.refile.button"}}</button>{{/if}}
-    {{#if canCountersign}}<button type="button" data-action="countersign" title="{{localize 'CANTICA.CardAction.countersign.hint'}}">{{localize "CANTICA.CardAction.countersign.button"}}</button>{{/if}}
     {{#if canNegate}}<button type="button" data-action="negate" title="{{localize 'CANTICA.Complication.NegateHint'}}">{{localize "CANTICA.Complication.Negate"}}</button>{{/if}}
     {{#if canComplicate}}<button type="button" data-action="complicate" title="{{localize 'CANTICA.Complication.Hint'}}">{{localize "CANTICA.Complication.Button"}}</button>{{/if}}
     {{#if canRaise}}<button type="button" data-action="raise" title="{{localize 'CANTICA.CardAction.raise.hint'}}">{{localize "CANTICA.CardAction.raise.button"}}</button>{{/if}}

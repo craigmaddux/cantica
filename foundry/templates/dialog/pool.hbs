@@ -28,11 +28,16 @@
   {{#each targets}}{{#if tags.length}}
   <fieldset class="target-tags" data-target="{{value}}" {{#unless selected}}hidden{{/unless}}>
     <legend>{{localize "CANTICA.Pool.Tags"}}: {{name}}</legend>
+    <label class="check">
+      <input type="radio" class="tag-pick" name="tag-{{index}}" value="" data-target="{{value}}" checked>
+      <span class="check-label sign">—</span>
+      <span class="check-text">{{localize "CANTICA.Pool.NoTag"}}</span>
+    </label>
     {{#each tags}}
     <label class="check">
-      <input type="checkbox" name="tag" value="{{name}}" data-target="{{../value}}">
+      <input type="radio" class="tag-pick" name="tag-{{../index}}" value="{{name}}" data-target="{{../value}}">
       <span class="check-label sign">−1</span>
-      <span class="check-text">{{name}}</span>
+      <span class="check-text">{{name}}{{#if action}} <em>({{localize "CANTICA.Npc.ActionTagShort"}})</em>{{/if}}</span>
     </label>
     {{/each}}
     <p class="hint">{{localize "CANTICA.Pool.TagsHint"}}</p>
@@ -124,6 +129,22 @@
   </fieldset>
   {{/if}}
 
+  <fieldset class="help">
+    <legend>{{localize "CANTICA.Pool.HelpLegend"}}</legend>
+    <label class="check">
+      <input type="checkbox" name="help">
+      <span class="check-label sign">+1</span>
+      <span class="check-text">{{localize "CANTICA.Pool.Help"}}</span>
+      <span class="check-note">{{localize "CANTICA.Pool.HelpNote"}}</span>
+    </label>
+    <label class="check">
+      <input type="checkbox" name="noticeOnTarget">
+      <span class="check-label sign">+1</span>
+      <span class="check-text">{{localize "CANTICA.Pool.NoticeOnTarget"}}</span>
+      <span class="check-note">{{localize "CANTICA.Pool.NoticeOnTargetNote"}}</span>
+    </label>
+  </fieldset>
+
   <fieldset class="penalty">
     <legend>{{localize "CANTICA.Pool.Penalty"}}</legend>
     <div class="penalty-options">
@@ -165,6 +186,12 @@
     {{/each}}
     <p class="hint">{{localize "CANTICA.Pool.EncumbranceNote"}}</p>
   </fieldset>
+
+  <label class="check turn-order">
+    <input type="checkbox" name="initiative">
+    <span class="check-label">{{localize "CANTICA.Pool.TurnOrder"}}</span>
+    <span class="check-note">{{localize "CANTICA.Pool.TurnOrderHint"}}</span>
+  </label>
 
   <div class="preview" data-preview>
     <span class="preview-total"><span data-total>1</span> {{localize "CANTICA.Pool.Dice"}}</span>

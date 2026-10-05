@@ -1,4 +1,5 @@
-import { SKILLS, OPEN_TRAITS, CARD_TOKEN } from "../config.mjs";
+import { SYSTEM_ID, SKILLS, OPEN_TRAITS, CARD_TOKEN } from "../config.mjs";
+import { escapeHtml } from "../lore-text.mjs";
 import { skillChange, traitSlotPurchase, traitRankUp, awardTenure, stampsPerSession, TRAIT_COST } from "../progression.mjs";
 
 export default class CanticaActor extends foundry.documents.Actor {
@@ -74,6 +75,26 @@ export default class CanticaActor extends foundry.documents.Actor {
     const stamps = Math.max(0, this.system.stamps + delta);
     await this.update({ "system.stamps": stamps });
     return stamps;
+  }
+
+  /**
+   * Countersign: give one of your Stamps to another character, to use as their Expedite or Refile. You don't
+   * need to be there. Your Stamp is spent now; theirs is added by whoever may edit them (the GM, if it isn't you).
+   * @param {Actor} to
+   * @returns {Promise<boolean>}
+   */
+  async giveStamp(to) {
+    if (!to || to.type !== "character" || to.id === this.id || this.system.stamps < 1) return false;
+    await this.adjustStamps(-1);
+    if (to.isOwner) await to.adjustStamps(1);
+    else game.socket.emit(`system.${SYSTEM_ID}`, { action: "give-stamp", toId: to.id });
+
+    const ChatMessage = CONFIG.ChatMessage.documentClass;
+    await ChatMessage.create({
+      speaker: ChatMessage.getSpeaker({ actor: this }),
+      content: `<p>${escapeHtml(game.i18n.format("CANTICA.Stamps.Countersigned", { from: this.name, to: to.name }))}</p>`
+    });
+    return true;
   }
 
   /** Start of a session: at least the Stamps this Grade begins with (2, +1 at Grades III, VI and IX). */

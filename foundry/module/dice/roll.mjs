@@ -1,5 +1,5 @@
 import { SYSTEM_ID, OPEN_TRAITS } from "../config.mjs";
-import { buildPool, evaluateRoll, commendationEffects, effectiveDifficulty, traitDice, POOL_CAP, WHITE_TARGET, VIOLET_TARGET } from "../rules.mjs";
+import { buildPool, evaluateRoll, commendationEffects, effectiveDifficulty, traitDice, withoutMarginEffects, POOL_CAP, WHITE_TARGET, VIOLET_TARGET } from "../rules.mjs";
 import { marginTarget as marginTargetFor } from "../progression.mjs";
 import { gainScrutiny } from "../scrutiny.mjs";
 import { getHum, addHum } from "../hum-tracker.mjs";
@@ -52,7 +52,10 @@ export async function rollExtraDie() {
  * @param {{id: string, name: string, ruleBreak: string}[]} [input.commendations] Ticked Commendations.
  * @param {number} [input.circumstances]    Environmental advantages (+1 each).
  * @param {number} [input.obstacles]        A penalty to this roll (-1 die each): "I have a -2". The pool builder offers 0 to 3.
- * @param {string[]} [input.tags]           The target NPC's Tags that apply to what they are doing: -1 die each (they count as obstacles).
+ * @param {string[]} [input.tags]           The target NPC's Tag that applies to what they are doing: -1 die (at most one applies; it counts as an obstacle).
+ * @param {boolean} [input.help]            Another character is helping: +1 die in total, however many help.
+ * @param {boolean} [input.noticeOnTarget]  A Notice on the target NPC, used against them: +1 die.
+ * @param {boolean} [input.initiative]      A turn-order roll: the Margin's Grace and Error don't count.
  * @param {boolean} [input.expedite]        Spend a Stamp before the roll for +1 die (one per roll).
  * @param {number} [input.bound]            Bound gear in play (0 or 1): turns one white die violet.
  * @param {string} [input.sceneId]          The Scene Card the roll happens in.
@@ -93,7 +96,7 @@ export async function rollPool(actor, input) {
 
   // One scene Trait may be picked, for +1 die.
   const sceneTrait = input.sceneTrait ?? null;
-  const tags = (Array.isArray(input.tags) ? input.tags : []).filter(Boolean);
+  const tags = (Array.isArray(input.tags) ? input.tags : []).filter(Boolean).slice(0, 1);
   const obstacles = Math.max(0, (input.obstacles || 0) + tags.length - fx.obstaclesIgnored);
 
   // Expedite adds a die, so it is only spent if the pool has room for one (the cap is 7).
@@ -101,7 +104,7 @@ export async function rollPool(actor, input) {
     skill: actor.skillRating(skill),
     traits: traits.reduce((sum, t) => sum + t.dice, 0),
     gift,
-    circumstances: (input.circumstances || 0) + sceneTraitDice(sceneTrait),
+    circumstances: (input.circumstances || 0) + sceneTraitDice(sceneTrait) + (input.help ? 1 : 0) + (input.noticeOnTarget ? 1 : 0),
     obstacles,
     bound: input.bound
   };
@@ -124,11 +127,12 @@ export async function rollPool(actor, input) {
 
   // The Margin's success threshold improves with Grade: 7+ at I-III, down to 4+ at X.
   const marginTarget = actor.system.marginTarget ?? marginTargetFor(1);
-  const outcome = evaluateRoll({ margin, white, violet }, {
+  const evaluated = evaluateRoll({ margin, white, violet }, {
     difficulty, encumbrance, greaterBound: widened, marginTarget,
     upgradeConditions: fx.upgradeConditions,
     suppressDissonance: fx.suppressDissonance
   });
+  const outcome = input.initiative ? withoutMarginEffects(evaluated) : evaluated;
 
   // Everything the card shows, worked out now and saved so the card can be redrawn later.
   const dissonanceMax = widened ? 2 : 1;
@@ -148,6 +152,8 @@ export async function rollPool(actor, input) {
   for (const c of commendations) factors.push(`★ ${c.name || i18n.localize("CANTICA.Commendation.Heading")} (${i18n.localize(`CANTICA.Commendation.short.${c.ruleBreak}`)})`);
   if (input.circumstances) factors.push(`+${input.circumstances} ${i18n.localize("CANTICA.Roll.Circumstances")}`);
   if (expedite) factors.push(i18n.localize("CANTICA.Roll.Expedite"));
+  if (input.help) factors.push(i18n.localize("CANTICA.Roll.Help"));
+  if (input.noticeOnTarget) factors.push(i18n.localize("CANTICA.Roll.NoticeOnTarget"));
   for (const tag of tags) factors.push(i18n.format("CANTICA.Roll.TagPenalty", { tag }));
   if (input.obstacles) factors.push(`−${input.obstacles} ${i18n.localize("CANTICA.Roll.Obstacles")}`);
   if (input.bound) factors.push(i18n.localize("CANTICA.Roll.BoundSource"));
@@ -180,6 +186,7 @@ export async function rollPool(actor, input) {
     notes: [
       pool.capped && i18n.localize("CANTICA.Roll.Capped"),
       pool.floored && i18n.localize("CANTICA.Roll.Floored"),
+      input.initiative && i18n.localize("CANTICA.Roll.TurnOrderNote"),
       gift && i18n.localize(`CANTICA.Roll.GiftEffect.${pool.giftEffect || "none"}`),
       marginTarget < 7 && i18n.format("CANTICA.Roll.MarginTarget", { n: marginTarget }),
       fx.upgradeConditions && i18n.localize("CANTICA.Roll.UpgradeNote"),

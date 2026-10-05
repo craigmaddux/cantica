@@ -1,5 +1,6 @@
 import { SYSTEM_ID } from "./config.mjs";
 import { HUM_BANDS, HUM_MAX, bandFor, changeHum } from "./hum.mjs";
+import { spendScrutiny } from "./scrutiny.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -118,9 +119,11 @@ class HumTracker extends HandlebarsApplicationMixin(ApplicationV2) {
     if (game.user.isGM) await applyHum(Number(target.dataset.delta));
   }
 
-  /** The GM triggers a Dissonance (spending Scrutiny, in the spec): +1 Hum. */
+  /** The GM triggers a Dissonance, as though a violet die had shown a 1: it costs 1 Scrutiny, and adds 1 to the Hum. */
   static async #onDissonance() {
-    if (game.user.isGM) await applyHum(1);
+    if (!game.user.isGM) return;
+    if (!(await spendScrutiny(1))) return ui.notifications.warn(game.i18n.localize("CANTICA.Complication.NoScrutiny"));
+    await applyHum(1);
   }
 
   /** The event has played out: the ship goes quiet and the slow climb begins again. */

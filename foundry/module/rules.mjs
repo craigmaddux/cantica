@@ -135,6 +135,14 @@ export function evaluateRoll({ margin, white = [], violet = [] }, {
   };
 }
 
+/**
+ * A turn-order roll (everyone rolls Notice; most successes goes first): the Margin still counts as a die,
+ * but its Grace and Error don't happen. No Scrutiny, no Stamp, no twist.
+ */
+export function withoutMarginEffects(outcome) {
+  return { ...outcome, grace: false, error: false, scrutiny: 0, stampEarned: false };
+}
+
 /* ── Commendations ── */
 
 /** The six rule-breaks a Commendation can use. */

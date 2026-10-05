@@ -19,11 +19,15 @@ export const findBrief = (id, list = loadBriefs()) => (id ? list.find(brief => b
 /** The Brief's skills as a full set: every skill, 0 where the Brief doesn't mention it. */
 export const briefSkills = brief => Object.fromEntries(SKILLS.map(key => [key, brief.skills?.[key] ?? 0]));
 
-/** Which suggestions a Brief makes at a step: "traits" or "hindrances" (see registration-steps.mjs). */
+/**
+ * Which suggestions a Brief makes at a step (see registration-steps.mjs): "traits" (all three), or one of the
+ * two Hindrances for its slot: "personal" is the first, "circumstantial" the second.
+ */
 export function suggestionsFor(kind, brief) {
   if (!brief) return [];
   if (kind === "traits") return brief.traits ?? [];
-  if (kind === "hindrances") return brief.hindrances ?? [];
+  if (kind === "personal") return brief.hindrances?.[0] ? [brief.hindrances[0]] : [];
+  if (kind === "circumstantial") return brief.hindrances?.[1] ? [brief.hindrances[1]] : [];
   return [];
 }
 

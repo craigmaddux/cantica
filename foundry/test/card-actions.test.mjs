@@ -2,11 +2,12 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { evaluateRoll } from "../module/rules.mjs";
 import { cardView, shownOutcome } from "../module/roll-card.mjs";
-import {
-  canCountersign, canRaise, canAddDie, canRefile, failedWhiteDie, addDie, refile, raiseRating, diceOnTable
-} from "../module/card-actions.mjs";
+import { canRaise, canAddDie, canRefile, failedWhiteDie, refile, raiseRating, diceOnTable } from "../module/card-actions.mjs";
 
 const t = (key, data) => (data ? `${key} ${JSON.stringify(data)}` : key);
+
+// Cards made in v0.8.1 could carry a die added by a Countersign. They must still read correctly.
+const withExtra = (state, value) => ({ ...state, extra: [...(state.extra ?? []), { kind: "white", value, success: value >= 7, extra: true, by: "countersign" }] });
 
 // Margin 8 (hit), whites 9 (hit) and 3 (miss): 2 successes vs D2 = With Conditions.
 const baseState = (over = {}) => ({
@@ -62,7 +63,7 @@ test("Refile takes the first failed die rolled, then an added one", () => {
   const s = baseState();
   assert.deepEqual(failedWhiteDie(s), { list: "dice", index: 2 });
   // no failed die among those rolled: an added die that failed is eligible
-  const added = addDie(baseState({ dice: baseState().dice.slice(0, 2) }), { value: 4, who: "Deya", whoId: "deya" });
+  const added = withExtra(baseState({ dice: baseState().dice.slice(0, 2) }), 4);
   assert.deepEqual(failedWhiteDie(added), { list: "extra", index: 0 });
   const refiled = refile(added, { value: 9, who: "Ilse" });
   // the added die was already counted by its own result, so a hit there is one success, not two
@@ -75,36 +76,6 @@ test("the cap of 7 doesn't stop a Refile, which replaces a die", () => {
   assert.equal(canAddDie(seven), false);
   assert.equal(canRefile(seven), true);
   assert.equal(diceOnTable(refile(seven, { value: 9, who: "x" })), 7);
-});
-
-/* ── Countersign ── */
-
-test("Countersign adds one rolled white die, once per ally and never your own", () => {
-  const s = baseState();
-  assert.equal(canCountersign(s, "ilse"), false);
-  assert.equal(canCountersign(s, "deya"), true);
-  assert.equal(canCountersign(s, ""), false);
-  const signed = addDie(s, { value: 8, who: "Deya", whoId: "deya" });
-  assert.equal(shownOutcome(signed).successes, 3);
-  assert.equal(shownOutcome(signed).tier, "approved");
-  assert.equal(diceOnTable(signed), 4);
-  assert.equal(canCountersign(signed, "deya"), false);
-  assert.equal(canCountersign(signed, "marguerite"), true);
-  assert.equal(s.extra.length, 0);
-});
-
-test("the added die is a white die: it succeeds on 7+", () => {
-  const s = baseState();
-  assert.equal(addDie(s, { value: 7, who: "x", whoId: "a" }).extra[0].success, true);
-  assert.equal(addDie(s, { value: 6, who: "x", whoId: "a" }).extra[0].success, false);
-});
-
-test("the pool's cap of 7 dice applies to Countersign", () => {
-  const seven = baseState({ dice: Array.from({ length: 7 }, () => ({ kind: "white", value: 1, success: false })) });
-  assert.equal(canAddDie(seven), false);
-  assert.equal(canCountersign(seven, "deya"), false);
-  const six = baseState({ dice: seven.dice.slice(0, 6) });
-  assert.equal(canAddDie(addDie(six, { value: 9, who: "x", whoId: "a" })), false);
 });
 
 /* ── Raise the Rating ── */
@@ -152,27 +123,24 @@ test("a Commendation's With Conditions → Approved still applies after a die ch
   assert.equal(shownOutcome(refile(s, { value: 2, who: "x" })).tier, "approved");
 });
 
-test("the card shows the changed and added dice and says what was done", () => {
+test("the card shows the changed and legacy added dice and says what was done", () => {
   let s = baseState();
   s = refile(s, { value: 9, who: "Ilse" });
-  s = addDie(s, { value: 4, who: "Deya", whoId: "deya" });
+  s = withExtra(s, 4);
   s = raiseRating({ ...s, targetName: "Halvard" });
   const view = cardView(s, t);
   assert.equal(view.dice.length, 4);
   assert.equal(view.dice.filter(d => d.extra).length, 1);
   assert.equal(view.dice.filter(d => d.refiled).length, 1);
-  assert.deepEqual(view.actions.map(a => a.kind), ["refile", "countersign", "raise"]);
+  assert.deepEqual(view.actions.map(a => a.kind), ["refile", "raise"]);
   assert.ok(view.actions[0].text.includes('"was":3'));
-  assert.ok(view.actions[1].text.includes("Deya"));
 });
 
 test("the card knows which actions are still open", () => {
   const view = cardView(baseState(), t);
   assert.equal(view.canRefile, true);
-  assert.equal(view.canCountersign, true);
   const used = cardView(refile(baseState(), { value: 1, who: "x" }), t);
   assert.equal(used.canRefile, false);
-  assert.equal(used.canCountersign, true);
 });
 
 test("cards saved before v0.9.1 (no refile fields) still draw", () => {

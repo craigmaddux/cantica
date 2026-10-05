@@ -328,8 +328,8 @@ window.STATION_BRIEFS = [
     }
   },
   {
-    "id": "navigators-hall",
-    "name": "Navigators' Hall",
+    "id": "navigators-tower",
+    "name": "The Navigator's Tower",
     "greeting": "So you've been accepted by the Navigators. You'll be told a great many things in confidence. Please keep them that way.",
     "tagline": "You plot the jumps.",
     "blurb": "Officially, the Navigators know where the ship is going. Unofficially, you've begun to suspect how much of it is guesswork, and how much of the guesswork works anyway.",
