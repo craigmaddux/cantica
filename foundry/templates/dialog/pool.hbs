@@ -24,6 +24,21 @@
     </select>
   </div>
 
+  {{!-- A targeted NPC's Tags: each one that applies to what they are doing costs you a die. --}}
+  {{#each targets}}{{#if tags.length}}
+  <fieldset class="target-tags" data-target="{{value}}" {{#unless selected}}hidden{{/unless}}>
+    <legend>{{localize "CANTICA.Pool.Tags"}}: {{name}}</legend>
+    {{#each tags}}
+    <label class="check">
+      <input type="checkbox" name="tag" value="{{name}}" data-target="{{../value}}">
+      <span class="check-label sign">−1</span>
+      <span class="check-text">{{name}}</span>
+    </label>
+    {{/each}}
+    <p class="hint">{{localize "CANTICA.Pool.TagsHint"}}</p>
+  </fieldset>
+  {{/if}}{{/each}}
+
   <fieldset>
     <legend>{{localize "CANTICA.Pool.Traits"}}</legend>
     {{#if hasTraits}}

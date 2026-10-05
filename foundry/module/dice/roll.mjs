@@ -51,7 +51,8 @@ export async function rollExtraDie() {
  * @param {string[]} [input.encumbranceKeys] Hindrances in play: personal, circumstantial, drawback.
  * @param {{id: string, name: string, ruleBreak: string}[]} [input.commendations] Ticked Commendations.
  * @param {number} [input.circumstances]    Environmental advantages (+1 each).
- * @param {number} [input.obstacles]        Environmental penalties (-1 each).
+ * @param {number} [input.obstacles]        Other penalties (-1 each); macros can set these.
+ * @param {string[]} [input.tags]           The target NPC's Tags that apply to what they are doing: -1 die each (they count as obstacles).
  * @param {number} [input.bound]            Bound gear in play (0 or 1): turns one white die violet.
  * @param {string} [input.sceneId]          The Scene Card the roll happens in.
  * @param {string} [input.sceneName]
@@ -90,7 +91,8 @@ export async function rollPool(actor, input) {
 
   // One scene Trait may be picked, for +1 die.
   const sceneTrait = input.sceneTrait ?? null;
-  const obstacles = Math.max(0, (input.obstacles || 0) - fx.obstaclesIgnored);
+  const tags = (Array.isArray(input.tags) ? input.tags : []).filter(Boolean);
+  const obstacles = Math.max(0, (input.obstacles || 0) + tags.length - fx.obstaclesIgnored);
 
   const pool = buildPool({
     skill: actor.skillRating(skill),
@@ -140,6 +142,7 @@ export async function rollPool(actor, input) {
   if (gift) factors.push(actor.system.gift || i18n.localize("CANTICA.Roll.Gift"));
   for (const c of commendations) factors.push(`★ ${c.name || i18n.localize("CANTICA.Commendation.Heading")} (${i18n.localize(`CANTICA.Commendation.short.${c.ruleBreak}`)})`);
   if (input.circumstances) factors.push(`+${input.circumstances} ${i18n.localize("CANTICA.Roll.Circumstances")}`);
+  for (const tag of tags) factors.push(i18n.format("CANTICA.Roll.TagPenalty", { tag }));
   if (input.obstacles) factors.push(`−${input.obstacles} ${i18n.localize("CANTICA.Roll.Obstacles")}`);
   if (input.bound) factors.push(i18n.localize("CANTICA.Roll.BoundSource"));
   if (sceneTrait) factors.push(`+1 ${sceneTrait.name}`);

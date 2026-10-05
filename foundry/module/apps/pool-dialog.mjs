@@ -110,8 +110,9 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
       })),
 
       // A targeted NPC's Rating is used directly as the Difficulty. Preselect the first target.
-      targets: targets.map(({ id, name, rating }, i) => ({
+      targets: targets.map(({ id, name, rating, tags }, i) => ({
         value: `target:${id}`,
+        tags: tags.map(tag => ({ name: tag })),
         name,
         rating,
         label: i18n.format("CANTICA.Pool.TargetOption", { name, rating, kind: i18n.localize(`CANTICA.Rating.${rating}`) }),
@@ -129,7 +130,12 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
   #npcTargets() {
     return [...game.user.targets]
       .filter(token => token.actor?.type === "npc")
-      .map(token => ({ id: token.id, name: token.actor.name, rating: token.actor.system.rating }));
+      .map(token => ({
+        id: token.id,
+        name: token.actor.name,
+        rating: token.actor.system.rating,
+        tags: [token.actor.system.tag1, token.actor.system.tag2].filter(Boolean)
+      }));
   }
 
   _onRender(context, options) {
@@ -139,6 +145,20 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
       el.addEventListener("change", () => this.#updatePreview());
     });
     this.#updatePreview();
+  }
+
+  /** Show only the Tags of the NPC chosen as the target (a Rating on the ladder has none). */
+  #syncTargetTags() {
+    const chosen = this.element.elements.difficulty?.value ?? "";
+    this.element.querySelectorAll(".target-tags").forEach(group => { group.hidden = group.dataset.target !== chosen; });
+  }
+
+  /** Tags ticked for the chosen target: each is a die lost. */
+  #pickedTags() {
+    const chosen = this.element.elements.difficulty?.value ?? "";
+    return [...this.element.querySelectorAll('input[name="tag"]:checked')]
+      .filter(el => el.dataset.target === chosen)
+      .map(el => el.value);
   }
 
   /** Show only the Trait list of the chosen scene. */
@@ -197,13 +217,15 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
       sceneName: sceneId ? form.elements.sceneCard.selectedOptions[0].textContent.trim() : "",
       sceneTrait,
       difficulty: Number(chosen.dataset.difficulty),
-      targetName: chosen.dataset.name ?? ""
+      targetName: chosen.dataset.name ?? "",
+      tags: this.#pickedTags()
     };
   }
 
   #updatePreview() {
     this.#syncSceneGroups();
     this.#syncTraitSlots();
+    this.#syncTargetTags();
     const input = this.#readInput();
     const fx = commendationEffects(input.commendations);
     const traits = input.traits.slice(0, fx.secondTrait ? 2 : 1);
@@ -212,6 +234,8 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
       traits: traits.reduce((sum, t) => sum + traitDice({ rank: this.actor.traitRank(t.key), stretch: t.stretch }), 0),
       gift: input.gift,
       circumstances: sceneTraitDice(input.sceneTrait),
+      // Each of the target's Tags that applies costs a die.
+      obstacles: Math.max(0, input.tags.length - fx.obstaclesIgnored),
       bound: input.bound
     });
     const i18n = game.i18n;
