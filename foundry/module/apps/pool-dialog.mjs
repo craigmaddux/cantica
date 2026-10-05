@@ -70,6 +70,8 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
         }))
       })),
       hasTraits: this.actor.rollTraits.length > 0,
+      stamps: this.actor.system.stamps,
+      canExpedite: this.actor.system.stamps > 0,
       touched,
       giftText: gift,
 
@@ -213,6 +215,7 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
       encumbranceKeys: checked("encumbrance").map(el => el.value),
       commendations: checked("commendation").map(el => ({ id: el.value, name: el.dataset.name, ruleBreak: el.dataset.break })),
       bound: form.elements.bound?.checked ? 1 : 0,
+      expedite: Boolean(form.elements.expedite?.checked),
       sceneId,
       sceneName: sceneId ? form.elements.sceneCard.selectedOptions[0].textContent.trim() : "",
       sceneTrait,
@@ -236,7 +239,8 @@ export default class PoolDialog extends HandlebarsApplicationMixin(ApplicationV2
       circumstances: sceneTraitDice(input.sceneTrait),
       // Each of the target's Tags that applies costs a die.
       obstacles: Math.max(0, input.tags.length - fx.obstaclesIgnored),
-      bound: input.bound
+      bound: input.bound,
+      expedite: input.expedite
     });
     const i18n = game.i18n;
     const el = this.element.querySelector("[data-preview]");

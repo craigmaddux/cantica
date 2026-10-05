@@ -104,7 +104,7 @@
     },
     "Stamps": {
       "Label": "Stamps",
-      "Hint": "Earned when any Hindrance bites, sometimes from a Margin of Grace, and for withdrawing from a scene. Spend: Expedite (+1 die after a roll, from its chat card), Countersign (+1 die on an ally's roll), Reclassify (downgrade a Notice as it lands), Cite a Clause, Amend the Scene.",
+      "Hint": "Earned when any Hindrance bites, sometimes from a Margin of Grace, and for withdrawing from a scene. Spend: Expedite (+1 die before a roll), Refile (reroll one failed die after it, from its chat card), Countersign (+1 die on an ally's roll), Reclassify (downgrade a Notice as it lands), Cite a Clause, Amend the Scene.",
       "Cite": "Cite a Clause",
       "CiteTitle": "Cite a Clause",
       "CitePrompt": "Which rule do you declare exists and applies here?",
@@ -227,7 +227,9 @@
       "GearHint": "Gear never adds dice: the right tools let you roll at all. Anything else that helps or hinders is the table's call, or a scene Trait.",
       "ErrorAndDissonanceRange": "Margin of Error and Dissonance on {range}",
       "Tags": "Their Tags",
-      "TagsHint": "Tick a Tag when it applies to what they are doing: you lose a die for each, down to the Margin alone."
+      "TagsHint": "Tick a Tag when it applies to what they are doing: you lose a die for each, down to the Margin alone.",
+      "Expedite": "Expedite",
+      "ExpediteNote": "Spend a Stamp for +1 die before you roll. Once per roll. (After the roll, Refile rerolls a failed die.)"
     },
     "Roll": {
       "Margin": "Margin",
@@ -260,7 +262,8 @@
         "convert": "The Gift turns one die violet.",
         "none": "The Gift has no white die to turn violet."
       },
-      "TagPenalty": "−1 {tag} (Tag)"
+      "TagPenalty": "−1 {tag} (Tag)",
+      "Expedite": "Expedite (Stamp)"
     },
     "Tier": {
       "denied": "Denied",
@@ -532,7 +535,13 @@
       },
       "Pick": "Which character spends the Stamp?",
       "PickTitle": "Countersign",
-      "None": "You have no Stamp to spend."
+      "None": "You have no Stamp to spend.",
+      "refile": {
+        "button": "Refile (spend a Stamp)",
+        "hint": "Spend a Stamp to reroll one failed white die. Once per roll.",
+        "title": "Refiled",
+        "text": "{who} spent a Stamp to refile a die: a {was} became a {value} ({hit})."
+      }
     },
     "Brief": {
       "Label": "Station Briefs",

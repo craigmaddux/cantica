@@ -1,5 +1,5 @@
 import { reduceSuccesses, tierFor } from "./rules.mjs";
-import { canExpedite, canAddDie, canRaise } from "./card-actions.mjs";
+import { canRefile, canAddDie, canRaise } from "./card-actions.mjs";
 
 /**
  * The chat card for a roll, as a function of its saved state. Pure, no Foundry dependency (the
@@ -16,19 +16,21 @@ import { canExpedite, canAddDie, canRaise } from "./card-actions.mjs";
  *   dissonanceLabel: string, stampNote: boolean,
  *   complication: null | { trait: string, negated: boolean },
  *   actorId, targetName,                         // the roller, and the NPC whose Rating is the Difficulty
- *   extra: [{kind, value, success, extra, by}],  // white dice added after the roll (Expedite, Countersign)
- *   expedited: boolean, countersigned: string[], ratingRaise: number,
- *   log: [{kind: "expedite"|"countersign"|"raise", who, value, success}]
+ *   extra: [{kind, value, success, extra, by}],  // white dice added after the roll (Countersign)
+ *   refiled: boolean, refileGain: number,        // a failed die rerolled (once); +1 success if it was a rolled die and now hits
+ *   countersigned: string[], ratingRaise: number,
+ *   log: [{kind: "refile"|"countersign"|"raise", who, value, was, success}]
  * }
  */
 
 /**
  * The outcome with everything done to the roll since it was made, short of the Complication: added dice
- * count their successes and a raised Rating raises the Difficulty, and the tier is worked out again.
+ * and a refiled die count their successes and a raised Rating raises the Difficulty, and the tier is
+ * worked out again.
  */
 export function adjustedOutcome(state) {
   const base = state.outcome;
-  const added = (state.extra ?? []).filter(d => d.success).length;
+  const added = (state.extra ?? []).filter(d => d.success).length + (state.refileGain ?? 0);
   const raise = state.ratingRaise ?? 0;
   if (!added && !raise) return base;
   const successes = base.successes + added;
@@ -70,7 +72,7 @@ export function cardView(state, t) {
     actions: (state.log ?? []).map(entry => ({
       kind: entry.kind,
       title: t(`CANTICA.CardAction.${entry.kind}.title`),
-      text: t(`CANTICA.CardAction.${entry.kind}.text`, { who: entry.who, value: entry.value, hit: entry.success ? t("CANTICA.CardAction.hit") : t("CANTICA.CardAction.miss") })
+      text: t(`CANTICA.CardAction.${entry.kind}.text`, { who: entry.who, value: entry.value, was: entry.was, hit: entry.success ? t("CANTICA.CardAction.hit") : t("CANTICA.CardAction.miss") })
     })),
     outcome: shown,
     successes: shown.successes,
@@ -91,7 +93,7 @@ export function cardView(state, t) {
     canComplicate: Boolean(state.sceneId) && !c,
     canNegate: reduced,
     // Whether each action is still open on this roll. The chat hook shows each button only to the people it is for.
-    canExpedite: canExpedite(state),
+    canRefile: canRefile(state),
     canCountersign: canAddDie(state),
     canRaise: canRaise(state)
   };

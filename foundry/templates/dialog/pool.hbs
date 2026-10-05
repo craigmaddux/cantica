@@ -135,6 +135,16 @@
   </fieldset>
 
   <fieldset>
+    <legend>{{localize "CANTICA.Stamps.Label"}}</legend>
+    <label class="check {{#unless canExpedite}}off{{/unless}}">
+      <input type="checkbox" name="expedite" {{#unless canExpedite}}disabled{{/unless}}>
+      <span class="check-label">{{localize "CANTICA.Pool.Expedite"}}</span>
+      <span class="check-text">{{stamps}} {{localize "CANTICA.Stamps.Label"}}</span>
+      <span class="check-note">{{localize "CANTICA.Pool.ExpediteNote"}}</span>
+    </label>
+  </fieldset>
+
+  <fieldset>
     <legend>{{localize "CANTICA.Encumbrance.Heading"}}</legend>
     {{#each encumbrances}}
     <label class="check {{#if disabled}}off{{/if}}">

@@ -1,5 +1,5 @@
 import { SYSTEM_ID, OPEN_TRAITS } from "../config.mjs";
-import { buildPool, evaluateRoll, commendationEffects, effectiveDifficulty, traitDice, WHITE_TARGET, VIOLET_TARGET } from "../rules.mjs";
+import { buildPool, evaluateRoll, commendationEffects, effectiveDifficulty, traitDice, POOL_CAP, WHITE_TARGET, VIOLET_TARGET } from "../rules.mjs";
 import { marginTarget as marginTargetFor } from "../progression.mjs";
 import { gainScrutiny } from "../scrutiny.mjs";
 import { getHum, addHum } from "../hum-tracker.mjs";
@@ -53,6 +53,7 @@ export async function rollExtraDie() {
  * @param {number} [input.circumstances]    Environmental advantages (+1 each).
  * @param {number} [input.obstacles]        Other penalties (-1 each); macros can set these.
  * @param {string[]} [input.tags]           The target NPC's Tags that apply to what they are doing: -1 die each (they count as obstacles).
+ * @param {boolean} [input.expedite]        Spend a Stamp before the roll for +1 die (one per roll).
  * @param {number} [input.bound]            Bound gear in play (0 or 1): turns one white die violet.
  * @param {string} [input.sceneId]          The Scene Card the roll happens in.
  * @param {string} [input.sceneName]
@@ -65,6 +66,7 @@ export async function rollPool(actor, input) {
   const i18n = game.i18n;
   const skill = input.skill;
   const gift = Boolean(input.gift && actor.system.touched);
+  const wantsExpedite = Boolean(input.expedite) && actor.system.stamps > 0;
   const baseDifficulty = Number.isFinite(Number(input.difficulty)) ? Number(input.difficulty) : 1;
   // Hindrances never add dice. If any is in play, that is Greater Bound: the Margin of Error and
   // Dissonance both widen to 1-2, and each Dissonance adds 2 to the Hum.
@@ -94,14 +96,17 @@ export async function rollPool(actor, input) {
   const tags = (Array.isArray(input.tags) ? input.tags : []).filter(Boolean);
   const obstacles = Math.max(0, (input.obstacles || 0) + tags.length - fx.obstaclesIgnored);
 
-  const pool = buildPool({
+  // Expedite adds a die, so it is only spent if the pool has room for one (the cap is 7).
+  const poolInput = {
     skill: actor.skillRating(skill),
     traits: traits.reduce((sum, t) => sum + t.dice, 0),
     gift,
     circumstances: (input.circumstances || 0) + sceneTraitDice(sceneTrait),
     obstacles,
     bound: input.bound
-  });
+  };
+  const expedite = wantsExpedite && buildPool(poolInput).raw < POOL_CAP;
+  const pool = buildPool({ ...poolInput, expedite });
 
   const parts = [`1d10[${COLORSETS.margin}]`];
   if (pool.white) parts.push(`${pool.white}d10[${COLORSETS.white}]`);
@@ -142,6 +147,7 @@ export async function rollPool(actor, input) {
   if (gift) factors.push(actor.system.gift || i18n.localize("CANTICA.Roll.Gift"));
   for (const c of commendations) factors.push(`★ ${c.name || i18n.localize("CANTICA.Commendation.Heading")} (${i18n.localize(`CANTICA.Commendation.short.${c.ruleBreak}`)})`);
   if (input.circumstances) factors.push(`+${input.circumstances} ${i18n.localize("CANTICA.Roll.Circumstances")}`);
+  if (expedite) factors.push(i18n.localize("CANTICA.Roll.Expedite"));
   for (const tag of tags) factors.push(i18n.format("CANTICA.Roll.TagPenalty", { tag }));
   if (input.obstacles) factors.push(`−${input.obstacles} ${i18n.localize("CANTICA.Roll.Obstacles")}`);
   if (input.bound) factors.push(i18n.localize("CANTICA.Roll.BoundSource"));
@@ -161,7 +167,6 @@ export async function rollPool(actor, input) {
     actorId: actor.id,
     targetName: input.targetName || "",
     extra: [],
-    expedited: false,
     countersigned: [],
     ratingRaise: 0,
     log: [],
@@ -200,8 +205,10 @@ export async function rollPool(actor, input) {
   ChatMessage.applyRollMode(data, game.settings.get("core", "rollMode"));
   const message = await ChatMessage.create(data);
 
-  // A Hindrance biting earns a Stamp. (Spending Stamps is done after the roll, from the card.)
-  if (outcome.stampEarned) await actor.adjustStamps(1);
+  // Stamps: Expedite spends one; a Hindrance biting earns one. Settle them in a single update.
+  // (Refile and Countersign are spent after the roll, from the card.)
+  const stampDelta = (outcome.stampEarned ? 1 : 0) - (expedite ? 1 : 0);
+  if (stampDelta) await actor.adjustStamps(stampDelta);
 
   // Every Margin of Error gives the GM +1 Scrutiny.
   if (outcome.scrutiny) await gainScrutiny();

@@ -71,6 +71,14 @@ test("the Gift is separate from Bound gear", () => {
   assert.equal(p.white, 1);
 });
 
+test("Expedite adds one die before the roll, still subject to the cap", () => {
+  assert.equal(buildPool({ skill: 2 }).total, 3);
+  assert.equal(buildPool({ skill: 2, expedite: true }).total, 4);
+  assert.equal(buildPool({ skill: 2, traits: 2, circumstances: 1, expedite: true }).total, 7);
+  assert.equal(buildPool({ skill: 2, traits: 2, circumstances: 1, expedite: true }).capped, false);
+  assert.equal(buildPool({ skill: 2, traits: 2, circumstances: 2, expedite: true }).capped, true);
+});
+
 test("violet replaces white; it never adds to the count", () => {
   const p = buildPool({ skill: 1, bound: 1 });
   assert.equal(p.total, 2);

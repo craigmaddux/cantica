@@ -2,7 +2,7 @@ import { SYSTEM_ID } from "./config.mjs";
 import { getScrutiny, spendScrutiny } from "./scrutiny.mjs";
 import { renderRollCard, rollExtraDie } from "./dice/roll.mjs";
 import { escapeHtml } from "./lore-text.mjs";
-import { canExpedite, canCountersign, canRaise, addDie, raiseRating } from "./card-actions.mjs";
+import { canRefile, canCountersign, canRaise, addDie, refile, raiseRating } from "./card-actions.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -12,7 +12,7 @@ const SOCKET = `system.${SYSTEM_ID}`;
  * Wire up the buttons on Cantica roll cards. Cards are saved HTML plus a saved roll state, so each
  * button's visibility is worked out from the message flags and who is looking, on every render.
  *
- * After the roll, players spend Stamps (Expedite, Countersign, Negate) and the GM spends Scrutiny
+ * After the roll, players spend Stamps (Refile, Countersign, Negate) and the GM spends Scrutiny
  * (Complicate, Raise the Rating). See card-actions.mjs for the rules.
  */
 export function onRenderChatMessage(message, html) {
@@ -21,7 +21,7 @@ export function onRenderChatMessage(message, html) {
   const actor = game.actors.get(flags.actorId);
 
   claimStamp(message, html, flags, actor);
-  expedite(message, html, flags, actor);
+  refileDie(message, html, flags, actor);
   countersign(message, html, flags);
   negate(message, html, flags, actor);
   complicate(message, html, flags);
@@ -54,13 +54,13 @@ function claimStamp(message, html, flags, actor) {
   });
 }
 
-/** The roller: spend a Stamp for one more die on this roll, once. */
-function expedite(message, html, flags, actor) {
-  const button = html.querySelector('[data-action="expedite"]');
+/** The roller: spend a Stamp to reroll one failed white die, once per roll. */
+function refileDie(message, html, flags, actor) {
+  const button = html.querySelector('[data-action="refile"]');
   if (!button) return;
   const state = flags.state;
 
-  if (!actor?.isOwner || !state || !canExpedite(state) || actor.system.stamps < 1) {
+  if (!actor?.isOwner || !state || !canRefile(state) || actor.system.stamps < 1) {
     button.hidden = true;
     return;
   }
@@ -69,10 +69,10 @@ function expedite(message, html, flags, actor) {
     event.preventDefault();
     button.disabled = true;
     const current = message.flags[SYSTEM_ID]?.state;
-    if (!current || !canExpedite(current) || actor.system.stamps < 1) return;
+    if (!current || !canRefile(current) || actor.system.stamps < 1) return;
     await actor.adjustStamps(-1);
     const value = await rollExtraDie();
-    await redraw(message, addDie(current, { value, by: "expedite", who: actor.name, whoId: actor.id }));
+    await redraw(message, refile(current, { value, who: actor.name }));
   });
 }
 
@@ -114,7 +114,7 @@ function countersign(message, html, flags) {
     if (!current || !canCountersign(current, who.id) || who.system.stamps < 1) return;
     await who.adjustStamps(-1);
     const value = await rollExtraDie();
-    await redraw(message, addDie(current, { value, by: "countersign", who: who.name, whoId: who.id }));
+    await redraw(message, addDie(current, { value, who: who.name, whoId: who.id }));
   });
 }
 
