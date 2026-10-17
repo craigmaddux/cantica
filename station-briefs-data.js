@@ -17,16 +17,19 @@ window.STATION_BRIEFS = [
       "athletics": 1,
       "scuffle": 0,
       "sneak": 0,
+      "aim": 0,
       "lore": 0,
       "science": 1,
       "notice": 2,
+      "composure": 0,
+      "systems": 2,
       "hullcraft": 2,
       "mend": 0,
       "pilot": 0,
       "persuade": 0,
       "procedure": 1,
       "survival": 0,
-      "attune": 2
+      "navigate": 0
     },
     "traits": [
       "Reads Schematics Like Scripture",
@@ -57,16 +60,19 @@ window.STATION_BRIEFS = [
       "athletics": 1,
       "scuffle": 1,
       "sneak": 0,
+      "aim": 0,
       "lore": 1,
       "science": 0,
       "notice": 2,
+      "composure": 0,
+      "systems": 0,
       "hullcraft": 0,
       "mend": 0,
       "pilot": 0,
       "persuade": 2,
       "procedure": 2,
       "survival": 0,
-      "attune": 0
+      "navigate": 0
     },
     "traits": [
       "Has Heard Every Excuse Twice",
@@ -97,16 +103,19 @@ window.STATION_BRIEFS = [
       "athletics": 2,
       "scuffle": 0,
       "sneak": 0,
+      "aim": 0,
       "lore": 0,
       "science": 1,
       "notice": 1,
+      "composure": 0,
+      "systems": 0,
       "hullcraft": 0,
       "mend": 1,
       "pilot": 2,
       "persuade": 0,
       "procedure": 0,
       "survival": 2,
-      "attune": 0
+      "navigate": 0
     },
     "traits": [
       "Has Walked on Three Worlds",
@@ -137,16 +146,19 @@ window.STATION_BRIEFS = [
       "athletics": 0,
       "scuffle": 0,
       "sneak": 0,
+      "aim": 0,
       "lore": 0,
       "science": 2,
       "notice": 1,
+      "composure": 1,
+      "systems": 0,
       "hullcraft": 0,
       "mend": 2,
       "pilot": 0,
       "persuade": 2,
       "procedure": 1,
       "survival": 0,
-      "attune": 1
+      "navigate": 0
     },
     "traits": [
       "Steady When It Matters",
@@ -177,16 +189,19 @@ window.STATION_BRIEFS = [
       "athletics": 0,
       "scuffle": 0,
       "sneak": 0,
+      "aim": 0,
       "lore": 2,
       "science": 0,
       "notice": 1,
+      "composure": 2,
+      "systems": 0,
       "hullcraft": 0,
       "mend": 1,
       "pilot": 0,
       "persuade": 2,
       "procedure": 1,
       "survival": 0,
-      "attune": 2
+      "navigate": 0
     },
     "traits": [
       "A Voice That Carries at Compline",
@@ -202,7 +217,7 @@ window.STATION_BRIEFS = [
     "shine": "people need comforting, the Bound are restless, or the old texts hold an answer",
     "commendation": {
       "name": "Sung Them Quiet",
-      "situation": "when I Attune during Compline",
+      "situation": "when I sing at Compline",
       "effect": "a violet 1 doesn't cause Dissonance",
       "ruleBreak": "dissonance"
     }
@@ -217,16 +232,19 @@ window.STATION_BRIEFS = [
       "athletics": 0,
       "scuffle": 0,
       "sneak": 0,
+      "aim": 0,
       "lore": 0,
       "science": 2,
       "notice": 2,
+      "composure": 0,
+      "systems": 1,
       "hullcraft": 1,
       "mend": 1,
       "pilot": 0,
       "persuade": 0,
       "procedure": 0,
       "survival": 2,
-      "attune": 1
+      "navigate": 0
     },
     "traits": [
       "Can Grow Anything Given Time",
@@ -257,16 +275,19 @@ window.STATION_BRIEFS = [
       "athletics": 0,
       "scuffle": 1,
       "sneak": 2,
+      "aim": 0,
       "lore": 1,
       "science": 0,
       "notice": 2,
+      "composure": 0,
+      "systems": 0,
       "hullcraft": 0,
       "mend": 0,
       "pilot": 0,
       "persuade": 2,
       "procedure": 1,
       "survival": 0,
-      "attune": 0
+      "navigate": 0
     },
     "traits": [
       "Everyone's Cousin",
@@ -297,16 +318,19 @@ window.STATION_BRIEFS = [
       "athletics": 0,
       "scuffle": 2,
       "sneak": 2,
+      "aim": 0,
       "lore": 0,
       "science": 0,
       "notice": 1,
+      "composure": 0,
+      "systems": 0,
       "hullcraft": 2,
       "mend": 0,
       "pilot": 0,
       "persuade": 1,
       "procedure": 0,
       "survival": 1,
-      "attune": 0
+      "navigate": 0
     },
     "traits": [
       "Can Find Anything in the Sump",
@@ -328,8 +352,8 @@ window.STATION_BRIEFS = [
     }
   },
   {
-    "id": "navigators-hall",
-    "name": "Navigators' Hall",
+    "id": "navigators-tower",
+    "name": "The Navigator's Tower",
     "greeting": "So you've been accepted by the Navigators. You'll be told a great many things in confidence. Please keep them that way.",
     "tagline": "You plot the jumps.",
     "blurb": "Officially, the Navigators know where the ship is going. Unofficially, you've begun to suspect how much of it is guesswork, and how much of the guesswork works anyway.",
@@ -337,16 +361,19 @@ window.STATION_BRIEFS = [
       "athletics": 0,
       "scuffle": 0,
       "sneak": 0,
+      "aim": 0,
       "lore": 2,
       "science": 2,
       "notice": 1,
+      "composure": 0,
+      "systems": 1,
       "hullcraft": 0,
       "mend": 0,
-      "pilot": 2,
+      "pilot": 0,
       "persuade": 0,
       "procedure": 1,
       "survival": 0,
-      "attune": 1
+      "navigate": 2
     },
     "traits": [
       "Sees Patterns in the Stars",
@@ -362,7 +389,7 @@ window.STATION_BRIEFS = [
     "shine": "the ship is lost, the numbers don't agree, or something in the stars isn't where it should be",
     "commendation": {
       "name": "Read the Jump",
-      "situation": "when I Pilot through a jump's aftermath",
+      "situation": "when I Navigate through a jump's aftermath",
       "effect": "the Difficulty is one lower",
       "ruleBreak": "difficulty"
     }
@@ -377,16 +404,19 @@ window.STATION_BRIEFS = [
       "athletics": 0,
       "scuffle": 0,
       "sneak": 1,
+      "aim": 0,
       "lore": 2,
       "science": 1,
       "notice": 2,
+      "composure": 0,
+      "systems": 0,
       "hullcraft": 0,
       "mend": 0,
       "pilot": 0,
       "persuade": 1,
       "procedure": 2,
       "survival": 0,
-      "attune": 0
+      "navigate": 0
     },
     "traits": [
       "Can Find Any File in an Hour",

@@ -18,7 +18,7 @@
       note: '<strong>Not sure where to start?</strong> The <a href="briefs.html">Station Briefs</a> are ten orientation packets, from Engineering to the Registry, each with suggested skills, Traits and Hindrances to borrow.',
       entries: ["rules-creation", "rules-traits", "rules-hindrances", "rules-gift"] },
     { id: "part-skills", no: "Part IV", title: "The skills", skills: true,
-      blurb: "Thirteen skills, each rated 0 to 2. A skill says what you are doing; a Trait says why you are good at it." },
+      blurb: "Sixteen skills, each rated 0 to 2. A skill says what you are doing; a Trait says why you are good at it." },
     { id: "part-currencies", no: "Part V", title: "Stamps and Scrutiny",
       blurb: "Two small currencies, one for the players and one for the ship. Both are kept in the open.",
       entries: ["rules-stamps", "rules-scrutiny"] },
