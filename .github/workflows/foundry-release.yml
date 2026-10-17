@@ -2,8 +2,11 @@ name: Foundry system release
 
 # Push a tag like v0.1.0 to publish a release with system.json and system.zip.
 # The system lives in foundry/; the website at the repo root is unaffected.
-# Molten (or any Foundry) installs and updates from:
-#   https://github.com/craigmaddux/cantica/releases/latest/download/system.json
+# MIGRATION RELEASE. The Cantica system now lives in its own repository,
+#   https://github.com/craigmaddux/canticafoundry
+# This release is built here one last time so existing installs can update across: the zip is downloaded from this
+# repository, but the system.json inside it points manifest at the new repository, so every update after this one
+# comes from there. Nothing else is published from this repository any more.
 
 on:
   push:
@@ -30,8 +33,8 @@ jobs:
           VERSION="${GITHUB_REF_NAME#v}"
           REPO="${GITHUB_REPOSITORY}"
           jq --arg v "$VERSION" \
-             --arg url "https://github.com/${REPO}" \
-             --arg manifest "https://github.com/${REPO}/releases/latest/download/system.json" \
+             --arg url "https://github.com/craigmaddux/canticafoundry" \
+             --arg manifest "https://github.com/craigmaddux/canticafoundry/releases/latest/download/system.json" \
              --arg download "https://github.com/${REPO}/releases/download/${GITHUB_REF_NAME}/system.zip" \
              '.version = $v | .url = $url | .manifest = $manifest | .download = $download' \
              system.json > system.tmp && mv system.tmp system.json
